@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Senha</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    
+    <!-- cabeçalho -->    
+        <div class="header">
+            <img src="capa.png" alt="Imagem de Capa">
+        </div>
+
+    <!-- nav -->
+        <div class="navbar">
+            <a href=./index.html>Home</a>
+            <a href=./sobre_nos.html>Sobre nós</a>
+            <a href=./professores.html>Professores</a>
+            <a href=./alunos.html>Alunos</a>
+            <a href=./login.html>Login</a>
+            <!-- Aqui podemos adicionar mais abas de navegação -->
+        </div>
+
+    <!-- main (conteudo)-->
+        <div class="main-content">
+
+            <div class="reset-password-section">
+                <h2>Recuperar Senha</h2>
+                <form class="reset-password-form" action="recuperar_senha.php" method="post"> <!-- inserir backend php p recuperar senha-->
+                    <input type="email" name="email" placeholder="Digite seu email" required>
+                    <button type="submit">Enviar</button> <!-- esse botão aciona o recuperar_senha.php-->
+                </form>
+            </div>
+
+        </div>
+
+    <!-- rodape -->
+        <div class="footer">
+            UNIVESP PI 2024
+        </div>
+
+    <!-- scripts -->
+        <script>
+                
+            // 
+
+        </script>
+
+</body>
+</html>

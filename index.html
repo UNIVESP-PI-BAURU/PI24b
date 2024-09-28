@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- cabeçalho -->    
+        <div class="header">
+            <img src="capa.png" alt="Imagem de Capa">
+        </div>
+
+    <!-- nav -->
+        <div class="navbar">
+            <a href=./index.html>Home</a>
+            <a href=./sobre_nos.html>Sobre nós</a>
+            <a href=./professores.html>Professores</a>
+            <a href=./alunos.html>Alunos</a>
+            <a href=./login.html>Login</a>
+            <!-- Aqui podemos adicionar mais abas de navegação -->
+        </div>
+
+    <!-- main (conteudo)-->
+        <div class="main-content">
+
+            <div class="col">
+                <div class="row">
+                    <div class="text-content">
+                        <h1>Bem-vindo à Conectando Interesses!</h1>
+                        <p>Aqui você tem tudo o que precisa para alavancar os seus estudos em línguas estrangeiras. Vai ficar fora dessa? </p>
+                        <a href=./cadastro.html class="signup-button">Cadastre-se já!</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="carousel">
+                        <div class="slides">
+                            <div class="slide"><img src="1.png" alt="Imagem 1"></div>
+                            <div class="slide"><img src="2.png" alt="Imagem 2"></div>
+                            <div class="slide"><img src="3.png" alt="Imagem 3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>   
+
+    <!-- rodape -->
+        <div class="footer">
+            UNIVESP PI 2024
+        </div>
+
+    <!-- scripts -->
+        <script>
+        
+            // Carrossel JavaScript
+            const slides = document.querySelector('.slides');
+            const slideCount = document.querySelectorAll('.slide').length;
+            let currentIndex = 0;
+    
+            function showNextSlide() {
+                currentIndex = (currentIndex + 1) % slideCount;
+                const offset = -currentIndex * 100;
+                slides.style.transform = `translateX(${offset}%)`;
+            }
+    
+            setInterval(showNextSlide, 3000); // Muda a imagem a cada 3 segundos
+
+        </script>
+
+</body>
+
+</html>
