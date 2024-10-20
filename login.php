@@ -14,15 +14,13 @@
         <img src="ASSETS/IMG/capa.png" alt="Imagem de Capa">
     </div>
 
-    <!-- nav -->
-    <div class="navbar">
-        <a href="./index.html">Home</a>
-        <a href="./sobre_nos.html">Sobre nós</a>
-        <a href="./professores.html">Professores</a>
-        <a href="./alunos.html">Alunos</a>
-        <a href="./login.php">Login</a>
-        <!-- Aqui podemos adicionar mais abas de navegação -->
-    </div>
+    <!-- Navegação -->
+    <nav class="navbar">
+        <a href="./index.php">Home</a>
+        <a href="./sobre_nos.php">Sobre nós</a>
+        <a href="./cadastro.html">Cadastro<a>
+    </nav>
+    <!-- fim Navegação -->
 
     <!-- msg erro ou sucesso -->
     <div class="message-area">
