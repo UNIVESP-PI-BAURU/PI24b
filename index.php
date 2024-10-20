@@ -10,6 +10,9 @@
 
 <body>
 
+    <!-- Inicia a sessão -->
+    <?php session_start(); ?>
+
     <!-- Cabeçalho -->
     <header class="header">
         <img src="ASSETS/IMG/capa.png">
@@ -19,8 +22,15 @@
     <nav class="navbar">
         <a href="./index.php">Home</a>
         <a href="./sobre_nos.php">Sobre nós</a>
-        <a href="./login.php">Login</a>
-        <a href="./cadastro.html">Cadastro<a>
+
+        <?php if (isset($_SESSION['id_aluno']) || isset($_SESSION['id_tutor'])): ?>
+            <!-- Usuário logado -->
+            <a href="./logout.php">Logout</a>
+        <?php else: ?>
+            <!-- Usuário não logado -->
+            <a href="./login.php">Login</a>
+            <a href="./cadastro.php">Cadastro</a>
+        <?php endif; ?>
     </nav>
     <!-- fim Navegação -->
 
@@ -29,7 +39,7 @@
         <section class="welcome-text">
             <h1>Bem-vindo à Conectando Interesses!</h1>
             <p>Aqui você encontra tudo para impulsionar seus estudos em línguas estrangeiras. Vai ficar fora dessa?</p>
-            <a href="./cadastro.html" class="signup-button">Cadastre-se já!</a>
+            <a href="./cadastro.php" class="signup-button">Cadastre-se já!</a>
         </section>
 
         <section class="carousel">

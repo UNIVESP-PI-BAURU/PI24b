@@ -24,7 +24,6 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
         <a href="../index.php">Home</a>
         <a href="../sobre_nos.php">Sobre nós</a>
         <a href="../login.php">Login</a>
-        <a href="./dashboard_aluno.php">Dashboard</a>
     </nav>
 
     <!-- Conteúdo Principal -->

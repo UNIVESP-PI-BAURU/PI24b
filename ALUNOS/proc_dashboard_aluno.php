@@ -14,17 +14,19 @@ $tipo_usuario = isset($_SESSION['id_aluno']) ? 'aluno' : 'tutor';
 $id_usuario = $_SESSION['id_' . $tipo_usuario];
 $tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
 
+// Consulta os dados do usuário
 $sql = "SELECT nome, foto_perfil, cidade, estado FROM $tabela_usuario WHERE id = :id";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':id', $id_usuario);
 $stmt->execute();
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// Verifica se os dados do usuário foram encontrados
 if (!$usuario) {
     echo "<p>Usuário não encontrado.</p>";
     exit();
 }
 
-// Retorna os dados do usuário para serem usados na dashboard
-return $usuario;
-?>
+// O array $usuario agora está disponível para uso na dashboard
+// (não precisa de 'return' já que é um script independente)
+

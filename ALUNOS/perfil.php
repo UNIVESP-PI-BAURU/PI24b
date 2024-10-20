@@ -31,10 +31,11 @@ if (!$usuario) {
     exit();
 }
 
-// Transforma o campo de idiomas (armazenado como JSON ou separado por vírgulas) em um array para exibição
-$idiomas = explode(',', $usuario['idiomas']);
-?>
+// Verifica se o campo idiomas existe e não é nulo
+$idiomas = isset($usuario['idiomas']) ? explode(',', $usuario['idiomas']) : [];
 
+// Começa a gerar a página HTML
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -54,14 +55,17 @@ $idiomas = explode(',', $usuario['idiomas']);
 <nav class="navbar">
     <a href="../index.php">Home</a>
     <a href="../sobre_nos.php">Sobre nós</a>
-    <a href="../login.php">Logoff</a>
-    <a href="./dashboard_aluno.php">Dashboard</a>
+    <?php if (isset($_SESSION['id_aluno']) || isset($_SESSION['id_tutor'])): ?>
+        <a href="../logout.php">Logout</a>
+    <?php else: ?>
+        <a href="../login.php">Login</a>
+    <?php endif; ?>
 </nav>
+<!-- fim Navegação -->
 
 <!-- Conteúdo Principal -->
 <main class="main-content">
     <section class="perfil-section">
-        <!-- Exibição do perfil -->
         <h1>Perfil de <?php echo ($tipo_usuario === 'tutor' ? "Tutor(a)" : "Aluno(a)"); ?>: <?php echo htmlspecialchars($usuario['nome']); ?></h1>
 
         <div class="foto-perfil">
@@ -77,11 +81,18 @@ $idiomas = explode(',', $usuario['idiomas']);
             <p><strong>Cidade/Estado:</strong> 
                 <?php echo htmlspecialchars($usuario['cidade']); ?>, <?php echo htmlspecialchars($usuario['estado']); ?>
             </p>
-            <p><strong>Data de Nascimento:</strong> <?php echo htmlspecialchars($usuario['data_nascimento']); ?></p>
+            <p><strong>Data de Nascimento:</strong> 
+                <?php echo !empty($usuario['data_nascimento']) ? htmlspecialchars($usuario['data_nascimento']) : 'Não informado'; ?>
+            </p>
             <p><strong>Idiomas:</strong> 
                 <?php echo implode(', ', array_map('htmlspecialchars', $idiomas)); ?>
             </p>
-            <p><strong>Sobre mim:</strong> <?php echo htmlspecialchars($usuario['biografia']); ?></p>
+            <p><strong>Biografia:</strong> <?php echo htmlspecialchars($usuario['biografia']); ?></p>
+        </div>
+
+        <div class="actions">
+            <button onclick="window.location.href='editar_perfil.php'">Editar Perfil</button>
+            <button onclick="if(confirm('Você tem certeza que deseja excluir sua conta?')) { window.location.href='excluir_conta.php'; }">Excluir Conta</button>
         </div>
 
         <!-- Botão para voltar -->
