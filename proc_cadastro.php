@@ -2,6 +2,9 @@
 // Inclui o arquivo de conexão com o banco de dados
 require_once 'conexao.php';
 
+// Inicia a sessão
+session_start();
+
 // Verifica se foi enviado um formulário de cadastro
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
     // Recupera os dados do formulário
@@ -80,7 +83,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
             $stmt->execute([$id_usuario, $idioma]);
         }
 
-        echo "Cadastro realizado com sucesso!";
+        // Mensagem de sucesso na sessão
+        $_SESSION['message'] = 'Cadastro realizado com sucesso!';
+
+        // Redireciona para a página de login
+        header("Location: login.php"); // Altere para login.php se você renomeou a página
+        exit(); // Para garantir que o script pare aqui
     } catch (PDOException $e) {
         echo "Erro ao cadastrar: " . $e->getMessage();
     }
