@@ -48,10 +48,28 @@
 
             <!-- perfil -->
             <div class="perfil">
-                <!-- aqui terá um botão para exibir o perfil completo -->
+                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <div style="flex: 1;">
+                        <?php if (!empty($usuario['foto_perfil'])): ?>
+                            <img src="<?php echo $usuario['foto_perfil']; ?>" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%;">
+                        <?php else: ?>
+                            <p>Sem foto</p>
+                        <?php endif; ?>
+                    </div>
+                    <div style="flex: 2; padding-left: 10px;">
+                        <p><?php echo $tipo_usuario == "tutor" ? "Tutor(a): " : "Aluno(a): "; ?><?php echo $usuario['nome']; ?></p>
+                        <?php if (!empty($usuario['cidade']) || !empty($usuario['estado'])): ?>
+                            <p>
+                                <?php echo $usuario['cidade'] ? $usuario['cidade'] . ', ' : ''; ?>
+                                <?php echo $usuario['estado'] ? $usuario['estado'] : ''; ?>
+                            </p>
+                        <?php endif; ?>
+                    </div>
+                </div>
                 <button onclick="window.location.href='perfil.php'">Ver meu perfil</button>
             </div>
             <!-- fim perfil -->
+
 
             <!-- search -->
             <div class="search">
