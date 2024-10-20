@@ -27,9 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
         // Verifica a senha usando password_verify
         if (password_verify($senha, $usuario['senha'])) {
             // Armazena o ID do usuário e o nome na sessão
-            $id_usuario = $usuario['id_' . $tipo_usuario]; // id_aluno ou id_tutor
+            $id_usuario = $usuario['id']; // ID da tabela, que é o mesmo para ambos os tipos
             $_SESSION['id_' . $tipo_usuario] = $id_usuario;
-            $_SESSION['nome_aluno'] = $usuario['nome']; // Utiliza o campo 'nome' para ambos os tipos de usuários
+            $_SESSION['nome'] = $usuario['nome']; // Armazena o nome na mesma variável para ambos os tipos
 
             // Mensagem de sucesso
             $_SESSION['success'] = "Login realizado com sucesso!";

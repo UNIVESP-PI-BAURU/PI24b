@@ -9,7 +9,7 @@
 
 <body>
 
-    <!-- cabeçalho -->    
+    <!-- Cabeçalho -->    
     <div class="header">
         <img src="ASSETS/IMG/capa.png" alt="Imagem de Capa">
     </div>
@@ -18,11 +18,11 @@
     <nav class="navbar">
         <a href="./index.php">Home</a>
         <a href="./sobre_nos.php">Sobre nós</a>
-        <a href="./cadastro.html">Cadastro<a>
+        <a href="./cadastro.html">Cadastro</a>
     </nav>
     <!-- fim Navegação -->
 
-    <!-- msg erro ou sucesso -->
+    <!-- Mensagens de erro ou sucesso -->
     <div class="message-area">
         <?php
         session_start();
@@ -37,25 +37,24 @@
         ?>
     </div>
 
-    <!-- main (conteúdo) -->
+    <!-- Main (conteúdo) -->
     <div class="main-content">
-
         <div class="login-section">
             <h2>Entrar</h2>
             
-            <!-- início form login -->
+            <!-- Início form login -->
             <form method="POST" action="proc_login.php">
 
-                <!-- início escolher tipo user -->
+                <!-- Início escolher tipo de usuário -->
                 <div>
                     <input type="radio" id="aluno" name="tipo_usuario" value="aluno" checked>
                     <label for="aluno">Aluno</label>
                     <input type="radio" id="tutor" name="tipo_usuario" value="tutor">
                     <label for="tutor">Tutor</label>
                 </div>
-                <!-- fim escolher tipo user -->
+                <!-- Fim escolher tipo de usuário -->
                 <br>
-                <!-- início campos -->
+                <!-- Início campos -->
                 <div>
                     <label for="email">Email:</label>
                     <input type="email" id="email" name="email" required>
@@ -63,27 +62,24 @@
                     <label for="senha">Senha:</label>
                     <input type="password" id="senha" name="senha" required>
                 </div>
-                <!-- fim campos -->
+                <!-- Fim campos -->
                 <br>
-                <!-- botão submeter -->
+                <!-- Botão submeter -->
                 <button type="submit" name="login">Login</button>
             </form>
-            <!-- fim form login -->
-
+            <!-- Fim form login -->
         </div>
-    
     </div>
 
-    <!-- rodapé -->
+    <!-- Rodapé -->
     <div class="footer">
         UNIVESP PI 2024
     </div>
 
-    <!-- scripts -->
+    <!-- Scripts -->
     <script>
         // Scripts adicionais, se necessário
     </script>
 
 </body>
-
 </html>

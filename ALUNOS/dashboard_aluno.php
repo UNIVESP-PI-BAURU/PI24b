@@ -16,7 +16,7 @@
 
     // Verifica se o usuário está logado; se não, redireciona para a página de login
     if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
-        header("Location: login.php");
+        header("Location: ../login.php");
         exit();
     }
     ?>
@@ -42,7 +42,7 @@
 
             <!-- saudacao -->
             <div class="saudacao">
-                <h1>Bem-vindo, <?php echo isset($_SESSION['nome_aluno']) ? $_SESSION['nome_aluno'] : 'Visitante'; ?>!</h1>
+                <h1>Bem-vindo, <?php echo isset($_SESSION['nome']) ? $_SESSION['nome'] : 'Visitante'; ?>!</h1>
             </div>
             <!-- fim saudacao -->
 
