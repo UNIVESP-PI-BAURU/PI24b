@@ -19,6 +19,21 @@
         header("Location: ../login.php");
         exit();
     }
+
+    // Inclui o arquivo de conexão com o banco de dados
+    require_once 'conexao.php';
+
+    // Define o tipo de usuário e busca os dados do usuário
+    $tipo_usuario = isset($_SESSION['id_aluno']) ? 'aluno' : 'tutor';
+    $id_usuario = $_SESSION['id_' . $tipo_usuario];
+    $tabela_usuario = ($tipo_usuario == 'aluno') ? 'Alunos' : 'Tutores';
+
+    // Busca os dados do usuário
+    $sql = "SELECT nome, foto_perfil, cidade, estado FROM $tabela_usuario WHERE id = :id";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':id', $id_usuario);
+    $stmt->execute();
+    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
     ?>
 
     <!-- Cabeçalho -->
@@ -70,10 +85,8 @@
             </div>
             <!-- fim perfil -->
 
-
             <!-- search -->
             <div class="search">
-                <!-- aqui o sistema mais importante: onde o aluno pesquisará um tutor ou um tutor pesquisará por alunos -->
                 <input type="text" placeholder="Pesquise por tutores..." />
                 <button>Pesquisar</button>
             </div>
@@ -81,13 +94,10 @@
 
             <!-- aulas -->
             <div class="aulas">
-                <!-- aqui exibirá as aulas/cursos em andamento no momento -->
                 <h2>Aulas em andamento:</h2>
                 <!-- Listar aulas aqui -->
             </div>
             <!-- fim aulas -->
-
-            <!-- com o tempo poderá ser adicionado ou removido mais complementos aqui -->
 
         </section>
     </main>
