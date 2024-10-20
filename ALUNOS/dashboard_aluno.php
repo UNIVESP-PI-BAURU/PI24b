@@ -1,3 +1,7 @@
+<?php
+require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -5,48 +9,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Conectando Interesses</title>
-    <link rel="stylesheet" href="../ASSETS/CSS/style.css"> <!-- Caminho correto -->
+    <link rel="stylesheet" href="../ASSETS/CSS/style.css">
 </head>
 
 <body>
 
-    <?php
-    // Inicia a sessão
-    session_start();
-
-    // Verifica se o usuário está logado; se não, redireciona para a página de login
-    if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
-        header("Location: ../login.php");
-        exit();
-    }
-
-    // Inclui o arquivo de conexão com o banco de dados
-    require_once '../conexao.php'; // Caminho correto
-
-    // Define o tipo de usuário e busca os dados do usuário
-    $tipo_usuario = isset($_SESSION['id_aluno']) ? 'aluno' : 'tutor';
-    $id_usuario = $_SESSION['id_' . $tipo_usuario];
-    $tabela_usuario = ($tipo_usuario == 'aluno') ? 'Alunos' : 'Tutores';
-
-    // Busca os dados do usuário
-    $sql = "SELECT nome, foto_perfil, cidade, estado FROM $tabela_usuario WHERE id = :id";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':id', $id_usuario);
-    $stmt->execute();
-    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // Verifica se os dados do usuário foram encontrados
-    if (!$usuario) {
-        echo "<p>Usuário não encontrado.</p>";
-        exit();
-    }
-    ?>
-
     <!-- Cabeçalho -->
     <header class="header">
-        <img src="../ASSETS/IMG/capa.png" alt="Capa do Site"> <!-- Caminho correto -->
+        <img src="../ASSETS/IMG/capa.png" alt="Capa do Site">
     </header>
-    <!-- fim Cabeçalho -->
 
     <!-- Navegação -->
     <nav class="navbar">
@@ -55,7 +26,6 @@
         <a href="../login.php">Login</a>
         <a href="./dashboard_aluno.php">Dashboard</a>
     </nav>
-    <!-- fim Navegação -->
 
     <!-- Conteúdo Principal -->
     <main class="main-content">
@@ -65,7 +35,6 @@
             <div class="saudacao">
                 <h1>Bem-vindo, <?php echo htmlspecialchars($usuario['nome']); ?>!</h1>
             </div>
-            <!-- fim Saudação -->
 
             <!-- Perfil -->
             <div class="perfil">
@@ -78,7 +47,7 @@
                         <?php endif; ?>
                     </div>
                     <div style="flex: 2; padding-left: 10px;">
-                        <p><?php echo ($tipo_usuario == "tutor" ? "Tutor(a): " : "Aluno(a): ") . htmlspecialchars($usuario['nome']); ?></p>
+                        <p><?php echo ($tipo_usuario === "tutor" ? "Tutor(a): " : "Aluno(a): ") . htmlspecialchars($usuario['nome']); ?></p>
                         <?php if (!empty($usuario['cidade']) || !empty($usuario['estado'])): ?>
                             <p>
                                 <?php echo htmlspecialchars($usuario['cidade']) ? htmlspecialchars($usuario['cidade']) . ', ' : ''; ?>
@@ -89,31 +58,26 @@
                 </div>
                 <button onclick="window.location.href='perfil.php'">Ver meu perfil</button>
             </div>
-            <!-- fim Perfil -->
 
             <!-- Pesquisa -->
             <div class="search">
                 <input type="text" placeholder="Pesquise por tutores..." />
                 <button>Pesquisar</button>
             </div>
-            <!-- fim Pesquisa -->
 
             <!-- Aulas -->
             <div class="aulas">
                 <h2>Aulas em andamento:</h2>
                 <!-- Listar aulas aqui -->
             </div>
-            <!-- fim Aulas -->
 
         </section>
     </main>
-    <!-- fim Conteúdo Principal -->
 
     <!-- Rodapé -->
     <footer class="footer">
         <p>UNIVESP PI 2024</p>
     </footer>
-    <!-- fim Rodapé -->
 
 </body>
 
