@@ -10,6 +10,9 @@ if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
 
 // Incluir conexão com o banco de dados
 require_once '../conexao.php';
+if (!$conn) {
+    die("Falha na conexão com o banco de dados.");
+}
 
 // Determina o tipo de usuário e busca os dados
 $tipo_usuario = isset($_SESSION['id_aluno']) ? 'aluno' : 'tutor';
