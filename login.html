@@ -24,6 +24,18 @@
             <!-- Aqui podemos adicionar mais abas de navegação -->
         </div>
 
+    <!-- msg erro ou suscesso-->
+        <div class="message-area">
+            <?php
+            session_start();
+            if (isset($_SESSION['error'])) {
+                echo "<div class='error'>{$_SESSION['error']}</div>";
+                unset($_SESSION['error']); // Limpa a mensagem após exibir
+            }
+            ?>
+        </div>
+        
+
     <!-- main (conteudo)-->
         <div class="main-content">
 
