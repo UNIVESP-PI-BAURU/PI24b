@@ -10,6 +10,11 @@
 
 <body>
 
+    <!-- Iniciar a sessão -->
+    <?php
+    session_start();
+    ?>
+
     <!-- Cabeçalho -->
     <header class="header">
         <img src="ASSETS/IMG/capa.png">
@@ -31,7 +36,7 @@
 
             <!-- saudacao -->
             <div class="saudacao">
-                <h1>Bem-vindo, <?php echo $_SESSION['nome_aluno']; ?>!</h1>
+                <h1>Bem-vindo, <?php echo isset($_SESSION['nome_aluno']) ? $_SESSION['nome_aluno'] : 'Visitante'; ?>!</h1>
             </div>
             <!-- fim saudacao -->
 
@@ -51,7 +56,7 @@
             <div class="aulas">
                 <!-- aqui exibirá as aulas/cursos em andamento no momento -->
             </div>
-            <!-- fim aulas aulas -->
+            <!-- fim aulas -->
 
             <!-- com o tempo poderá ser adicionado ou removido mais complementos aqui -->
 

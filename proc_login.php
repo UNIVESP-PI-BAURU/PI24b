@@ -26,9 +26,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
     if ($usuario) {
         // Verifica a senha diretamente (alterar para password_verify)
         if (password_verify($senha, $usuario['senha'])) {
-            // Armazena o ID do usuário na sessão
+            // Armazena o ID do usuário e o nome na sessão
             $id_usuario = $usuario['id_' . $tipo_usuario];
             $_SESSION['id_' . $tipo_usuario] = $id_usuario;
+            $_SESSION['nome_aluno'] = ($tipo_usuario == "aluno") ? $usuario['nome'] : $usuario['nome_tutor']; // Altere para o campo correto
 
             // Mensagem de sucesso
             $_SESSION['success'] = "Login realizado com sucesso!";
