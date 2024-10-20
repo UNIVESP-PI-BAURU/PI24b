@@ -87,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
         $_SESSION['message'] = 'Cadastro realizado com sucesso!';
 
         // Redireciona para a página de login
-        header("Location: login.php"); // Altere para login.php se você renomeou a página
+        header("Location: login.html"); // Altere para login.php se você renomeou a página
         exit(); // Para garantir que o script pare aqui
     } catch (PDOException $e) {
         echo "Erro ao cadastrar: " . $e->getMessage();
