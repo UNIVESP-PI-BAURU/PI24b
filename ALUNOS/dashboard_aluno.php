@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Conectando Interesses</title>
-    <link rel="stylesheet" href="ASSETS/CSS/style.css">
+    <link rel="stylesheet" href="../ASSETS/CSS/style.css"> <!-- Atualizado para caminho correto -->
 </head>
 
 <body>
 
-    <!-- Iniciar a sessão -->
     <?php
+    // Iniciar a sessão
     session_start();
 
     // Verifica se o usuário está logado; se não, redireciona para a página de login
@@ -21,7 +21,7 @@
     }
 
     // Inclui o arquivo de conexão com o banco de dados
-    require_once 'conexao.php';
+    require_once '../conexao.php'; // Atualizado para caminho correto
 
     // Define o tipo de usuário e busca os dados do usuário
     $tipo_usuario = isset($_SESSION['id_aluno']) ? 'aluno' : 'tutor';
@@ -34,19 +34,25 @@
     $stmt->bindParam(':id', $id_usuario);
     $stmt->execute();
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Verifica se os dados do usuário foram encontrados
+    if (!$usuario) {
+        echo "<p>Usuário não encontrado.</p>";
+        exit();
+    }
     ?>
 
     <!-- Cabeçalho -->
     <header class="header">
-        <img src="ASSETS/IMG/capa.png" alt="Capa do Site">
+        <img src="../ASSETS/IMG/capa.png" alt="Capa do Site"> <!-- Atualizado para caminho correto -->
     </header>
     <!-- fim Cabeçalho -->
 
     <!-- Navegação -->
     <nav class="navbar">
-        <a href="./index.php">Home</a>
-        <a href="./sobre_nos.php">Sobre nós</a>
-        <a href="./login.php">Login</a> <!-- Aqui pode ser alterado para "Logoff" se o usuário estiver logado -->
+        <a href="../index.php">Home</a>
+        <a href="../sobre_nos.php">Sobre nós</a>
+        <a href="../login.php">Login</a> <!-- Aqui pode ser alterado para "Logoff" se o usuário estiver logado -->
         <a href="./dashboard_aluno.php">Dashboard</a>
     </nav>
     <!-- fim Navegação -->
@@ -57,7 +63,7 @@
 
             <!-- saudacao -->
             <div class="saudacao">
-                <h1>Bem-vindo, <?php echo isset($_SESSION['nome']) ? $_SESSION['nome'] : 'Visitante'; ?>!</h1>
+                <h1>Bem-vindo, <?php echo htmlspecialchars($usuario['nome']); ?>!</h1>
             </div>
             <!-- fim saudacao -->
 
@@ -66,17 +72,17 @@
                 <div style="display: flex; align-items: center; margin-bottom: 10px;">
                     <div style="flex: 1;">
                         <?php if (!empty($usuario['foto_perfil'])): ?>
-                            <img src="<?php echo $usuario['foto_perfil']; ?>" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%;">
+                            <img src="<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%;">
                         <?php else: ?>
                             <p>Sem foto</p>
                         <?php endif; ?>
                     </div>
                     <div style="flex: 2; padding-left: 10px;">
-                        <p><?php echo $tipo_usuario == "tutor" ? "Tutor(a): " : "Aluno(a): "; ?><?php echo $usuario['nome']; ?></p>
+                        <p><?php echo ($tipo_usuario == "tutor" ? "Tutor(a): " : "Aluno(a): ") . htmlspecialchars($usuario['nome']); ?></p>
                         <?php if (!empty($usuario['cidade']) || !empty($usuario['estado'])): ?>
                             <p>
-                                <?php echo $usuario['cidade'] ? $usuario['cidade'] . ', ' : ''; ?>
-                                <?php echo $usuario['estado'] ? $usuario['estado'] : ''; ?>
+                                <?php echo htmlspecialchars($usuario['cidade']) ? htmlspecialchars($usuario['cidade']) . ', ' : ''; ?>
+                                <?php echo htmlspecialchars($usuario['estado']) ? htmlspecialchars($usuario['estado']) : ''; ?>
                             </p>
                         <?php endif; ?>
                     </div>
