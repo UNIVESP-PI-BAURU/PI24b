@@ -35,9 +35,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
 
             // Redireciona para a dashboard correspondente
             if ($tipo_usuario == "aluno") {
-                header("Location: dashboard_aluno.php");
+                header("Location: ALUNOS/dashboard_aluno.php");
             } else {
-                header("Location: dashboard_tutor.php");
+                header("Location: TUTORES/dashboard_tutor.php");
             }
             exit();
         } else {
