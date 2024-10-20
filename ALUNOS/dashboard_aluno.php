@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Conectando Interesses</title>
-    <link rel="stylesheet" href="../ASSETS/CSS/style.css"> <!-- Atualizado para caminho correto -->
+    <link rel="stylesheet" href="../ASSETS/CSS/style.css"> <!-- Caminho correto -->
 </head>
 
 <body>
 
     <?php
-    // Iniciar a sessão
+    // Inicia a sessão
     session_start();
 
     // Verifica se o usuário está logado; se não, redireciona para a página de login
@@ -21,7 +21,7 @@
     }
 
     // Inclui o arquivo de conexão com o banco de dados
-    require_once '../conexao.php'; // Atualizado para caminho correto
+    require_once '../conexao.php'; // Caminho correto
 
     // Define o tipo de usuário e busca os dados do usuário
     $tipo_usuario = isset($_SESSION['id_aluno']) ? 'aluno' : 'tutor';
@@ -44,7 +44,7 @@
 
     <!-- Cabeçalho -->
     <header class="header">
-        <img src="../ASSETS/IMG/capa.png" alt="Capa do Site"> <!-- Atualizado para caminho correto -->
+        <img src="../ASSETS/IMG/capa.png" alt="Capa do Site"> <!-- Caminho correto -->
     </header>
     <!-- fim Cabeçalho -->
 
@@ -52,7 +52,7 @@
     <nav class="navbar">
         <a href="../index.php">Home</a>
         <a href="../sobre_nos.php">Sobre nós</a>
-        <a href="../login.php">Login</a> <!-- Aqui pode ser alterado para "Logoff" se o usuário estiver logado -->
+        <a href="../login.php">Login</a>
         <a href="./dashboard_aluno.php">Dashboard</a>
     </nav>
     <!-- fim Navegação -->
@@ -61,13 +61,13 @@
     <main class="main-content">
         <section class="dashboard-section">
 
-            <!-- saudacao -->
+            <!-- Saudação -->
             <div class="saudacao">
                 <h1>Bem-vindo, <?php echo htmlspecialchars($usuario['nome']); ?>!</h1>
             </div>
-            <!-- fim saudacao -->
+            <!-- fim Saudação -->
 
-            <!-- perfil -->
+            <!-- Perfil -->
             <div class="perfil">
                 <div style="display: flex; align-items: center; margin-bottom: 10px;">
                     <div style="flex: 1;">
@@ -89,21 +89,21 @@
                 </div>
                 <button onclick="window.location.href='perfil.php'">Ver meu perfil</button>
             </div>
-            <!-- fim perfil -->
+            <!-- fim Perfil -->
 
-            <!-- search -->
+            <!-- Pesquisa -->
             <div class="search">
                 <input type="text" placeholder="Pesquise por tutores..." />
                 <button>Pesquisar</button>
             </div>
-            <!-- fim search -->
+            <!-- fim Pesquisa -->
 
-            <!-- aulas -->
+            <!-- Aulas -->
             <div class="aulas">
                 <h2>Aulas em andamento:</h2>
                 <!-- Listar aulas aqui -->
             </div>
-            <!-- fim aulas -->
+            <!-- fim Aulas -->
 
         </section>
     </main>

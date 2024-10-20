@@ -35,7 +35,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
             $_SESSION['success'] = "Login realizado com sucesso!";
 
             // Redireciona para a dashboard correspondente
-            header("Location: " . strtoupper($tipo_usuario) . "/dashboard_" . $tipo_usuario . ".php");
+            if ($tipo_usuario == "aluno") {
+                header("Location: ALUNOS/dashboard_aluno.php");
+            } else {
+                header("Location: TUTORES/dashboard_tutor.php");
+            }
             exit();
         } else {
             // Senha incorreta
