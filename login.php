@@ -10,84 +10,82 @@
 <body>
 
     <!-- cabeçalho -->    
-        <div class="header">
-            <img src="ASSETS/IMG/capa.png" alt="Imagem de Capa">
-        </div>
+    <div class="header">
+        <img src="ASSETS/IMG/capa.png" alt="Imagem de Capa">
+    </div>
 
     <!-- nav -->
-        <div class="navbar">
-            <a href=./index.html>Home</a>
-            <a href=./sobre_nos.html>Sobre nós</a>
-            <a href=./professores.html>Professores</a>
-            <a href=./alunos.html>Alunos</a>
-            <a href=./login.html>Login</a>
-            <!-- Aqui podemos adicionar mais abas de navegação -->
-        </div>
+    <div class="navbar">
+        <a href="./index.html">Home</a>
+        <a href="./sobre_nos.html">Sobre nós</a>
+        <a href="./professores.html">Professores</a>
+        <a href="./alunos.html">Alunos</a>
+        <a href="./login.php">Login</a>
+        <!-- Aqui podemos adicionar mais abas de navegação -->
+    </div>
 
-    <!-- msg erro ou suscesso-->
-        <div class="message-area">
-            <?php
-            session_start();
-            if (isset($_SESSION['error'])) {
-                echo "<div class='error'>{$_SESSION['error']}</div>";
-                unset($_SESSION['error']); // Limpa a mensagem após exibir
-            }
-            ?>
-        </div>
-        
+    <!-- msg erro ou sucesso -->
+    <div class="message-area">
+        <?php
+        session_start();
+        if (isset($_SESSION['success'])) {
+            echo "<div class='success'>{$_SESSION['success']}</div>";
+            unset($_SESSION['success']); // Limpa a mensagem após exibir
+        }
+        if (isset($_SESSION['error'])) {
+            echo "<div class='error'>{$_SESSION['error']}</div>";
+            unset($_SESSION['error']); // Limpa a mensagem após exibir
+        }
+        ?>
+    </div>
 
-    <!-- main (conteudo)-->
-        <div class="main-content">
+    <!-- main (conteúdo) -->
+    <div class="main-content">
 
-            <div class="login-section">
-                <h2>Entrar</h2>
-                
-                <!-- inicio form login -->
-                <form method="POST" action="proc_login.php">
+        <div class="login-section">
+            <h2>Entrar</h2>
+            
+            <!-- início form login -->
+            <form method="POST" action="proc_login.php">
 
-                    <!-- inicio escolher tipo user -->
-                    <div>
-                        <input type="radio" id="aluno" name="tipo_usuario" value="aluno" checked>
-                        <label for="aluno">Aluno</label>
-                        <input type="radio" id="tutor" name="tipo_usuario" value="tutor">
-                        <label for="tutor">Tutor</label>
-                    </div>
-                    <!-- fim escolher tipo user -->
-                    <br>
-                    <!-- inicio campos -->
-                    <div>
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required>
+                <!-- início escolher tipo user -->
+                <div>
+                    <input type="radio" id="aluno" name="tipo_usuario" value="aluno" checked>
+                    <label for="aluno">Aluno</label>
+                    <input type="radio" id="tutor" name="tipo_usuario" value="tutor">
+                    <label for="tutor">Tutor</label>
+                </div>
+                <!-- fim escolher tipo user -->
+                <br>
+                <!-- início campos -->
+                <div>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
                     <br><br>
-                        <label for="senha">Senha:</label>
-                        <input type="password" id="senha" name="senha" required>
-                    </div>
-                    <!-- fim campos -->
-                    <br>
-                    <!-- botão submeter -->
-                    <button type="submit" name="login">Login</button>
-                </form>
-                <!-- fim form login -->
-                
+                    <label for="senha">Senha:</label>
+                    <input type="password" id="senha" name="senha" required>
+                </div>
+                <!-- fim campos -->
+                <br>
+                <!-- botão submeter -->
+                <button type="submit" name="login">Login</button>
+            </form>
+            <!-- fim form login -->
 
-
-            </div>
-        
         </div>
+    
+    </div>
 
-    <!-- rodape -->
-        <div class="footer">
-            UNIVESP PI 2024
-        </div>
+    <!-- rodapé -->
+    <div class="footer">
+        UNIVESP PI 2024
+    </div>
 
     <!-- scripts -->
-        <script>
-                
-            // 
-
-        </script>
+    <script>
+        // Scripts adicionais, se necessário
+    </script>
 
 </body>
 
 </html>
-

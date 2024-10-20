@@ -24,11 +24,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
 
     // Se o usuário existir, verifica a senha
     if ($usuario) {
-        // Verifica a senha usando password_verify
+        // Verifica a senha diretamente (alterar para password_verify)
         if (password_verify($senha, $usuario['senha'])) {
             // Armazena o ID do usuário na sessão
             $id_usuario = $usuario['id_' . $tipo_usuario];
             $_SESSION['id_' . $tipo_usuario] = $id_usuario;
+
+            // Mensagem de sucesso
+            $_SESSION['success'] = "Login realizado com sucesso!";
 
             // Redireciona para a dashboard correspondente
             if ($tipo_usuario == "aluno") {
@@ -40,13 +43,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
         } else {
             // Senha incorreta
             $_SESSION['error'] = "Senha incorreta. Por favor, tente novamente.";
-            header("Location: login.html");
+            header("Location: login.php"); // Redireciona de volta para o login
             exit();
         }
     } else {
         // Usuário não encontrado
         $_SESSION['error'] = "Usuário não encontrado. Por favor, verifique o email e o tipo de usuário.";
-        header("Location: login.html");
+        header("Location: login.php"); // Redireciona de volta para o login
         exit();
     }
 }
