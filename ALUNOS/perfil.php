@@ -1,43 +1,13 @@
 <?php
-// Inicia a sessão
+// Inicia a sessão e verifica login
 session_start();
-
-// Verifica se o usuário está logado
 if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
     header("Location: ../login.php");
     exit();
 }
 
-// Incluir conexão com o banco de dados
-require_once '../conexao.php';
-if (!$conn) {
-    die("Falha na conexão com o banco de dados.");
-}
-
-// Determina o tipo de usuário e busca os dados
-$tipo_usuario = isset($_SESSION['id_aluno']) ? 'aluno' : 'tutor';
-$id_usuario = $_SESSION['id_' . $tipo_usuario];
-$tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
-
-// Consulta SQL para buscar todos os dados do usuário
-$sql = "SELECT nome, email, foto_perfil, cidade, estado, data_nascimento, biografia, idiomas 
-        FROM $tabela_usuario 
-        WHERE id = :id";
-$stmt = $conn->prepare($sql);
-$stmt->bindParam(':id', $id_usuario);
-$stmt->execute();
-$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Verifica se os dados foram encontrados
-if (!$usuario) {
-    echo "<p>Usuário não encontrado.</p>";
-    exit();
-}
-
-// Verifica se o campo idiomas existe e não é nulo
-$idiomas = isset($usuario['idiomas']) ? explode(',', $usuario['idiomas']) : [];
-
-// Começa a gerar a página HTML
+// Inclui o processamento da página
+require_once 'proc_perfil.php';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -64,7 +34,6 @@ $idiomas = isset($usuario['idiomas']) ? explode(',', $usuario['idiomas']) : [];
         <a href="../login.php">Login</a>
     <?php endif; ?>
 </nav>
-<!-- fim Navegação -->
 
 <!-- Conteúdo Principal -->
 <main class="main-content">
@@ -81,15 +50,9 @@ $idiomas = isset($usuario['idiomas']) ? explode(',', $usuario['idiomas']) : [];
 
         <div class="info-usuario">
             <p><strong>Email:</strong> <?php echo htmlspecialchars($usuario['email']); ?></p>
-            <p><strong>Cidade/Estado:</strong> 
-                <?php echo htmlspecialchars($usuario['cidade']); ?>, <?php echo htmlspecialchars($usuario['estado']); ?>
-            </p>
-            <p><strong>Data de Nascimento:</strong> 
-                <?php echo !empty($usuario['data_nascimento']) ? htmlspecialchars($usuario['data_nascimento']) : 'Não informado'; ?>
-            </p>
-            <p><strong>Idiomas:</strong> 
-                <?php echo implode(', ', array_map('htmlspecialchars', $idiomas)); ?>
-            </p>
+            <p><strong>Cidade/Estado:</strong> <?php echo htmlspecialchars($usuario['cidade']) . ', ' . htmlspecialchars($usuario['estado']); ?></p>
+            <p><strong>Data de Nascimento:</strong> <?php echo !empty($usuario['data_nascimento']) ? htmlspecialchars($usuario['data_nascimento']) : 'Não informado'; ?></p>
+            <p><strong>Idiomas:</strong> <?php echo implode(', ', array_map('htmlspecialchars', $idiomas)); ?></p>
             <p><strong>Biografia:</strong> <?php echo htmlspecialchars($usuario['biografia']); ?></p>
         </div>
 
@@ -98,7 +61,6 @@ $idiomas = isset($usuario['idiomas']) ? explode(',', $usuario['idiomas']) : [];
             <button onclick="if(confirm('Você tem certeza que deseja excluir sua conta?')) { window.location.href='excluir_conta.php'; }">Excluir Conta</button>
         </div>
 
-        <!-- Botão para voltar -->
         <button onclick="window.location.href='./dashboard_aluno.php'">Voltar para Dashboard</button>
     </section>
 </main>
