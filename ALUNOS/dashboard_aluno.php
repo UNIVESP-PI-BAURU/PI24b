@@ -34,12 +34,12 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
         <section class="dashboard-section">
 
             <!-- Saudação -->
-            <div class="saudacao">
+            <div class="signup-section">
                 <h1>Bem-vindo, <?php echo htmlspecialchars($usuario['nome']); ?>!</h1>
             </div>
 
             <!-- Perfil -->
-            <div class="perfil" style="display: flex; align-items: center; margin-bottom: 20px;">
+            <div class="signup-section" style="display: flex; align-items: center; margin-bottom: 20px;">
                 <div style="flex: 1;">
                     <?php if (!empty($usuario['foto_perfil'])): ?>
                         <img src="<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" 
@@ -63,13 +63,13 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
             <button onclick="window.location.href='./perfil.php'">Ver meu perfil</button>
 
             <!-- Pesquisa -->
-            <div class="search" style="margin-top: 20px;">
+            <div class="signup-section" style="margin-top: 20px;">
                 <input type="text" placeholder="Pesquise por tutores..." />
                 <button>Pesquisar</button>
             </div>
 
             <!-- Aulas -->
-            <div class="aulas" style="margin-top: 30px;">
+            <div class="signup-section" style="margin-top: 30px;">
                 <h2>Aulas em andamento:</h2>
                 <!-- Conteúdo das aulas será inserido aqui -->
             </div>
