@@ -16,6 +16,13 @@ $tipo_usuario = isset($_SESSION['id_aluno']) ? 'aluno' : 'tutor';
 $id_usuario = $_SESSION['id_' . $tipo_usuario];
 $tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
 
+// Debug: Mostra os valores das variáveis
+echo "<pre>";
+echo "Tipo de usuário: " . $tipo_usuario . "\n";
+echo "ID do usuário: " . $id_usuario . "\n";
+echo "Tabela do usuário: " . $tabela_usuario . "\n";
+echo "</pre>";
+
 // Consulta SQL para buscar dados do usuário
 $sql = "SELECT nome, email, foto_perfil, cidade, estado, data_nascimento, biografia 
         FROM $tabela_usuario 
@@ -53,4 +60,9 @@ $idiomas = $stmt_idiomas->fetchAll(PDO::FETCH_COLUMN);
 if (!$idiomas) {
     $idiomas = []; // Caso não tenha idiomas, inicializa como array vazio
 }
+
+// Debug: Mostra os idiomas encontrados
+echo "<pre>";
+print_r($idiomas);
+echo "</pre>";
 ?>
