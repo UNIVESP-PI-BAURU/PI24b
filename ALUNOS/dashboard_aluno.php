@@ -27,7 +27,7 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
             <a href="../login.php">Login</a>
         <?php endif; ?>
     </nav>
-    <!-- fim Navegação -->
+    <!-- Fim da Navegação -->
 
     <!-- Conteúdo Principal -->
     <main class="main-content">
@@ -39,38 +39,39 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
             </div>
 
             <!-- Perfil -->
-            <div class="perfil">
-                <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                    <div style="flex: 1;">
-                        <?php if (!empty($usuario['foto_perfil'])): ?>
-                            <img src="<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%;">
-                        <?php else: ?>
-                            <p>Sem foto</p>
-                        <?php endif; ?>
-                    </div>
-                    <div style="flex: 2; padding-left: 10px;">
-                        <p><?php echo ($tipo_usuario === "tutor" ? "Tutor(a): " : "Aluno(a): ") . htmlspecialchars($usuario['nome']); ?></p>
-                        <?php if (!empty($usuario['cidade']) || !empty($usuario['estado'])): ?>
-                            <p>
-                                <?php echo htmlspecialchars($usuario['cidade']) ? htmlspecialchars($usuario['cidade']) . ', ' : ''; ?>
-                                <?php echo htmlspecialchars($usuario['estado']) ? htmlspecialchars($usuario['estado']) : ''; ?>
-                            </p>
-                        <?php endif; ?>
-                    </div>
+            <div class="perfil" style="display: flex; align-items: center; margin-bottom: 20px;">
+                <div style="flex: 1;">
+                    <?php if (!empty($usuario['foto_perfil'])): ?>
+                        <img src="<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" 
+                             alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%;">
+                    <?php else: ?>
+                        <p>Sem foto</p>
+                    <?php endif; ?>
                 </div>
-                <button onclick="verPerfil()">Ver meu perfil</button>
+                <div style="flex: 2; padding-left: 10px;">
+                    <p><?php echo ($tipo_usuario === "tutor" ? "Tutor(a): " : "Aluno(a): ") . 
+                                 htmlspecialchars($usuario['nome']); ?></p>
+                    <?php if (!empty($usuario['cidade']) || !empty($usuario['estado'])): ?>
+                        <p>
+                            <?php echo htmlspecialchars($usuario['cidade']) ? htmlspecialchars($usuario['cidade']) . ', ' : ''; ?>
+                            <?php echo htmlspecialchars($usuario['estado']) ? htmlspecialchars($usuario['estado']) : ''; ?>
+                        </p>
+                    <?php endif; ?>
+                </div>
             </div>
 
+            <button onclick="window.location.href='./perfil.php'">Ver meu perfil</button>
+
             <!-- Pesquisa -->
-            <div class="search">
+            <div class="search" style="margin-top: 20px;">
                 <input type="text" placeholder="Pesquise por tutores..." />
                 <button>Pesquisar</button>
             </div>
 
             <!-- Aulas -->
-            <div class="aulas">
+            <div class="aulas" style="margin-top: 30px;">
                 <h2>Aulas em andamento:</h2>
-                <!-- Listar aulas aqui -->
+                <!-- Conteúdo das aulas será inserido aqui -->
             </div>
 
         </section>
@@ -80,13 +81,6 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
     <footer class="footer">
         <p>UNIVESP PI 2024</p>
     </footer>
-
-    <script>
-    function verPerfil() {
-        alert("Botão clicado! Redirecionando para o perfil...");
-        window.location.href='./perfil.php'; // Certifique-se de que o caminho está correto
-    }
-    </script>
 
 </body>
 </html>

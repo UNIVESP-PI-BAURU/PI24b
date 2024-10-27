@@ -302,3 +302,45 @@ body {
     padding: 3rem;
     width: 100%;
 }
+
+
+.perfil-section {
+    margin-top: 2rem;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 600px;
+    box-sizing: border-box;
+}
+.perfil-section h2 {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+.perfil-form {
+    display: flex;
+    flex-direction: column;
+}
+.perfil-form label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+.perfil-form input, .signup-form select {
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+.perfil-form button {
+    padding: 0.5rem 1rem;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.perfil-form button:hover {
+    background-color: #575757;
+}

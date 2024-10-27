@@ -2,7 +2,8 @@
 // Inicia a sessão e verifica login
 session_start();
 if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
-    die("Usuário não está logado.");
+    header("Location: ../login.php");
+    exit();
 }
 
 // Inclui o processamento dos dados para preencher o formulário
@@ -39,7 +40,7 @@ require_once 'proc_editar_perfil.php';
     <section class="perfil-section">
         <h1>Editar Perfil de <?php echo ($tipo_usuario === 'tutor' ? "Tutor(a)" : "Aluno(a)"); ?></h1>
 
-        <form action="proc_editar_perfil.php" method="post">
+        <form class="perfil-form" action="proc_editar_perfil.php" method="post">
             <input type="hidden" name="id_usuario" value="<?php echo htmlspecialchars($id_usuario); ?>">
 
             <label for="nome">Nome:</label>

@@ -2,7 +2,8 @@
 // Inicia a sessão e verifica login
 session_start();
 if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
-    die("Usuário não está logado."); // Mensagem de erro se não estiver logado
+    header("Location: ../login.php");
+    exit();
 }
 
 // Inclui o processamento da página

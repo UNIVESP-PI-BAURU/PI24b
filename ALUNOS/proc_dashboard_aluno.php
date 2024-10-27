@@ -1,9 +1,8 @@
 <?php
 session_start();
 
-// Verifica se o usuário está logado
+// Verifica se o usuário está logado e redireciona para login se não estiver
 if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
-    echo "Usuário não está logado. Redirecionando para login.";
     header("Location: ../login.php");
     exit();
 }
@@ -22,9 +21,9 @@ $stmt->bindParam(':id', $id_usuario);
 $stmt->execute();
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Verifica se os dados do usuário foram encontrados
+// Finaliza a execução se o usuário não for encontrado
 if (!$usuario) {
-    echo "Usuário não encontrado.";
+    header("Location: ../login.php");
     exit();
 }
 

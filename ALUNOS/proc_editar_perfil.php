@@ -2,7 +2,8 @@
 // Inicia a sessão
 session_start();
 if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
-    die("Usuário não está logado.");
+    header("Location: ../login.php");
+    exit();
 }
 
 // Conexão com o banco de dados
@@ -43,24 +44,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Atualiza os dados pessoais
     $sql_update = "UPDATE Alunos SET nome = ?, email = ?, cidade = ?, estado = ?, data_nascimento = ?, biografia = ? WHERE id = ?";
     $stmt_update = $conn->prepare($sql_update);
-    if (!$stmt_update->execute([$nome, $email, $cidade, $estado, $data_nascimento, $biografia, $id_usuario])) {
-        die("Erro ao atualizar dados do usuário: " . implode(", ", $stmt_update->errorInfo()));
-    }
+    $stmt_update->execute([$nome, $email, $cidade, $estado, $data_nascimento, $biografia, $id_usuario]);
 
     // Remove os idiomas antigos
     $sql_delete = "DELETE FROM IdiomaAluno WHERE id_aluno = ?";
     $stmt_delete = $conn->prepare($sql_delete);
-    if (!$stmt_delete->execute([$id_usuario])) {
-        die("Erro ao deletar idiomas: " . implode(", ", $stmt_delete->errorInfo()));
-    }
+    $stmt_delete->execute([$id_usuario]);
 
     // Insere os novos idiomas
     foreach ($idiomas as $idioma) {
         $sql_insert = "INSERT INTO IdiomaAluno (id_aluno, idioma) VALUES (?, ?)";
         $stmt_insert = $conn->prepare($sql_insert);
-        if (!$stmt_insert->execute([$id_usuario, $idioma])) {
-            die("Erro ao inserir idioma: " . implode(", ", $stmt_insert->errorInfo()));
-        }
+        $stmt_insert->execute([$id_usuario, $idioma]);
     }
 
     // Redireciona para o perfil
