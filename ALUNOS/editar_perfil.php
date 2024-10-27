@@ -38,11 +38,11 @@ require_once 'proc_editar_perfil.php';
 <!-- Conteúdo Principal -->
 <div class="main-content">
 
-    <div class="signup-section">
+    <div class="perfil-section">
         <h2>Editar Perfil</h2>
 
         <!-- Formulário de Edição de Perfil -->
-        <form class="signup-form" action="proc_editar_perfil.php" method="post" enctype="multipart/form-data">
+        <form class="perfil-form" action="proc_editar_perfil.php" method="post" enctype="multipart/form-data">
 
             <!-- Campo para nome -->
             <label for="nome">Nome:</label>
@@ -59,6 +59,14 @@ require_once 'proc_editar_perfil.php';
             <!-- Campo para estado -->
             <label for="estado">Estado:</label>
             <input type="text" id="estado" name="estado" value="<?php echo htmlspecialchars($estado); ?>">
+            <br>
+            <!-- Campo para data de nascimento -->
+            <label for="data_nascimento">Data de Nascimento:</label>
+            <input type="date" id="data_nascimento" name="data_nascimento" value="<?php echo htmlspecialchars($data_nascimento); ?>">
+            <br>
+            <!-- Campo para biografia -->
+            <label for="biografia">Biografia:</label>
+            <textarea id="biografia" name="biografia"><?php echo htmlspecialchars($biografia); ?></textarea>
             <br>
             <!-- Campo para foto de perfil -->
             <label for="foto_perfil">Foto de Perfil:</label>

@@ -24,12 +24,19 @@ $stmt->bindParam(':id', $id_usuario);
 $stmt->execute();
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
+$nome = $usuario['nome'];
+$email = $usuario['email'];
+$cidade = $usuario['cidade'];
+$estado = $usuario['estado'];
+$data_nascimento = $usuario['data_nascimento'];
+$biografia = $usuario['biografia'];
+
 // Recupera os idiomas do usuário
 $sql_idiomas = "SELECT idioma FROM IdiomaAluno WHERE id_aluno = :id_aluno";
 $stmt_idiomas = $conn->prepare($sql_idiomas);
 $stmt_idiomas->bindParam(':id_aluno', $id_usuario);
 $stmt_idiomas->execute();
-$idiomas_aluno = $stmt_idiomas->fetchAll(PDO::FETCH_COLUMN);
+$idiomas = $stmt_idiomas->fetchAll(PDO::FETCH_COLUMN);
 
 // Processa a atualização se for uma requisição POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
