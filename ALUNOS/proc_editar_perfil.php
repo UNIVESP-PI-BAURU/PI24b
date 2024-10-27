@@ -39,12 +39,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $estado = $_POST['estado'];
     $data_nascimento = $_POST['data_nascimento'];
     $biografia = $_POST['biografia'];
-    $idiomas = array_map('trim', explode(',', $_POST['idioma'][0])); // Converte para array
-
+    
     // Atualiza os dados pessoais
     $sql_update = "UPDATE Alunos SET nome = ?, email = ?, cidade = ?, estado = ?, data_nascimento = ?, biografia = ? WHERE id = ?";
     $stmt_update = $conn->prepare($sql_update);
     $stmt_update->execute([$nome, $email, $cidade, $estado, $data_nascimento, $biografia, $id_usuario]);
+
+    // Recupera os idiomas do usuário
+    $idiomas = array_map('trim', $_POST['idiomas']); // Obtém todos os idiomas
 
     // Remove os idiomas antigos
     $sql_delete = "DELETE FROM IdiomaAluno WHERE id_aluno = ?";
@@ -53,9 +55,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Insere os novos idiomas
     foreach ($idiomas as $idioma) {
-        $sql_insert = "INSERT INTO IdiomaAluno (id_aluno, idioma) VALUES (?, ?)";
-        $stmt_insert = $conn->prepare($sql_insert);
-        $stmt_insert->execute([$id_usuario, $idioma]);
+        if (!empty($idioma)) { // Verifica se o idioma não está vazio
+            $sql_insert = "INSERT INTO IdiomaAluno (id_aluno, idioma) VALUES (?, ?)";
+            $stmt_insert = $conn->prepare($sql_insert);
+            $stmt_insert->execute([$id_usuario, $idioma]);
+        }
     }
 
     // Redireciona para o perfil

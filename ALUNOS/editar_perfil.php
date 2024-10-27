@@ -61,8 +61,11 @@ require_once 'proc_editar_perfil.php';
             <label for="biografia">Biografia:</label>
             <textarea id="biografia" name="biografia"><?php echo htmlspecialchars($usuario['biografia']); ?></textarea>
 
-            <label for="idioma">Idiomas:</label>
-            <input type="text" id="idioma" name="idioma[]" placeholder="Adicione idiomas separados por vírgulas">
+            <label for="idiomas">Idiomas:</label>
+                <div id="idiomas">
+                    <input type="text" name="idiomas[]" placeholder="Adicione um idioma" required>
+                    <button type="button" onclick="addCampoIdioma()">Adicionar mais um</button>
+                </div>
 
             <button type="submit">Salvar</button>
         </form>
@@ -75,6 +78,20 @@ require_once 'proc_editar_perfil.php';
 <footer class="footer">
     <p>UNIVESP PI 2024</p>
 </footer>
+
+
+<!-- JS para campo idiomas, add mais idioma -->
+<script>
+function addCampoIdioma() {
+    var idiomasDiv = document.getElementById("idiomas");
+    var newInput = document.createElement("input");
+    newInput.type = "text";
+    newInput.name = "idiomas[]";
+    newInput.placeholder = "Adicione um idioma";
+    idiomasDiv.appendChild(newInput);
+}
+</script>
+
 
 </body>
 </html>
