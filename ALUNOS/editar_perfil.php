@@ -40,38 +40,64 @@ $idiomas_aluno = $stmt_idiomas->fetchAll(PDO::FETCH_COLUMN);
 </head>
 <body>
 
-<!-- Formulário para editar o perfil -->
-<form action="proc_editar_perfil.php" method="post">
-    <input type="hidden" name="id_usuario" value="<?php echo htmlspecialchars($id_usuario); ?>">
+<!-- Cabeçalho -->
+<header class="header">
+    <img src="../ASSETS/IMG/capa.png" alt="Capa do Site">
+</header>
 
-    <label for="nome">Nome:</label>
-    <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($usuario['nome']); ?>" required>
+<!-- Navegação -->
+<nav class="navbar">
+    <a href="../index.php">Home</a>
+    <a href="../sobre_nos.php">Sobre nós</a>
+    <?php if (isset($_SESSION['id_aluno']) || isset($_SESSION['id_tutor'])): ?>
+        <a href="../logout.php">Logout</a>
+    <?php else: ?>
+        <a href="../login.php">Login</a>
+    <?php endif; ?>
+</nav>
 
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" required>
+<!-- Conteúdo Principal -->
+<main class="main-content">
 
-    <label for="cidade">Cidade:</label>
-    <input type="text" id="cidade" name="cidade" value="<?php echo htmlspecialchars($usuario['cidade']); ?>">
+    <!-- Formulário para editar o perfil -->
+    <form action="proc_editar_perfil.php" method="post">
+        <input type="hidden" name="id_usuario" value="<?php echo htmlspecialchars($id_usuario); ?>">
 
-    <label for="estado">Estado:</label>
-    <input type="text" id="estado" name="estado" value="<?php echo htmlspecialchars($usuario['estado']); ?>">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($usuario['nome']); ?>" required>
 
-    <label for="data_nascimento">Data de Nascimento:</label>
-    <input type="date" id="data_nascimento" name="data_nascimento" value="<?php echo htmlspecialchars($usuario['data_nascimento']); ?>">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" required>
 
-    <label for="biografia">Biografia:</label>
-    <textarea id="biografia" name="biografia"><?php echo htmlspecialchars($usuario['biografia']); ?></textarea>
+        <label for="cidade">Cidade:</label>
+        <input type="text" id="cidade" name="cidade" value="<?php echo htmlspecialchars($usuario['cidade']); ?>">
 
-    <label for="idioma">Idiomas:</label>
-    <select id="idioma" name="idioma[]" multiple>
-        <option value="Inglês" <?php echo in_array("Inglês", $idiomas_aluno) ? 'selected' : ''; ?>>Inglês</option>
-        <option value="Espanhol" <?php echo in_array("Espanhol", $idiomas_aluno) ? 'selected' : ''; ?>>Espanhol</option>
-        <option value="Francês" <?php echo in_array("Francês", $idiomas_aluno) ? 'selected' : ''; ?>>Francês</option>
-        <option value="Alemão" <?php echo in_array("Alemão", $idiomas_aluno) ? 'selected' : ''; ?>>Alemão</option>
-    </select>
+        <label for="estado">Estado:</label>
+        <input type="text" id="estado" name="estado" value="<?php echo htmlspecialchars($usuario['estado']); ?>">
 
-    <button type="submit">Salvar</button>
-</form>
+        <label for="data_nascimento">Data de Nascimento:</label>
+        <input type="date" id="data_nascimento" name="data_nascimento" value="<?php echo htmlspecialchars($usuario['data_nascimento']); ?>">
+
+        <label for="biografia">Biografia:</label>
+        <textarea id="biografia" name="biografia"><?php echo htmlspecialchars($usuario['biografia']); ?></textarea>
+
+        <label for="idioma">Idiomas:</label>
+        <select id="idioma" name="idioma[]" multiple>
+            <option value="Inglês" <?php echo in_array("Inglês", $idiomas_aluno) ? 'selected' : ''; ?>>Inglês</option>
+            <option value="Espanhol" <?php echo in_array("Espanhol", $idiomas_aluno) ? 'selected' : ''; ?>>Espanhol</option>
+            <option value="Francês" <?php echo in_array("Francês", $idiomas_aluno) ? 'selected' : ''; ?>>Francês</option>
+            <option value="Alemão" <?php echo in_array("Alemão", $idiomas_aluno) ? 'selected' : ''; ?>>Alemão</option>
+        </select>
+
+        <button type="submit">Salvar</button>
+    </form>
+
+</main>
+
+<!-- Rodapé -->
+<footer class="footer">
+    <p>UNIVESP PI 2024</p>
+</footer>
 
 </body>
 </html>
