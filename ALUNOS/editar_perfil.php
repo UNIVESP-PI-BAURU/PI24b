@@ -38,43 +38,46 @@ require_once 'proc_editar_perfil.php';
 <!-- Conteúdo Principal -->
 <div class="main-content">
 
-    <div class="perfil-section">
+    <div class="signup-section">
         <h2>Editar Perfil</h2>
 
         <!-- Formulário de Edição de Perfil -->
-        <form class="perfil-form" action="proc_editar_perfil.php" method="post" enctype="multipart/form-data">
+        <form class="signup-form" action="proc_editar_perfil.php" method="post" enctype="multipart/form-data">
 
             <!-- Campo para nome -->
             <label for="nome">Nome:</label>
             <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($nome); ?>" required>
-
+            <br>
             <!-- Campo para email -->
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
-
+            <br>
             <!-- Campo para cidade -->
             <label for="cidade">Cidade:</label>
             <input type="text" id="cidade" name="cidade" value="<?php echo htmlspecialchars($cidade); ?>">
-
+            <br>
             <!-- Campo para estado -->
             <label for="estado">Estado:</label>
             <input type="text" id="estado" name="estado" value="<?php echo htmlspecialchars($estado); ?>">
-
+            <br>
             <!-- Campo para foto de perfil -->
             <label for="foto_perfil">Foto de Perfil:</label>
             <input type="file" id="foto_perfil" name="foto_perfil" accept="image/*">
-
+            <br>
             <!-- Idiomas -->
             <div id="idiomas">
                 <label for="idioma">Idioma:</label>
-                <input type="text" id="idioma" name="idiomas[]" value="<?php echo htmlspecialchars($idiomas[0]); ?>" required>
+                <input type="text" id="idioma" name="idiomas[]" value="<?php echo htmlspecialchars($idiomas[0]); ?>">
                 <button type="button" onclick="addCampoIdioma()">Adicionar mais um</button>
             </div>
-
+            <br>
             <!-- Botão submeter -->
             <button type="submit" name="atualizar">Atualizar</button>
-
         </form>
+        <br>
+        <!-- Botão para retornar ao perfil -->
+        <button type="button" onclick="retornarPerfil()">Retornar ao Perfil</button>
+
     </div>
 
 </div>
@@ -92,6 +95,10 @@ require_once 'proc_editar_perfil.php';
         novoCampo.innerHTML = '<label for="idioma">Idioma:</label>' +
                               '<input type="text" name="idiomas[]" required>';
         divIdiomas.appendChild(novoCampo);
+    }
+
+    function retornarPerfil() {
+        window.location.href = 'perfil.php'; // Substitua pelo caminho correto do perfil
     }
 </script>
 
