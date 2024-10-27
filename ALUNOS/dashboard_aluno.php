@@ -4,14 +4,12 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
 
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Conectando Interesses</title>
     <link rel="stylesheet" href="../ASSETS/CSS/style.css">
 </head>
-
 <body>
 
     <!-- Cabeçalho -->
@@ -84,5 +82,4 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
     </footer>
 
 </body>
-
 </html>

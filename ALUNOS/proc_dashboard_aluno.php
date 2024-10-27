@@ -28,5 +28,3 @@ if (!$usuario) {
 }
 
 // O array $usuario agora está disponível para uso na dashboard
-// (não precisa de 'return' já que é um script independente)
-
