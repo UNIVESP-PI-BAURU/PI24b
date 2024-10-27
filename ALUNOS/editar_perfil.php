@@ -38,11 +38,11 @@ require_once 'proc_editar_perfil.php';
 <!-- Conteúdo Principal -->
 <div class="main-content">
 
-    <div class="perfil-section">
+    <div class="signup-section">
         <h2>Editar Perfil</h2>
 
         <!-- Formulário de Edição de Perfil -->
-        <form class="perfil-form" action="proc_editar_perfil.php" method="post" enctype="multipart/form-data">
+        <form class="signup-form" action="proc_editar_perfil.php" method="post" enctype="multipart/form-data">
 
             <!-- Campo para nome -->
             <label for="nome">Nome:</label>

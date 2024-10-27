@@ -37,7 +37,8 @@ require_once 'proc_perfil.php';
 
 <!-- Conteúdo Principal -->
 <main class="main-content">
-    <section class="perfil-section">
+
+    <div class="signup-section">
         <h1>Perfil de <?php echo ($tipo_usuario === 'tutor' ? "Tutor(a)" : "Aluno(a)"); ?>: <?php echo htmlspecialchars($usuario['nome']); ?></h1>
 
         <div class="foto-perfil">
@@ -62,7 +63,8 @@ require_once 'proc_perfil.php';
         </div>
 
         <button onclick="window.location.href='./dashboard_aluno.php'">Voltar para Dashboard</button>
-    </section>
+    </div>
+
 </main>
 
 <!-- Rodapé -->
