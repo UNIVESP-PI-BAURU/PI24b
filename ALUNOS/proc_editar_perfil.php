@@ -1,10 +1,14 @@
 <?php
+// Inicia a sessão
 session_start();
-require_once '../conexao.php';
-
-// Verifica se o usuário está logado
 if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
     die("Usuário não está logado."); // Mensagem de erro se não estiver logado
+}
+
+// Incluir conexão com o banco de dados
+require_once '../conexao.php';
+if (!$conn) {
+    die("Falha na conexão com o banco de dados.");
 }
 
 // Verifica se a requisição é POST
@@ -19,11 +23,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $biografia = $_POST['biografia'];
     $idiomas = $_POST['idiomas']; // Supondo que você tenha um campo para os idiomas
 
-    // Atualiza os dados no banco
+    // Debug: Mostra os valores das variáveis
+    echo "<pre>";
+    echo "ID do usuário: " . $id_usuario . "\n";
+    echo "Nome: " . $nome . "\n";
+    echo "Email: " . $email . "\n";
+    echo "Cidade: " . $cidade . "\n";
+    echo "Estado: " . $estado . "\n";
+    echo "Data de Nascimento: " . $data_nascimento . "\n";
+    echo "Biografia: " . $biografia . "\n";
+    echo "Idiomas: " . implode(", ", $idiomas) . "\n"; // Debug dos idiomas
+    echo "</pre>";
+
+    // Determina o tipo de usuário
     $tipo_usuario = isset($_SESSION['id_aluno']) ? 'aluno' : 'tutor';
     $tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
 
-    // Atualiza os dados pessoais, excluindo o campo 'idiomas'
+    // Atualiza os dados pessoais
     $sql = "UPDATE $tabela_usuario SET nome = ?, email = ?, cidade = ?, estado = ?, data_nascimento = ?, biografia = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
     
@@ -32,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Atualiza os idiomas na tabela IdiomaAluno
-    // Primeiramente, você deve remover os idiomas antigos, se necessário
+    // Primeiramente, remove os idiomas antigos
     $sql_delete = "DELETE FROM IdiomaAluno WHERE id_aluno = ?";
     $stmt_delete = $conn->prepare($sql_delete);
     if (!$stmt_delete->execute([$id_usuario])) {
