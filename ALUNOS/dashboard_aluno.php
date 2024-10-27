@@ -23,8 +23,13 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
     <nav class="navbar">
         <a href="../index.php">Home</a>
         <a href="../sobre_nos.php">Sobre nós</a>
-        <a href="../login.php">Login</a>
+        <?php if (isset($_SESSION['id_aluno']) || isset($_SESSION['id_tutor'])): ?>
+            <a href="../logout.php">Logout</a>
+        <?php else: ?>
+            <a href="../login.php">Login</a>
+        <?php endif; ?>
     </nav>
+    <!-- fim Navegação -->
 
     <!-- Conteúdo Principal -->
     <main class="main-content">
@@ -55,7 +60,7 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
                         <?php endif; ?>
                     </div>
                 </div>
-                <button onclick="window.location.href='perfil.php'">Ver meu perfil</button>
+                <button onclick="window.location.href='./perfil.php'">Ver meu perfil</button>
             </div>
 
             <!-- Pesquisa -->
