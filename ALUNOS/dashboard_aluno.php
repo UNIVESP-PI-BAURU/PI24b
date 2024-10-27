@@ -1,10 +1,5 @@
 <?php
 require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
-
-// Mensagem de depuração para verificar se $usuario está definido
-if (!isset($usuario)) {
-    echo "<!-- Debug: Usuario não está definido. -->";
-}
 ?>
 
 <!DOCTYPE html>
@@ -40,7 +35,7 @@ if (!isset($usuario)) {
 
             <!-- Saudação -->
             <div class="saudacao">
-                <h1>Bem-vindo, <?php echo isset($usuario) ? htmlspecialchars($usuario['nome']) : 'Usuário'; ?>!</h1>
+                <h1>Bem-vindo, <?php echo htmlspecialchars($usuario['nome']); ?>!</h1>
             </div>
 
             <!-- Perfil -->
@@ -63,7 +58,7 @@ if (!isset($usuario)) {
                         <?php endif; ?>
                     </div>
                 </div>
-                <button onclick="window.location.href='perfil.php'">Ver meu perfil</button>
+                <button onclick="verPerfil()">Ver meu perfil</button>
             </div>
 
             <!-- Pesquisa -->
@@ -85,6 +80,13 @@ if (!isset($usuario)) {
     <footer class="footer">
         <p>UNIVESP PI 2024</p>
     </footer>
+
+    <script>
+    function verPerfil() {
+        alert("Botão clicado! Redirecionando para o perfil...");
+        window.location.href='./ALUNOS/perfil.php'; // Certifique-se de que o caminho está correto
+    }
+    </script>
 
 </body>
 </html>
