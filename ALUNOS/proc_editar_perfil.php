@@ -21,18 +21,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $estado = $_POST['estado'];
     $data_nascimento = $_POST['data_nascimento'];
     $biografia = $_POST['biografia'];
-    $idiomas = $_POST['idiomas']; // Supondo que você tenha um campo para os idiomas
+    $idiomas = $_POST['idiomas']; // Supondo que você tenha um campo para os idiomas, este deve ser um array
 
-    // Debug: Mostra os valores das variáveis
+    // Debug: Mostra os valores das variáveis (remova em produção)
     echo "<pre>";
-    echo "ID do usuário: " . $id_usuario . "\n";
-    echo "Nome: " . $nome . "\n";
-    echo "Email: " . $email . "\n";
-    echo "Cidade: " . $cidade . "\n";
-    echo "Estado: " . $estado . "\n";
-    echo "Data de Nascimento: " . $data_nascimento . "\n";
-    echo "Biografia: " . $biografia . "\n";
-    echo "Idiomas: " . implode(", ", $idiomas) . "\n"; // Debug dos idiomas
+    echo "ID do usuário: " . htmlspecialchars($id_usuario) . "\n";
+    echo "Nome: " . htmlspecialchars($nome) . "\n";
+    echo "Email: " . htmlspecialchars($email) . "\n";
+    echo "Cidade: " . htmlspecialchars($cidade) . "\n";
+    echo "Estado: " . htmlspecialchars($estado) . "\n";
+    echo "Data de Nascimento: " . htmlspecialchars($data_nascimento) . "\n";
+    echo "Biografia: " . htmlspecialchars($biografia) . "\n";
+    echo "Idiomas: " . htmlspecialchars(implode(", ", $idiomas)) . "\n"; // Debug dos idiomas
     echo "</pre>";
 
     // Determina o tipo de usuário
@@ -58,10 +58,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Agora, insere os novos idiomas
     if (!empty($idiomas)) {
         foreach ($idiomas as $idioma) {
-            $sql_insert = "INSERT INTO IdiomaAluno (id_aluno, idioma) VALUES (?, ?)";
-            $stmt_insert = $conn->prepare($sql_insert);
-            if (!$stmt_insert->execute([$id_usuario, $idioma])) {
-                die("Erro ao inserir novos idiomas: " . implode(", ", $stmt_insert->errorInfo())); // Mensagem de erro se houver problema na inserção
+            // Verifica se o idioma não está vazio antes de inserir
+            if (!empty($idioma)) {
+                $sql_insert = "INSERT INTO IdiomaAluno (id_aluno, idioma) VALUES (?, ?)";
+                $stmt_insert = $conn->prepare($sql_insert);
+                if (!$stmt_insert->execute([$id_usuario, $idioma])) {
+                    die("Erro ao inserir novos idiomas: " . implode(", ", $stmt_insert->errorInfo())); // Mensagem de erro se houver problema na inserção
+                }
             }
         }
     }
@@ -69,5 +72,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Redireciona de volta para o perfil
     header("Location: ./perfil.php");
     exit();
+} else {
+    die("Requisição inválida."); // Mensagem de erro se não for uma requisição POST
 }
-?>
