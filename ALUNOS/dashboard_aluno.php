@@ -84,7 +84,7 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
     <script>
     function verPerfil() {
         alert("Botão clicado! Redirecionando para o perfil...");
-        window.location.href='./ALUNOS/perfil.php'; // Certifique-se de que o caminho está correto
+        window.location.href='./perfil.php'; // Certifique-se de que o caminho está correto
     }
     </script>
 
