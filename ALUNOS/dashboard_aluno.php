@@ -35,7 +35,7 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
 
             <!-- Saudação -->
             <div class="signup-section">
-                <h1>Bem-vindo, <?php echo htmlspecialchars($usuario['nome']); ?>!</h1>
+                <h3>Bem-vindo, <?php echo htmlspecialchars($usuario['nome']); ?>!</h3>
             </div>
 
             <!-- Perfil -->
@@ -58,19 +58,20 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
                         </p>
                     <?php endif; ?>
                 </div>
+                <button onclick="window.location.href='./perfil.php'">Ver meu perfil</button>
             </div>
-
-            <button onclick="window.location.href='./perfil.php'">Ver meu perfil</button>
 
             <!-- Pesquisa -->
             <div class="signup-section" style="margin-top: 20px;">
+                <h3>Encontre seu tutor aqui!</h3>
+                <br>
                 <input type="text" placeholder="Pesquise por tutores..." />
                 <button>Pesquisar</button>
             </div>
 
             <!-- Aulas -->
             <div class="signup-section" style="margin-top: 30px;">
-                <h2>Aulas em andamento:</h2>
+                <h3>Aulas em andamento:</h3>
                 <!-- Conteúdo das aulas será inserido aqui -->
             </div>
 
