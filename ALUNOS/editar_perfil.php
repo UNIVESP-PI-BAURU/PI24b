@@ -36,62 +36,64 @@ require_once 'proc_editar_perfil.php';
 </nav>
 
 <!-- Conteúdo Principal -->
-<main class="main-content">
-    <section class="perfil-section">
-        <h1>Editar Perfil de <?php echo ($tipo_usuario === 'tutor' ? "Tutor(a)" : "Aluno(a)"); ?></h1>
+<div class="main-content">
 
-        <form class="perfil-form" action="proc_editar_perfil.php" method="post">
-            <input type="hidden" name="id_usuario" value="<?php echo htmlspecialchars($id_usuario); ?>">
+    <div class="perfil-section">
+        <h2>Editar Perfil</h2>
 
+        <!-- Formulário de Edição de Perfil -->
+        <form class="perfil-form" action="proc_editar_perfil.php" method="post" enctype="multipart/form-data">
+
+            <!-- Campo para nome -->
             <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($usuario['nome']); ?>" required>
+            <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($nome); ?>" required>
 
+            <!-- Campo para email -->
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" required>
+            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
 
+            <!-- Campo para cidade -->
             <label for="cidade">Cidade:</label>
-            <input type="text" id="cidade" name="cidade" value="<?php echo htmlspecialchars($usuario['cidade']); ?>">
+            <input type="text" id="cidade" name="cidade" value="<?php echo htmlspecialchars($cidade); ?>">
 
+            <!-- Campo para estado -->
             <label for="estado">Estado:</label>
-            <input type="text" id="estado" name="estado" value="<?php echo htmlspecialchars($usuario['estado']); ?>">
+            <input type="text" id="estado" name="estado" value="<?php echo htmlspecialchars($estado); ?>">
 
-            <label for="data_nascimento">Data de Nascimento:</label>
-            <input type="date" id="data_nascimento" name="data_nascimento" value="<?php echo htmlspecialchars($usuario['data_nascimento']); ?>">
+            <!-- Campo para foto de perfil -->
+            <label for="foto_perfil">Foto de Perfil:</label>
+            <input type="file" id="foto_perfil" name="foto_perfil" accept="image/*">
 
-            <label for="biografia">Biografia:</label>
-            <textarea id="biografia" name="biografia"><?php echo htmlspecialchars($usuario['biografia']); ?></textarea>
+            <!-- Idiomas -->
+            <div id="idiomas">
+                <label for="idioma">Idioma:</label>
+                <input type="text" id="idioma" name="idiomas[]" value="<?php echo htmlspecialchars($idiomas[0]); ?>" required>
+                <button type="button" onclick="addCampoIdioma()">Adicionar mais um</button>
+            </div>
 
-            <label for="idiomas">Idiomas:</label>
-                <div id="idiomas">
-                    <input type="text" name="idiomas[]" placeholder="Adicione um idioma" required>
-                    <button type="button" onclick="addCampoIdioma()">Adicionar mais um</button>
-                </div>
+            <!-- Botão submeter -->
+            <button type="submit" name="atualizar">Atualizar</button>
 
-            <button type="submit">Salvar</button>
         </form>
+    </div>
 
-        <button onclick="window.location.href='./perfil.php'">Cancelar</button>
-    </section>
-</main>
+</div>
 
 <!-- Rodapé -->
-<footer class="footer">
-    <p>UNIVESP PI 2024</p>
-</footer>
+<div class="footer">
+    UNIVESP PI 2024
+</div>
 
-
-<!-- JS para campo idiomas, add mais idioma -->
+<!-- Scripts -->
 <script>
-function addCampoIdioma() {
-    var idiomasDiv = document.getElementById("idiomas");
-    var newInput = document.createElement("input");
-    newInput.type = "text";
-    newInput.name = "idiomas[]";
-    newInput.placeholder = "Adicione um idioma";
-    idiomasDiv.appendChild(newInput);
-}
+    function addCampoIdioma() {
+        var divIdiomas = document.getElementById('idiomas');
+        var novoCampo = document.createElement('div');
+        novoCampo.innerHTML = '<label for="idioma">Idioma:</label>' +
+                              '<input type="text" name="idiomas[]" required>';
+        divIdiomas.appendChild(novoCampo);
+    }
 </script>
-
 
 </body>
 </html>
