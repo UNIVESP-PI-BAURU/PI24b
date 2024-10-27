@@ -14,6 +14,8 @@ $tipo_usuario = isset($_SESSION['id_aluno']) ? 'aluno' : 'tutor';
 $id_usuario = $_SESSION['id_' . $tipo_usuario];
 $tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
 
+echo "<!-- Debug: tipo_usuario = $tipo_usuario, id_usuario = $id_usuario -->"; // Mensagem de depuração
+
 // Consulta os dados do usuário
 $sql = "SELECT nome, foto_perfil, cidade, estado FROM $tabela_usuario WHERE id = :id";
 $stmt = $conn->prepare($sql);
@@ -28,3 +30,4 @@ if (!$usuario) {
 }
 
 // O array $usuario agora está disponível para uso na dashboard
+echo "<!-- Debug: usuario encontrado = " . json_encode($usuario) . " -->"; // Mensagem de depuração

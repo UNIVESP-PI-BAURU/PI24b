@@ -1,5 +1,10 @@
 <?php
 require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
+
+// Mensagem de depuração para verificar se $usuario está definido
+if (!isset($usuario)) {
+    echo "<!-- Debug: Usuario não está definido. -->";
+}
 ?>
 
 <!DOCTYPE html>
@@ -35,7 +40,7 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
 
             <!-- Saudação -->
             <div class="saudacao">
-                <h1>Bem-vindo, <?php echo htmlspecialchars($usuario['nome']); ?>!</h1>
+                <h1>Bem-vindo, <?php echo isset($usuario) ? htmlspecialchars($usuario['nome']) : 'Usuário'; ?>!</h1>
             </div>
 
             <!-- Perfil -->
