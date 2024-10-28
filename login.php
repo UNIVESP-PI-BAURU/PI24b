@@ -43,16 +43,19 @@
 
             <!-- Formulário de Login -->
             <form method="POST" action="proc_login.php">
+                
                 <!-- Tipo de Usuário -->
                 <div class="user-type">
                     <div>
                         <input type="radio" id="aluno" name="tipo_usuario" value="aluno" checked>
                         <label for="aluno">Aluno</label>
-
+                    </div>
+                    <div>
                         <input type="radio" id="tutor" name="tipo_usuario" value="tutor">
                         <label for="tutor">Tutor</label>
                     </div>
                 </div>
+
 
                 <!-- Campos de Login -->
                 <label for="email">Email:</label>
