@@ -66,10 +66,9 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
             <!-- Pesquisa -->
             <div class="signup-section" style="margin-top: 20px;">
                 <h3>Encontre seu tutor aqui!</h3>
-                <br>
-                <input type="text" placeholder="Pesquise por tutores..." />
-                <button>Pesquisar</button>
+                <button onclick="window.location.href='./pesquisa_tutores.php'">Pesquisar Tutores</button>
             </div>
+
 
             <!-- Aulas -->
             <div class="signup-section" style="margin-top: 30px;">
