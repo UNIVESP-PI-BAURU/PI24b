@@ -1,7 +1,7 @@
 <?php
 // Inicia a sessão e verifica login
 session_start();
-if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
+if (!isset($_SESSION['id_tutor'])) {
     header("Location: ../login.php");
     exit();
 }
@@ -14,7 +14,7 @@ require_once 'proc_perfil.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil</title>
+    <title>Perfil do Tutor</title>
     <link rel="stylesheet" href="../ASSETS/CSS/style.css">
 </head>
 <body>
@@ -28,18 +28,13 @@ require_once 'proc_perfil.php';
 <nav class="navbar">
     <a href="../index.php">Home</a>
     <a href="../sobre_nos.php">Sobre nós</a>
-    <?php if (isset($_SESSION['id_aluno']) || isset($_SESSION['id_tutor'])): ?>
-        <a href="../logout.php">Logout</a>
-    <?php else: ?>
-        <a href="../login.php">Login</a>
-    <?php endif; ?>
+    <a href="../logout.php">Logout</a>
 </nav>
 
 <!-- Conteúdo Principal -->
 <main class="main-content">
-
     <div class="signup-section">
-        <h2>Perfil de <?php echo ($tipo_usuario === 'tutor' ? "Tutor(a)" : "Aluno(a)"); ?>: <?php echo htmlspecialchars($usuario['nome']); ?></h2>
+        <h2>Perfil do Tutor: <?php echo htmlspecialchars($usuario['nome']); ?></h2>
 
         <div class="foto-perfil">
             <div class="foto-moldura-perfil">
@@ -64,9 +59,8 @@ require_once 'proc_perfil.php';
             <button onclick="if(confirm('Você tem certeza que deseja excluir sua conta?')) { window.location.href='excluir_conta.php'; }">Excluir Conta</button>
         </div>
 
-        <button onclick="window.location.href='./dashboard_aluno.php'">Voltar para Dashboard</button>
+        <button onclick="window.location.href='./dashboard_tutor.php'">Voltar para Dashboard</button>
     </div>
-
 </main>
 
 <!-- Rodapé -->

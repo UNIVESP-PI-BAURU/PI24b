@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesquisa de Tutores</title>
+    <title>Pesquisa de Alunos</title>
     <link rel="stylesheet" href="ASSETS/CSS/style.css">
 </head>
 
@@ -23,16 +23,16 @@
     </nav>
     <!-- fim Navegação -->
 
-    <!-- Pesquisa de Tutores -->
+    <!-- Pesquisa de Alunos -->
     <div class="main-content">
         <div class="signup-section">
-            <h2>Pesquisar Tutores</h2>
-            <form class="signup-form" method="POST" action="resultado_tutores.php">
-                <input type="text" name="cidade" placeholder="Cidade..."  />
+            <h2>Pesquisar Alunos</h2>
+            <form class="signup-form" method="POST" action="resultado_alunos.php">
+                <input type="text" name="cidade" placeholder="Cidade..." />
                 <br>
-                <input type="text" name="estado" placeholder="Estado..."  />
+                <input type="text" name="estado" placeholder="Estado..." />
                 <br>
-                <input type="text" name="idioma" placeholder="Idioma..."  />
+                <input type="text" name="idioma" placeholder="Idioma..." />
                 <br>
                 <button type="submit">Pesquisar</button>
             </form>

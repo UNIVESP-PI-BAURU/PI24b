@@ -12,13 +12,15 @@ if (!$conn) {
     die("Falha na conexão com o banco de dados.");
 }
 
-// Identifica o tipo de usuário e obtém o ID
+// Identifica o tipo de usuário e define a tabela correspondente
 $tipo_usuario = isset($_SESSION['id_aluno']) ? 'aluno' : 'tutor';
 $id_usuario = $_SESSION['id_' . $tipo_usuario];
+$tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
+$tabela_idioma = ($tipo_usuario === 'aluno') ? 'IdiomaAluno' : 'IdiomaTutor';
 
 // Recupera os dados do usuário
 $sql = "SELECT nome, email, cidade, estado, data_nascimento, biografia 
-        FROM Alunos WHERE id = :id";
+        FROM $tabela_usuario WHERE id = :id";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':id', $id_usuario);
 $stmt->execute();
@@ -32,9 +34,9 @@ $data_nascimento = $usuario['data_nascimento'];
 $biografia = $usuario['biografia'];
 
 // Recupera os idiomas do usuário
-$sql_idiomas = "SELECT idioma FROM IdiomaAluno WHERE id_aluno = :id_aluno";
+$sql_idiomas = "SELECT idioma FROM $tabela_idioma WHERE id_{$tipo_usuario} = :id_usuario";
 $stmt_idiomas = $conn->prepare($sql_idiomas);
-$stmt_idiomas->bindParam(':id_aluno', $id_usuario);
+$stmt_idiomas->bindParam(':id_usuario', $id_usuario);
 $stmt_idiomas->execute();
 $idiomas = $stmt_idiomas->fetchAll(PDO::FETCH_COLUMN);
 
@@ -48,22 +50,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $biografia = $_POST['biografia'];
     
     // Atualiza os dados pessoais
-    $sql_update = "UPDATE Alunos SET nome = ?, email = ?, cidade = ?, estado = ?, data_nascimento = ?, biografia = ? WHERE id = ?";
+    $sql_update = "UPDATE $tabela_usuario 
+                   SET nome = ?, email = ?, cidade = ?, estado = ?, data_nascimento = ?, biografia = ? 
+                   WHERE id = ?";
     $stmt_update = $conn->prepare($sql_update);
     $stmt_update->execute([$nome, $email, $cidade, $estado, $data_nascimento, $biografia, $id_usuario]);
 
-    // Recupera os idiomas do usuário
-    $idiomas = array_map('trim', $_POST['idiomas']); // Obtém todos os idiomas
+    // Recupera os idiomas do formulário
+    $idiomas = array_map('trim', $_POST['idiomas']);
 
     // Remove os idiomas antigos
-    $sql_delete = "DELETE FROM IdiomaAluno WHERE id_aluno = ?";
+    $sql_delete = "DELETE FROM $tabela_idioma WHERE id_{$tipo_usuario} = ?";
     $stmt_delete = $conn->prepare($sql_delete);
     $stmt_delete->execute([$id_usuario]);
 
     // Insere os novos idiomas
     foreach ($idiomas as $idioma) {
-        if (!empty($idioma)) { // Verifica se o idioma não está vazio
-            $sql_insert = "INSERT INTO IdiomaAluno (id_aluno, idioma) VALUES (?, ?)";
+        if (!empty($idioma)) {
+            $sql_insert = "INSERT INTO $tabela_idioma (id_{$tipo_usuario}, idioma) VALUES (?, ?)";
             $stmt_insert = $conn->prepare($sql_insert);
             $stmt_insert->execute([$id_usuario, $idioma]);
         }

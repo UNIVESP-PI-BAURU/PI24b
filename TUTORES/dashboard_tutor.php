@@ -35,7 +35,7 @@ require_once 'proc_dashboard_tutor.php'; // Importa a lógica da dashboard do tu
 
             <!-- Saudação -->
             <div class="signup-section">
-                <h3>Bem-vindo, <?php echo htmlspecialchars($usuario['nome']); ?>!</h3>
+                <h3>Bem-vindo (a), tutor(a) <?php echo htmlspecialchars($usuario['nome']); ?>!</h3>
             </div>
 
             <!-- Perfil -->
