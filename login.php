@@ -48,8 +48,7 @@
                     <div>
                         <input type="radio" id="aluno" name="tipo_usuario" value="aluno" checked>
                         <label for="aluno">Aluno</label>
-                    </div>
-                    <div>
+
                         <input type="radio" id="tutor" name="tipo_usuario" value="tutor">
                         <label for="tutor">Tutor</label>
                     </div>
