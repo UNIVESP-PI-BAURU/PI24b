@@ -236,3 +236,15 @@ button:hover, .signup-button:hover {
     border-radius: 50%; /* Bordas arredondadas da imagem */
 }
 
+/* paginas de resultados da pesquisa aluno ou tutor */
+.pagination a {
+    text-decoration: none;
+    padding: 8px 12px;
+    color: #007bff; /* Cor padrão para links */
+}
+
+.pagination a.active {
+    background-color: #007bff; /* Cor de fundo para a página ativa */
+    color: white; /* Cor do texto para contraste */
+    border-radius: 4px; /* Bordas arredondadas */
+}
