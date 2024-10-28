@@ -39,7 +39,7 @@
 
     <!-- Main (conteúdo) -->
     <div class="main-content">
-        <div class="login-section">
+        <div class="signup-section">
             <h2>Entrar</h2>
             
             <!-- Início form login -->
