@@ -215,3 +215,22 @@ button:hover, .signup-button:hover {
     height: 150px; /* Altura da imagem */
     border-radius: 50%; /* Bordas arredondadas da imagem */
 }
+
+
+/* No dashboard, o resumo do perfil */
+.foto-moldura {
+    width: 65px; /* Largura da moldura */
+    height: 90px; /* Altura da moldura */
+    border: 2px solid #ccc; /* Borda da moldura */
+    border-radius: 10px; /* Bordas arredondadas */
+    display: flex;
+    align-items: center; /* Centraliza verticalmente o conteúdo */
+    justify-content: center; /* Centraliza horizontalmente o conteúdo */
+    background-color: #f9f9f9; /* Cor de fundo para a moldura */
+}
+
+.avatar-dashboard {
+    width: 60px; /* Largura da imagem do avatar */
+    height: 80px; /* Altura da imagem do avatar */
+    border-radius: 50%; /* Bordas arredondadas da imagem */
+}

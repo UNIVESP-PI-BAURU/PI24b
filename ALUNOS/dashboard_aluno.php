@@ -41,16 +41,18 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
             <!-- Perfil -->
             <div class="signup-section" style="display: flex; align-items: center; margin-bottom: 20px;">
                 <div style="flex: 1;">
-                    <?php if (!empty($usuario['foto_perfil'])): ?>
-                        <img src="<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" 
-                             alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%;">
-                    <?php else: ?>
-                        <p>Sem foto</p>
-                    <?php endif; ?>
+                    <div class="foto-moldura">
+                        <?php if (!empty($usuario['foto_perfil'])): ?>
+                            <img src="<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" 
+                                alt="Avatar" class="avatar-dashboard">
+                        <?php else: ?>
+                            <p>Sem foto</p>
+                        <?php endif; ?>
+                    </div>
                 </div>
                 <div style="flex: 2; padding-left: 10px;">
                     <p><?php echo ($tipo_usuario === "tutor" ? "Tutor(a): " : "Aluno(a): ") . 
-                                 htmlspecialchars($usuario['nome']); ?></p>
+                                    htmlspecialchars($usuario['nome']); ?></p>
                     <?php if (!empty($usuario['cidade']) || !empty($usuario['estado'])): ?>
                         <p>
                             <?php echo htmlspecialchars($usuario['cidade']) ? htmlspecialchars($usuario['cidade']) . ', ' : ''; ?>
@@ -61,6 +63,7 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
                 <br>
                 <button onclick="window.location.href='./perfil.php'">Ver meu perfil</button>
             </div>
+
 
             <!-- Pesquisa -->
             <div class="signup-section" style="margin-top: 20px;">
