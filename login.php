@@ -20,7 +20,6 @@
         <a href="./sobre_nos.php">Sobre nós</a>
         <a href="./cadastro.html">Cadastro</a>
     </nav>
-    <!-- fim Navegação -->
 
     <!-- Mensagens de erro ou sucesso -->
     <div class="message-area">
@@ -28,11 +27,11 @@
         session_start();
         if (isset($_SESSION['success'])) {
             echo "<div class='success'>{$_SESSION['success']}</div>";
-            unset($_SESSION['success']); // Limpa a mensagem após exibir
+            unset($_SESSION['success']);
         }
         if (isset($_SESSION['error'])) {
             echo "<div class='error'>{$_SESSION['error']}</div>";
-            unset($_SESSION['error']); // Limpa a mensagem após exibir
+            unset($_SESSION['error']);
         }
         ?>
     </div>
@@ -41,34 +40,31 @@
     <div class="main-content">
         <div class="signup-section">
             <h2>Entrar</h2>
-            
-            <!-- Início form login -->
-            <form method="POST" action="proc_login.php">
 
-                <!-- Início escolher tipo de usuário -->
-                <div>
-                    <input type="radio" id="aluno" name="tipo_usuario" value="aluno" checked>
-                    <label for="aluno">Aluno</label>
-                    <br>
-                    <input type="radio" id="tutor" name="tipo_usuario" value="tutor">
-                    <label for="tutor">Tutor</label>
+            <!-- Formulário de Login -->
+            <form method="POST" action="proc_login.php">
+                <!-- Tipo de Usuário -->
+                <div class="user-type">
+                    <div>
+                        <input type="radio" id="aluno" name="tipo_usuario" value="aluno" checked>
+                        <label for="aluno">Aluno</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="tutor" name="tipo_usuario" value="tutor">
+                        <label for="tutor">Tutor</label>
+                    </div>
                 </div>
-                <!-- Fim escolher tipo de usuário -->
-                <br>
-                <!-- Início campos -->
-                <div>
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
-                    <br><br>
-                    <label for="senha">Senha:</label>
-                    <input type="password" id="senha" name="senha" required>
-                </div>
-                <!-- Fim campos -->
-                <br>
-                <!-- Botão submeter -->
-                <button class="login-button" type="submit" name="login">Login</button>
+
+                <!-- Campos de Login -->
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="senha">Senha:</label>
+                <input type="password" id="senha" name="senha" required>
+
+                <!-- Botão de Login -->
+                <button type="submit" name="login" class="login-button">Login</button>
             </form>
-            <!-- Fim form login -->
         </div>
     </div>
 
@@ -77,7 +73,6 @@
         UNIVESP PI 2024
     </div>
 
-    <!-- Scripts -->
     <script>
         // Scripts adicionais, se necessário
     </script>
