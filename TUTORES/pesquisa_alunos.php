@@ -23,17 +23,38 @@
     </nav>
     <!-- fim Navegação -->
 
-    <!-- Pesquisa de Alunos -->
-    <div class="main-content">
+   <!-- Pesquisa de Alunos -->
+   <div class="main-content">
         <div class="signup-section">
             <h2>Pesquisar Alunos</h2>
-            <form class="signup-form" method="POST" action="resultado_alunos.php">
-                <input type="text" name="cidade" placeholder="Cidade..." />
-                <br>
-                <input type="text" name="estado" placeholder="Estado..." />
-                <br>
-                <input type="text" name="idioma" placeholder="Idioma..." />
-                <br>
+            <form class="signup-form" method="POST" action="proc_pesquisa_alunos.php">
+                <h3>Cidades:</h3>
+                <?php
+                // Recuperar cidades únicas do banco de dados
+                $cidades = $conn->query("SELECT DISTINCT cidade FROM Alunos")->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($cidades as $cidade) {
+                    echo '<label><input type="checkbox" name="cidades[]" value="' . htmlspecialchars($cidade['cidade']) . '">' . htmlspecialchars($cidade['cidade']) . '</label><br>';
+                }
+                ?>
+
+                <h3>Estados:</h3>
+                <?php
+                // Recuperar estados únicos do banco de dados
+                $estados = $conn->query("SELECT DISTINCT estado FROM Alunos")->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($estados as $estado) {
+                    echo '<label><input type="checkbox" name="estados[]" value="' . htmlspecialchars($estado['estado']) . '">' . htmlspecialchars($estado['estado']) . '</label><br>';
+                }
+                ?>
+
+                <h3>Idiomas:</h3>
+                <?php
+                // Recuperar idiomas únicos do banco de dados
+                $idiomas = $conn->query("SELECT DISTINCT idioma FROM IdiomaAluno")->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($idiomas as $idioma) {
+                    echo '<label><input type="checkbox" name="idiomas[]" value="' . htmlspecialchars($idioma['idioma']) . '">' . htmlspecialchars($idioma['idioma']) . '</label><br>';
+                }
+                ?>
+
                 <button type="submit">Pesquisar</button>
             </form>
         </div>

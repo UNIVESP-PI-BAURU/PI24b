@@ -11,15 +11,15 @@ require_once '../conexao.php';
 // Dados da sessão
 $tutores_resultados = $_SESSION['tutores_resultados'] ?? null;
 $erro_consulta = $_SESSION['erro_consulta'] ?? null;
-$total_registros = $_SESSION['total_registros'] ?? 0;
+$total_resultados = $_SESSION['total_paginas'] ?? 0; // Corrigido para pegar o total de páginas
 $limite = 10;
 
 // Calcula o total de páginas
-$total_paginas = ceil($total_registros / $limite);
+$total_paginas = ceil($total_resultados / $limite);
 $pagina_atual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
 
 // Limpa a sessão
-unset($_SESSION['tutores_resultados'], $_SESSION['erro_consulta'], $_SESSION['total_registros']);
+unset($_SESSION['tutores_resultados'], $_SESSION['erro_consulta'], $_SESSION['total_paginas']);
 ?>
 
 <!DOCTYPE html>
