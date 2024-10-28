@@ -41,21 +41,24 @@ unset($_SESSION['erro_consulta']);
     </nav>
 
     <!-- Conteúdo Principal -->
-    <main class="main-content">
-        <h2>Resultados da Pesquisa</h2>
+    <div class="main-content">
+
+        <div class="signup-section">
+            <h2>Resultados da Pesquisa</h2>
         
-        <?php if ($erro_consulta): ?>
-            <p><?php echo htmlspecialchars($erro_consulta); ?></p>
-        <?php elseif ($tutores_resultados && $tutores_resultados->num_rows > 0): ?>
-            <ul>
-                <?php while ($row = $tutores_resultados->fetch_assoc()): ?>
-                    <li><?php echo htmlspecialchars($row['nome']) . " - " . htmlspecialchars($row['cidade']) . ", " . htmlspecialchars($row['estado']) . " (" . htmlspecialchars($row['idioma']) . ")"; ?></li>
-                <?php endwhile; ?>
-            </ul>
-        <?php else: ?>
-            <p>Desculpe, não localizamos registros com estes dados. Favor tentar novamente.</p>
-        <?php endif; ?>
-    </main>
+            <?php if ($erro_consulta): ?>
+                <p><?php echo htmlspecialchars($erro_consulta); ?></p>
+            <?php elseif ($tutores_resultados && $tutores_resultados->num_rows > 0): ?>
+                <ul>
+                    <?php while ($row = $tutores_resultados->fetch_assoc()): ?>
+                        <li><?php echo htmlspecialchars($row['nome']) . " - " . htmlspecialchars($row['cidade']) . ", " . htmlspecialchars($row['estado']) . " (" . htmlspecialchars($row['idioma']) . ")"; ?></li>
+                    <?php endwhile; ?>
+                </ul>
+            <?php else: ?>
+                <p>Desculpe, não localizamos registros com estes dados. Favor tentar novamente.</p>
+            <?php endif; ?>
+        </div>
+    </div>
 
     <!-- Rodapé -->
     <footer class="footer">
