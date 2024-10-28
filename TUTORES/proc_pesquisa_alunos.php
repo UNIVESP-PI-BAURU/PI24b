@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Verifica se o usuário está logado e redireciona para login se não estiver
+// Verifica se o usuário está logado e redireciona para o login se não estiver
 if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
     header("Location: ../login.php");
     exit();
@@ -13,26 +13,28 @@ require_once '../conexao.php'; // Inclui a conexão com o banco de dados
 $tipo_usuario = isset($_SESSION['id_aluno']) ? 'aluno' : 'tutor';
 $id_usuario = $_SESSION['id_' . $tipo_usuario];
 
-// Coleta os dados do formulário
+// Coleta os dados do formulário e remove espaços em excesso
 $cidade = isset($_POST['cidade']) ? trim($_POST['cidade']) : '';
 $estado = isset($_POST['estado']) ? trim($_POST['estado']) : '';
 $idioma = isset($_POST['idioma']) ? trim($_POST['idioma']) : '';
 
-// Cria a consulta SQL
-$sql = "SELECT a.nome, a.cidade, a.estado, ia.idioma 
-        FROM Alunos a
-        JOIN IdiomaAluno ia ON a.id_aluno = ia.id_aluno
-        WHERE 1=1";
+// Cria a consulta SQL inicial
+$sql = "
+    SELECT a.nome, a.cidade, a.estado, ia.idioma 
+    FROM Alunos a
+    JOIN IdiomaAluno ia ON a.id_aluno = ia.id_aluno
+    WHERE 1=1
+";
 
-// Adiciona condições com base nos filtros fornecidos
+// Adiciona filtros dinamicamente, aplicando `LOWER` e `TRIM` para comparação flexível
 if (!empty($cidade)) {
-    $sql .= " AND a.cidade LIKE :cidade";
+    $sql .= " AND LOWER(TRIM(a.cidade)) LIKE LOWER(TRIM(:cidade))";
 }
 if (!empty($estado)) {
-    $sql .= " AND a.estado LIKE :estado";
+    $sql .= " AND LOWER(TRIM(a.estado)) LIKE LOWER(TRIM(:estado))";
 }
 if (!empty($idioma)) {
-    $sql .= " AND ia.idioma LIKE :idioma";
+    $sql .= " AND LOWER(TRIM(ia.idioma)) LIKE LOWER(TRIM(:idioma))";
 }
 
 // Prepara e executa a consulta
