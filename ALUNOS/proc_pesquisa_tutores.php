@@ -37,22 +37,17 @@ if (!empty($idioma)) {
 // Executar a consulta
 $result = $conn->query($sql);
 
-// Verificar e exibir os resultados
+// Redirecionar para a página de resultados
 if ($result) {
-    if ($result->num_rows > 0) {
-        echo "<h3>Resultados da Pesquisa:</h3>";
-        echo "<ul>";
-        while ($row = $result->fetch_assoc()) {
-            echo "<li>" . htmlspecialchars($row['nome']) . " - " . htmlspecialchars($row['cidade']) . ", " . htmlspecialchars($row['estado']) . " (" . htmlspecialchars($row['idioma']) . ")</li>";
-        }
-        echo "</ul>";
-    } else {
-        // Mensagem quando não há resultados
-        echo "<p>Desculpe, não localizamos registros com estes dados. Favor tentar novamente.</p>";
-    }
+    // Salvar os resultados na sessão
+    $_SESSION['tutores_resultados'] = $result;
+    header("Location: resultado_tutores.php");
+    exit();
 } else {
-    // Mensagem de erro na execução da consulta
-    echo "<p>Ocorreu um erro ao executar a consulta. Tente novamente mais tarde.</p>";
+    // Se houver erro, redirecionar com mensagem de erro
+    $_SESSION['erro_consulta'] = "Ocorreu um erro ao executar a consulta. Tente novamente mais tarde.";
+    header("Location: resultado_tutores.php");
+    exit();
 }
 
 // Fechar a conexão
