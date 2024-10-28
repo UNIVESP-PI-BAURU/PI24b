@@ -45,12 +45,14 @@
             <form method="POST" action="proc_login.php">
                 <!-- Tipo de Usuário -->
                 <div class="user-type">
-                    <div>
-                        <input type="radio" id="aluno" name="tipo_usuario" value="aluno" checked>
+                    <div class="radio-option">
                         <label for="aluno">Aluno</label>
+                        <input type="radio" id="aluno" name="tipo_usuario" value="aluno" checked>
+                    </div>
 
-                        <input type="radio" id="tutor" name="tipo_usuario" value="tutor">
+                    <div class="radio-option">
                         <label for="tutor">Tutor</label>
+                        <input type="radio" id="tutor" name="tipo_usuario" value="tutor">
                     </div>
                 </div>
 

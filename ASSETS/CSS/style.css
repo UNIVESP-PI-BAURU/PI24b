@@ -20,7 +20,7 @@
     font-weight: bold;
 }
 
-/* Reset básico */
+/* Configuração geral do corpo */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -28,20 +28,20 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #f5f5f5;
 }
 
-/* Header */
+/* Estilo do cabeçalho */
 .header {
     text-align: center;
 }
+
 .header img {
     max-width: 100%;
     height: auto;
     display: inline-block;
 }
 
-/* Navbar */
+/* Barra de navegação */
 .navbar {
     display: flex;
     justify-content: space-around;
@@ -49,117 +49,52 @@ body {
     padding: 1rem;
     width: 100%;
 }
+
 .navbar a {
     color: white;
     text-decoration: none;
     padding: 14px 20px;
     display: block;
 }
+
 .navbar a:hover {
     background-color: #575757;
     border-radius: 4px;
 }
 
-/* Main Content */
+/* Área principal de conteúdo */
 .main-content {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     width: 100%;
-    max-width: 1200px;
+    max-width: 600px;
+    margin-top: 2rem;
     padding: 2rem;
     box-sizing: border-box;
 }
 
-/* Form Sections */
+/* Seção de login e cadastro */
 .signup-section {
-    padding: 2rem;
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 90%;
+    width: 100%;
     max-width: 400px;
-    box-sizing: border-box;
-    margin-top: 2rem;
+    padding: 2rem;
 }
+
 .signup-section h2 {
     text-align: center;
     margin-bottom: 1rem;
 }
-.signup-section input {
-    width: 100%;
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-}
 
-/* Botões */
-button, .signup-button {
-    padding: 0.5rem 1rem;
-    background-color: #333;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    margin-top: 1rem;
-}
-button:hover, .signup-button:hover {
-    background-color: #575757;
-}
-
-/* User Type Radio Buttons */
-.user-type {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 1rem;
-}
-
-/* Carrossel */
-.carousel {
-    margin-top: 30px;
-    position: relative;
-    width: 100%;
-    max-width: 580px;
-    overflow: hidden;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-}
-.carousel .slides {
-    display: flex;
-    transition: transform 1s ease;
-}
-.carousel .slide {
-    min-width: 100%;
-}
-.carousel img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-/* Rodapé */
-.footer {
-    display: flex;
-    justify-content: center;
-    background-color: #333;
-    color: white;
-    padding: 1rem;
-    width: 100%;
-    margin-top: auto;
-}
-
-/* Formulário de Login */
+/* Formulário de login */
 .login-form {
     display: flex;
     flex-direction: column;
 }
+
 .login-form input {
     padding: 0.5rem;
     margin-bottom: 1rem;
@@ -168,9 +103,58 @@ button:hover, .signup-button:hover {
     font-size: 16px;
 }
 
-/* Área de Mensagens */
-.message-area {
-    width: 90%;
-    max-width: 400px;
-    margin-top: 1rem;
+/* Botão de login */
+button {
+    padding: 0.75rem 1rem;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #575757;
+}
+
+/* Estilo para links */
+.login-form a {
+    color: #333;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+.login-form a:hover {
+    text-decoration: underline;
+}
+
+/* Estilo do tipo de usuário */
+.user-type {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.radio-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.radio-option input[type="radio"] {
+    margin-top: 5px;
+}
+
+/* Rodapé */
+.footer {
+    display: flex;
+    justify-content: center;
+    background-color: #333;
+    color: #fff;
+    padding: 2rem;
+    width: 100%;
+    margin-top: auto;
 }
