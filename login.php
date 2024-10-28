@@ -66,7 +66,7 @@
                 <!-- Fim campos -->
                 <br>
                 <!-- Botão submeter -->
-                <button type="submit" name="login">Login</button>
+                <button class="login-button" type="submit" name="login">Login</button>
             </form>
             <!-- Fim form login -->
         </div>
