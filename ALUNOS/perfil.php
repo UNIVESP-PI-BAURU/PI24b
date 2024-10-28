@@ -42,15 +42,14 @@ require_once 'proc_perfil.php';
         <h2>Perfil de <?php echo ($tipo_usuario === 'tutor' ? "Tutor(a)" : "Aluno(a)"); ?>: <?php echo htmlspecialchars($usuario['nome']); ?></h2>
 
         <div class="foto-perfil">
-            <div class="foto-moldura">
+            <div class="foto-moldura-perfil">
                 <?php if (!empty($usuario['foto_perfil'])): ?>
-                    <img src="<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Avatar" class="avatar">
+                    <img src="<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Avatar" class="avatar-perfil">
                 <?php else: ?>
                     <p>Sem foto</p>
                 <?php endif; ?>
             </div>
         </div>
-
 
         <div class="info-usuario">
             <p><strong>Email:</strong> <?php echo htmlspecialchars($usuario['email']); ?></p>
