@@ -10,12 +10,11 @@
 
 <body>
 
-    <!-- Inicia a sessão -->
     <?php session_start(); ?>
 
     <!-- Cabeçalho -->
     <header class="header">
-        <img src="ASSETS/IMG/capa.png">
+        <img src="ASSETS/IMG/capa.png" alt="Capa">
     </header>
 
     <!-- Navegação -->
@@ -24,34 +23,31 @@
         <a href="./sobre_nos.php">Sobre nós</a>
 
         <?php if (isset($_SESSION['id_aluno']) || isset($_SESSION['id_tutor'])): ?>
-            <!-- Usuário logado -->
-            <a href="./logout.php">Logout</a>
+            <a href="./logout.php" class="logout">Logout</a>
         <?php else: ?>
-            <!-- Usuário não logado -->
             <a href="./login.php">Login</a>
-            <a href="./cadastro.php">Cadastro</a>
+            <a href="./cadastro.html">Cadastro</a>
         <?php endif; ?>
     </nav>
-    <!-- fim Navegação -->
 
     <!-- Conteúdo Principal -->
     <main class="main-content">
-        <section class="welcome-text">
+        <section class="section">
             <h1>Bem-vindo à Conectando Interesses!</h1>
             <p>Aqui você encontra tudo para impulsionar seus estudos em línguas estrangeiras. Vai ficar fora dessa?</p>
-            <a href="./cadastro.php" class="signup-button">Cadastre-se já!</a>
+            <a href="./cadastro.html" class="signup-button">Cadastre-se já!</a>
         </section>
 
         <section class="carousel">
             <div class="slides">
                 <div class="slide">
-                    <img src="ASSETS/IMG/BANNER/1.png">
+                    <img src="ASSETS/IMG/BANNER/1.png" alt="Banner 1">
                 </div>
                 <div class="slide">
-                    <img src="ASSETS/IMG/BANNER/2.png">
+                    <img src="ASSETS/IMG/BANNER/2.png" alt="Banner 2">
                 </div>
                 <div class="slide">
-                    <img src="ASSETS/IMG/BANNER/3.png">
+                    <img src="ASSETS/IMG/BANNER/3.png" alt="Banner 3">
                 </div>
             </div>
         </section>
@@ -64,7 +60,6 @@
 
     <!-- Scripts -->
     <script>
-        // Carrossel JavaScript
         const slides = document.querySelector('.slides');
         const slideCount = document.querySelectorAll('.slide').length;
         let currentIndex = 0;
@@ -75,9 +70,8 @@
             slides.style.transform = `translateX(${offset}%)`;
         }
 
-        setInterval(showNextSlide, 3000); // Troca de imagem a cada 3 segundos
+        setInterval(showNextSlide, 3000);
     </script>
 
 </body>
-
 </html>
