@@ -39,15 +39,18 @@ require_once 'proc_perfil.php';
 <main class="main-content">
 
     <div class="signup-section">
-        <h1>Perfil de <?php echo ($tipo_usuario === 'tutor' ? "Tutor(a)" : "Aluno(a)"); ?>: <?php echo htmlspecialchars($usuario['nome']); ?></h1>
+        <h2>Perfil de <?php echo ($tipo_usuario === 'tutor' ? "Tutor(a)" : "Aluno(a)"); ?>: <?php echo htmlspecialchars($usuario['nome']); ?></h2>
 
         <div class="foto-perfil">
-            <?php if (!empty($usuario['foto_perfil'])): ?>
-                <img src="<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Avatar" style="width: 150px; height: 150px; border-radius: 50%;">
-            <?php else: ?>
-                <p>Sem foto</p>
-            <?php endif; ?>
+            <div class="foto-moldura">
+                <?php if (!empty($usuario['foto_perfil'])): ?>
+                    <img src="<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Avatar" class="avatar">
+                <?php else: ?>
+                    <p>Sem foto</p>
+                <?php endif; ?>
+            </div>
         </div>
+
 
         <div class="info-usuario">
             <p><strong>Email:</strong> <?php echo htmlspecialchars($usuario['email']); ?></p>

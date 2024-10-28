@@ -190,3 +190,28 @@ button:hover, .signup-button:hover {
     max-width: 400px;
     margin-top: 1rem;
 }
+
+
+/* No perfil, a foto do avatar */
+.foto-perfil {
+    display: flex;
+    justify-content: center; /* Centraliza a moldura na div */
+    margin-bottom: 1rem; /* Espaçamento abaixo da foto do perfil */
+}
+
+.foto-moldura {
+    width: 190px; /* Largura da moldura */
+    height: 220px; /* Altura da moldura */
+    border: 2px solid #ccc; /* Borda da moldura */
+    border-radius: 10px; /* Bordas arredondadas */
+    display: flex;
+    align-items: center; /* Centraliza verticalmente o conteúdo */
+    justify-content: center; /* Centraliza horizontalmente o conteúdo */
+    background-color: #f9f9f9; /* Cor de fundo para a moldura */
+}
+
+.avatar {
+    width: 150px; /* Largura da imagem */
+    height: 150px; /* Altura da imagem */
+    border-radius: 50%; /* Bordas arredondadas da imagem */
+}
