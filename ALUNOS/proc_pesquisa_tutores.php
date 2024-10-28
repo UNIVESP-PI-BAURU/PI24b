@@ -41,12 +41,12 @@ $result = $conn->query($sql);
 if ($result) {
     // Salvar os resultados na sessão
     $_SESSION['tutores_resultados'] = $result;
-    header("Location: resultado_tutores.php");
+    header("Location: resultado_tutores.php"); // Corrigido para a página correta
     exit();
 } else {
     // Se houver erro, redirecionar com mensagem de erro
     $_SESSION['erro_consulta'] = "Ocorreu um erro ao executar a consulta. Tente novamente mais tarde.";
-    header("Location: resultado_tutores.php");
+    header("Location: resultado_tutores.php"); // Também corrigido para a página correta
     exit();
 }
 
