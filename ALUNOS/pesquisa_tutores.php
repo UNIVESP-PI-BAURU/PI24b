@@ -27,12 +27,12 @@
     <div class="main-content">
         <div class="signup-section">
             <h2>Pesquisar Tutores</h2>
-            <form method="POST" action="resultado_tutores.php">
-                <input type="text" name="cidade" placeholder="Cidade..." />
+            <form class="signup-form" method="POST" action="resultado_tutores.php">
+                <input type="text" name="cidade" placeholder="Cidade..." required />
                 <br>
-                <input type="text" name="estado" placeholder="Estado..." />
+                <input type="text" name="estado" placeholder="Estado..." required />
                 <br>
-                <input type="text" name="idioma" placeholder="Idioma..." />
+                <input type="text" name="idioma" placeholder="Idioma..." required />
                 <br>
                 <button type="submit">Pesquisar</button>
             </form>
