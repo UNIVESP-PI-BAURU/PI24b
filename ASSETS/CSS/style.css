@@ -168,19 +168,17 @@ button:hover, .signup-button:hover {
     font-size: 16px;
 }
 .user-type {
-    display: flex; /* Faz o contêiner se comportar como flex */
-    justify-content: space-around; /* Distribui o espaço entre os itens */
-    align-items: center; /* Alinha os itens verticalmente ao centro */
-    margin-top: 1rem; /* Adiciona um espaço acima da seção */
+    display: flex; /* Alinha os itens em linha */
+    justify-content: center; /* Centraliza os botões de rádio horizontalmente */
+    margin-bottom: 1rem; /* Espaço abaixo do grupo de botões */
 }
 
 .user-type input[type="radio"] {
-    margin-right: 0.5rem; /* Espaço entre o botão de rádio e o label */
+    margin: 0 0.5rem; /* Margem lateral entre os botões */
 }
 
 .user-type label {
-    display: block; /* Faz com que o label ocupe uma linha inteira */
-    text-align: center; /* Centraliza o texto do label */
+    margin-right: 1rem; /* Margem à direita dos rótulos */
 }
 
 
