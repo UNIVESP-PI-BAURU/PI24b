@@ -59,9 +59,9 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
                             <?php echo htmlspecialchars($usuario['estado']) ? htmlspecialchars($usuario['estado']) : ''; ?>
                         </p>
                     <?php endif; ?>
+                    <br>
+                    <button onclick="window.location.href='./perfil.php'">Ver meu perfil</button>
                 </div>
-                <br>
-                <button onclick="window.location.href='./perfil.php'">Ver meu perfil</button>
             </div>
 
 
