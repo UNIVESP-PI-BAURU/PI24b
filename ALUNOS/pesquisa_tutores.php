@@ -26,7 +26,7 @@
     <!-- Pesquisa de Tutores -->
     <div class="signup-section" style="margin-top: 20px;">
         <h3>Pesquisar Tutores</h3>
-        <form method="POST" action="resultado_pesquisa.php">
+        <form method="POST" action="resultado_tutores.php">
             <input type="text" name="cidade" placeholder="Cidade..." />
             <input type="text" name="estado" placeholder="Estado..." />
             <input type="text" name="idioma" placeholder="Idioma..." />
