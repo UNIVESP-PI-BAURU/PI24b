@@ -29,7 +29,7 @@
         <?php else: ?>
             <!-- Usuário não logado -->
             <a href="./login.php">Login</a>
-            <a href="./cadastro.html">Cadastro</a>
+            <a href="./cadastro.php">Cadastro</a>
         <?php endif; ?>
     </nav>
     <!-- fim Navegação -->
@@ -39,7 +39,7 @@
         <section class="welcome-text">
             <h1>Bem-vindo à Conectando Interesses!</h1>
             <p>Aqui você encontra tudo para impulsionar seus estudos em línguas estrangeiras. Vai ficar fora dessa?</p>
-            <a href="./cadastro.html" class="signup-button">Cadastre-se já!</a>
+            <a href="./cadastro.php" class="signup-button">Cadastre-se já!</a>
         </section>
 
         <section class="carousel">

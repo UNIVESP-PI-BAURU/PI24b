@@ -8,42 +8,52 @@ $cidade = isset($_POST['cidade']) ? trim($_POST['cidade']) : '';
 $estado = isset($_POST['estado']) ? trim($_POST['estado']) : '';
 $idioma = isset($_POST['idioma']) ? trim($_POST['idioma']) : '';
 
-// Bloco try-catch para capturar erros
 try {
-    // Query corrigida
-    $sql = "SELECT a.nome, a.cidade, a.estado, ia.idioma
-            FROM Alunos a
-            LEFT JOIN IdiomaAluno ia ON a.id_aluno = ia.id_aluno
-            WHERE 1=1";
+    // Inicializa um array para armazenar resultados
+    $resultados = [];
 
-    // Adiciona os filtros à query
+    // Consulta para cidade
     if (!empty($cidade)) {
-        $sql .= " AND LOWER(TRIM(a.cidade)) LIKE LOWER(TRIM(:cidade))";
+        $sqlCidade = "SELECT id, nome, cidade, estado FROM Alunos WHERE LOWER(TRIM(cidade)) LIKE LOWER(TRIM(:cidade))";
+        $stmtCidade = $conn->prepare($sqlCidade);
+        $stmtCidade->bindValue(':cidade', "%$cidade%", PDO::PARAM_STR);
+        $stmtCidade->execute();
+        $resultadosCidade = $stmtCidade->fetchAll(PDO::FETCH_ASSOC);
+        $resultados = array_merge($resultados, $resultadosCidade);
     }
+
+    // Consulta para estado
     if (!empty($estado)) {
-        $sql .= " AND LOWER(TRIM(a.estado)) LIKE LOWER(TRIM(:estado))";
+        $sqlEstado = "SELECT id, nome, cidade, estado FROM Alunos WHERE LOWER(TRIM(estado)) LIKE LOWER(TRIM(:estado))";
+        $stmtEstado = $conn->prepare($sqlEstado);
+        $stmtEstado->bindValue(':estado', "%$estado%", PDO::PARAM_STR);
+        $stmtEstado->execute();
+        $resultadosEstado = $stmtEstado->fetchAll(PDO::FETCH_ASSOC);
+        $resultados = array_merge($resultados, $resultadosEstado);
     }
+
+    // Consulta para idioma (de forma diferente)
     if (!empty($idioma)) {
-        $sql .= " AND LOWER(TRIM(ia.idioma)) LIKE LOWER(TRIM(:idioma))";
+        // Obtemos os IDs dos alunos que possuem o idioma específico
+        $sqlIdioma = "SELECT id_aluno FROM IdiomaAlunos WHERE LOWER(TRIM(idioma)) LIKE LOWER(TRIM(:idioma))";
+        $stmtIdioma = $conn->prepare($sqlIdioma);
+        $stmtIdioma->bindValue(':idioma', "%$idioma%", PDO::PARAM_STR);
+        $stmtIdioma->execute();
+        $resultadosIdioma = $stmtIdioma->fetchAll(PDO::FETCH_COLUMN);
+
+        // Se houver IDs de alunos, buscamos os dados correspondentes na tabela Alunos
+        if (!empty($resultadosIdioma)) {
+            $placeholders = implode(',', array_fill(0, count($resultadosIdioma), '?'));
+            $sqlAlunos = "SELECT id, nome, cidade, estado FROM Alunos WHERE id IN ($placeholders)";
+            $stmtAlunos = $conn->prepare($sqlAlunos);
+            $stmtAlunos->execute($resultadosIdioma);
+            $resultadosAlunos = $stmtAlunos->fetchAll(PDO::FETCH_ASSOC);
+            $resultados = array_merge($resultados, $resultadosAlunos);
+        }
     }
 
-    // Prepara a query
-    $stmt = $conn->prepare($sql);
-
-    // Bind dos parâmetros
-    if (!empty($cidade)) {
-        $stmt->bindValue(':cidade', "%$cidade%", PDO::PARAM_STR);
-    }
-    if (!empty($estado)) {
-        $stmt->bindValue(':estado', "%$estado%", PDO::PARAM_STR);
-    }
-    if (!empty($idioma)) {
-        $stmt->bindValue(':idioma', "%$idioma%", PDO::PARAM_STR);
-    }
-
-    // Executa a consulta
-    $stmt->execute();
-    $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Remover duplicatas do resultado com base no ID do aluno
+    $resultados = array_unique($resultados, SORT_REGULAR);
 
     // Verifica se há resultados
     if ($resultados) {

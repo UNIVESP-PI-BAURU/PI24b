@@ -11,8 +11,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
     $nome = $_POST["nome"];
     $email = $_POST["email"];
     $senha = password_hash($_POST["senha"], PASSWORD_DEFAULT); // Criptografa a senha
-    $cidade = $_POST["cidade"];
-    $estado = $_POST["estado"];
+    $cidade = $_POST["cidade"];  // Cidade selecionada no dropdown
+    $estado = $_POST["estado"];  // Estado selecionado no dropdown
     $data_nascimento = $_POST["data_nascimento"];
     $biografia = $_POST["biografia"];
     $idiomas = $_POST["idiomas"]; // Array de idiomas
@@ -64,16 +64,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
     // Inserindo dados na tabela correta (Alunos ou Tutores)
     try {
         if ($tipo_usuario === 'aluno') {
-            $stmt = $conn->prepare("INSERT INTO Alunos (nome, email, senha, cidade, estado, data_nascimento, biografia, foto_perfil) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $conn->prepare(
+                "INSERT INTO Alunos (nome, email, senha, cidade, estado, data_nascimento, biografia, foto_perfil) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+            );
         } else {
-            $stmt = $conn->prepare("INSERT INTO Tutores (nome, email, senha, cidade, estado, data_nascimento, biografia, foto_perfil) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $conn->prepare(
+                "INSERT INTO Tutores (nome, email, senha, cidade, estado, data_nascimento, biografia, foto_perfil) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+            );
         }
 
-        // Executa a inserção dos dados
+        // Executa a inserção dos dados principais
         $stmt->execute([$nome, $email, $senha, $cidade, $estado, $data_nascimento, $biografia, $foto_perfil]);
 
-        // Insere os idiomas
+        // Recupera o ID do usuário recém-criado
         $id_usuario = $conn->lastInsertId();
+
+        // Insere os idiomas no banco
         foreach ($idiomas as $idioma) {
             if ($tipo_usuario === 'aluno') {
                 $stmt = $conn->prepare("INSERT INTO IdiomaAluno (id_aluno, idioma) VALUES (?, ?)");
@@ -87,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
         $_SESSION['message'] = 'Cadastro realizado com sucesso!';
 
         // Redireciona para a página de login
-        header("Location: login.php"); // Altere para login.php se você renomeou a página
+        header("Location: login.php");
         exit(); // Para garantir que o script pare aqui
     } catch (PDOException $e) {
         echo "Erro ao cadastrar: " . $e->getMessage();
