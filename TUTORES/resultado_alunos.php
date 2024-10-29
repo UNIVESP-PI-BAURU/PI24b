@@ -1,5 +1,15 @@
 <?php
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+
 session_start();
+
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    die("Sessão não está ativa.");
+}
 
 // Verifica se o usuário está logado e redireciona para o login se não estiver
 if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
@@ -33,20 +43,25 @@ if (!empty($idioma)) {
 }
 
 // Prepara e executa a consulta
-$stmt = $conn->prepare($sql);
+try {
+    $stmt = $conn->prepare($sql);
 
-if (!empty($cidade)) {
-    $stmt->bindValue(':cidade', "%$cidade%", PDO::PARAM_STR);
-}
-if (!empty($estado)) {
-    $stmt->bindValue(':estado', "%$estado%", PDO::PARAM_STR);
-}
-if (!empty($idioma)) {
-    $stmt->bindValue(':idioma', "%$idioma%", PDO::PARAM_STR);
+    if (!empty($cidade)) {
+        $stmt->bindValue(':cidade', "%$cidade%", PDO::PARAM_STR);
+    }
+    if (!empty($estado)) {
+        $stmt->bindValue(':estado', "%$estado%", PDO::PARAM_STR);
+    }
+    if (!empty($idioma)) {
+        $stmt->bindValue(':idioma', "%$idioma%", PDO::PARAM_STR);
+    }
+
+    $stmt->execute();
+    $alunos_resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Erro ao executar a consulta: " . $e->getMessage());
 }
 
-$stmt->execute();
-$alunos_resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Verifica se há resultados
 if (empty($alunos_resultados)) {
