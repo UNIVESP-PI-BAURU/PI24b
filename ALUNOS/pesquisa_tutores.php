@@ -21,7 +21,6 @@
         <a href="./sobre_nos.php">Sobre nós</a>
         <a href="./dashboard.php">Dashboard</a>
     </nav>
-    <!-- fim Navegação -->
 
     <!-- Pesquisa de Tutores -->
     <div class="main-content">

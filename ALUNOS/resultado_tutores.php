@@ -1,25 +1,61 @@
 <?php
 session_start();
 
+// Verifica se o usuário está logado e redireciona para login se não estiver
 if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
     header("Location: ../login.php");
     exit();
 }
 
-require_once '../conexao.php';
+require_once '../conexao.php'; // Inclui a conexão com o banco de dados
 
 // Dados da sessão
-$tutores_resultados = $_SESSION['tutores_resultados'] ?? null;
-$erro_consulta = $_SESSION['erro_consulta'] ?? null;
-$total_resultados = $_SESSION['total_paginas'] ?? 0; // Corrigido para pegar o total de páginas
-$limite = 10;
+$cidade = $_POST['cidade'] ?? '';
+$estado = $_POST['estado'] ?? '';
+$idioma = $_POST['idioma'] ?? '';
+$erro_consulta = null;
 
-// Calcula o total de páginas
-$total_paginas = ceil($total_resultados / $limite);
-$pagina_atual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+// Coletar dados da pesquisa
+$cidade = trim($cidade);
+$estado = trim($estado);
+$idioma = trim($idioma);
+
+// Criar a consulta
+$sql = "SELECT t.nome, t.cidade, t.estado, it.idioma 
+        FROM Tutores t
+        JOIN IdiomaTutor it ON t.id_tutor = it.id_tutor WHERE 1=1";
+
+if (!empty($cidade)) {
+    $sql .= " AND LOWER(TRIM(t.cidade)) LIKE LOWER(TRIM(:cidade))";
+}
+if (!empty($estado)) {
+    $sql .= " AND LOWER(TRIM(t.estado)) LIKE LOWER(TRIM(:estado))";
+}
+if (!empty($idioma)) {
+    $sql .= " AND LOWER(TRIM(it.idioma)) LIKE LOWER(TRIM(:idioma))";
+}
+
+// Prepara e executa a consulta
+$stmt = $conn->prepare($sql);
+if (!empty($cidade)) {
+    $stmt->bindValue(':cidade', "%$cidade%", PDO::PARAM_STR);
+}
+if (!empty($estado)) {
+    $stmt->bindValue(':estado', "%$estado%", PDO::PARAM_STR);
+}
+if (!empty($idioma)) {
+    $stmt->bindValue(':idioma', "%$idioma%", PDO::PARAM_STR);
+}
+$stmt->execute();
+$tutores_resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Verifica se houve resultados
+if (empty($tutores_resultados)) {
+    $erro_consulta = "Não conseguimos encontrar registros, tente novamente.";
+}
 
 // Limpa a sessão
-unset($_SESSION['tutores_resultados'], $_SESSION['erro_consulta'], $_SESSION['total_paginas']);
+unset($_SESSION['tutores_resultados'], $_SESSION['erro_consulta']);
 ?>
 
 <!DOCTYPE html>
@@ -45,7 +81,8 @@ unset($_SESSION['tutores_resultados'], $_SESSION['erro_consulta'], $_SESSION['to
 
             <?php if ($erro_consulta): ?>
                 <p><?php echo htmlspecialchars($erro_consulta); ?></p>
-            <?php elseif ($tutores_resultados && count($tutores_resultados) > 0): ?>
+                <a href="pesquisa_tutores.php">Voltar</a>
+            <?php else: ?>
                 <ul>
                     <?php foreach ($tutores_resultados as $tutor): ?>
                         <li><?php echo htmlspecialchars($tutor['nome']) . " - " . 
@@ -55,19 +92,6 @@ unset($_SESSION['tutores_resultados'], $_SESSION['erro_consulta'], $_SESSION['to
                         </li>
                     <?php endforeach; ?>
                 </ul>
-
-                <!-- Paginação -->
-                <div class="pagination">
-                    <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
-                        <a href="?pagina=<?php echo $i; ?>" 
-                           class="<?php echo ($i === $pagina_atual) ? 'active' : ''; ?>">
-                           <?php echo $i; ?>
-                        </a>
-                    <?php endfor; ?>
-                </div>
-
-            <?php else: ?>
-                <p>Desculpe, não encontramos registros com esses dados. Tente novamente.</p>
             <?php endif; ?>
         </div>
     </div>
