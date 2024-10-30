@@ -23,7 +23,7 @@ try {
     } elseif ($tipo === 'estado') {
         $sql = "SELECT DISTINCT estado FROM Alunos WHERE LOWER(TRIM(estado)) LIKE LOWER(TRIM(:termo))";
     } elseif ($tipo === 'idioma') {
-        $sql = "SELECT DISTINCT idioma FROM IdiomaAlunos WHERE LOWER(TRIM(idioma)) LIKE LOWER(TRIM(:termo))";
+        $sql = "SELECT DISTINCT idioma FROM IdiomaAluno WHERE LOWER(TRIM(idioma)) LIKE LOWER(TRIM(:termo))";
     }
 
     // Debug: imprime a consulta SQL

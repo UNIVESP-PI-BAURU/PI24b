@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 require_once '../conexao.php';
 
 // Coleta dos filtros
@@ -22,7 +21,7 @@ try {
     // Construir a consulta dependendo dos filtros preenchidos
     $sql = "SELECT t.id AS id_tutor, t.nome, t.cidade, t.estado
             FROM Tutores t
-            INNER JOIN IdiomaTutores it ON t.id = it.id_tutor
+            INNER JOIN IdiomaTutor it ON t.id = it.id_tutor
             WHERE 1=1"; // Para facilitar a adição de condições
 
     if (!empty($idioma)) {
@@ -53,20 +52,20 @@ try {
     $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Verifica se há resultados
-    if ($resultados) {
-        $_SESSION['tutores_resultados'] = $resultados; // Altera para 'tutores_resultados'
-        header("Location: resultado_tutores.php"); // Altera para redirecionar para a página de tutores
+    if (!empty($resultados)) {
+        $_SESSION['tutores_resultados'] = $resultados; // Armazena os resultados na sessão
+        header("Location: resultado_tutores.php"); // Redireciona para a página de resultados
         exit();
     } else {
         $_SESSION['erro_consulta'] = "Não conseguimos encontrar registros, tente novamente.";
-        header("Location: resultado_tutores.php"); // Altera para redirecionar para a página de tutores
+        header("Location: resultado_tutores.php"); // Redireciona para a página de resultados
         exit();
     }
 
 } catch (PDOException $e) {
     error_log("Erro na consulta: " . $e->getMessage());
     $_SESSION['erro_consulta'] = "Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.";
-    header("Location: resultado_tutores.php"); // Altera para redirecionar para a página de tutores
+    header("Location: resultado_tutores.php"); // Redireciona para a página de resultados
     exit();
 }
 

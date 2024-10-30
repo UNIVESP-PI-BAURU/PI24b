@@ -24,7 +24,7 @@ try {
     // Construir a consulta dependendo dos filtros preenchidos
     $sql = "SELECT t.id AS id_tutor, t.nome, t.cidade, t.estado
             FROM Tutores t
-            INNER JOIN IdiomaTutores it ON t.id = it.id_tutor
+            INNER JOIN IdiomaTutor it ON t.id = it.id_tutor
             WHERE 1=1"; // Para facilitar a adição de condições
 
     if (!empty($idioma)) {

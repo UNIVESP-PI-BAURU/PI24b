@@ -40,6 +40,7 @@ try {
     echo json_encode($resultados);
 } catch (PDOException $e) {
     // Tratamento de erro
-    echo json_encode([]);
+    error_log("Erro na consulta: " . $e->getMessage()); // Loga o erro para depuração
+    echo json_encode([]); // Retorna uma resposta vazia em caso de erro
 }
 ?>

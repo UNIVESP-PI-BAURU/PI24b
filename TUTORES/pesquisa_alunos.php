@@ -96,19 +96,13 @@
             });
         });
 
-
-
         function handleSubmit() {
-        console.log("Formulário enviado:");
-        console.log("Cidade:", $("#cidade").val());
-        console.log("Estado:", $("#estado").val());
-        console.log("Idioma:", $("#idioma").val());
-        return true; // Permite o envio do formulário
+            console.log("Formulário enviado:");
+            console.log("Cidade:", $("#cidade").val());
+            console.log("Estado:", $("#estado").val());
+            console.log("Idioma:", $("#idioma").val());
+            return true; // Permite o envio do formulário
         }
-
-
-
-
     </script>
 
     <!-- Rodapé -->
