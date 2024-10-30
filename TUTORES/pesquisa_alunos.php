@@ -12,6 +12,7 @@
 </head>
 
 <body>
+
     <!-- Cabeçalho -->
     <div class="header">
         <img src="ASSETS/IMG/capa.png" alt="Imagem de Capa">
@@ -100,5 +101,6 @@
     <div class="footer">
         UNIVESP PI 2024
     </div>
+
 </body>
 </html>

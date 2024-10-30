@@ -18,7 +18,7 @@ try {
     $resultados = [];
 
     // Consulta para obter alunos com o idioma específico
-    $sql = "SELECT a.id, a.nome, a.cidade, a.estado 
+    $sql = "SELECT a.id AS id_aluno, a.nome, a.cidade, a.estado
             FROM Alunos a
             INNER JOIN IdiomaAlunos ia ON a.id = ia.id_aluno
             WHERE LOWER(TRIM(ia.idioma)) LIKE LOWER(TRIM(:idioma))";
@@ -41,7 +41,11 @@ try {
     }
 
 } catch (PDOException $e) {
-    die("Erro na consulta: " . $e->getMessage());
+    // Registra o erro para depuração e exibe uma mensagem genérica ao usuário
+    error_log("Erro na consulta: " . $e->getMessage());
+    $_SESSION['erro_consulta'] = "Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.";
+    header("Location: resultado_alunos.php");
+    exit();
 }
 
 // Fecha a conexão

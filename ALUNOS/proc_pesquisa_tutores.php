@@ -18,9 +18,9 @@ try {
     $resultados = [];
 
     // Consulta para obter tutores com o idioma específico
-    $sql = "SELECT t.id_tutor, t.nome, t.cidade, t.estado 
+    $sql = "SELECT t.id AS id_tutor, t.nome, t.cidade, t.estado
             FROM Tutores t
-            INNER JOIN IdiomaTutor it ON t.id_tutor = it.id_tutor
+            INNER JOIN IdiomaTutor it ON t.id = it.id_tutor
             WHERE LOWER(TRIM(it.idioma)) LIKE LOWER(TRIM(:idioma))";
 
     $stmt = $conn->prepare($sql);
