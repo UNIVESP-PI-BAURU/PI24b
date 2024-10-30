@@ -1,14 +1,16 @@
 <?php
 session_start();
 
-require_once '../conexao.php'; 
+require_once '../conexao.php';
 
-// Coleta do filtro de idioma
+// Coleta dos filtros
+$cidade = isset($_POST['cidade']) ? trim($_POST['cidade']) : '';
+$estado = isset($_POST['estado']) ? trim($_POST['estado']) : '';
 $idioma = isset($_POST['idioma']) ? trim($_POST['idioma']) : '';
 
-// Verifica se o filtro de idioma foi preenchido
-if (empty($idioma)) {
-    $_SESSION['erro_consulta'] = "É necessário preencher o critério de idioma.";
+// Verifica se pelo menos um dos filtros foi preenchido
+if (empty($cidade) && empty($estado) && empty($idioma)) {
+    $_SESSION['erro_consulta'] = "É necessário preencher pelo menos um critério de pesquisa.";
     header("Location: resultado_tutores.php");
     exit();
 }
@@ -17,33 +19,55 @@ try {
     // Inicializa um array para armazenar resultados
     $resultados = [];
 
-    // Consulta para obter tutores com o idioma específico
+    // Construir a consulta dependendo dos filtros preenchidos
     $sql = "SELECT t.id AS id_tutor, t.nome, t.cidade, t.estado
             FROM Tutores t
-            INNER JOIN IdiomaTutor it ON t.id = it.id_tutor
-            WHERE LOWER(TRIM(it.idioma)) LIKE LOWER(TRIM(:idioma))";
+            INNER JOIN IdiomaTutores it ON t.id = it.id_tutor
+            WHERE 1=1"; // Para facilitar a adição de condições
+
+    if (!empty($idioma)) {
+        $sql .= " AND LOWER(TRIM(it.idioma)) LIKE LOWER(TRIM(:idioma))";
+    }
+    if (!empty($cidade)) {
+        $sql .= " AND LOWER(TRIM(t.cidade)) LIKE LOWER(TRIM(:cidade))";
+    }
+    if (!empty($estado)) {
+        $sql .= " AND LOWER(TRIM(t.estado)) LIKE LOWER(TRIM(:estado))";
+    }
 
     $stmt = $conn->prepare($sql);
-    $stmt->bindValue(':idioma', "%$idioma%", PDO::PARAM_STR);
+
+    // Bind dos valores
+    if (!empty($idioma)) {
+        $stmt->bindValue(':idioma', "%$idioma%", PDO::PARAM_STR);
+    }
+    if (!empty($cidade)) {
+        $stmt->bindValue(':cidade', "%$cidade%", PDO::PARAM_STR);
+    }
+    if (!empty($estado)) {
+        $stmt->bindValue(':estado', "%$estado%", PDO::PARAM_STR);
+    }
+
     $stmt->execute();
 
     $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Debug: verifique os resultados obtidos
-    var_dump($resultados); // Adicionei isso para verificar os resultados
     // Verifica se há resultados
     if ($resultados) {
-        $_SESSION['tutores_resultados'] = $resultados;
-        header("Location: resultado_tutores.php");
+        $_SESSION['tutores_resultados'] = $resultados; // Altera para 'tutores_resultados'
+        header("Location: resultado_tutores.php"); // Altera para redirecionar para a página de tutores
         exit();
     } else {
         $_SESSION['erro_consulta'] = "Não conseguimos encontrar registros, tente novamente.";
-        header("Location: resultado_tutores.php");
+        header("Location: resultado_tutores.php"); // Altera para redirecionar para a página de tutores
         exit();
     }
 
 } catch (PDOException $e) {
-    die("Erro na consulta: " . $e->getMessage());
+    error_log("Erro na consulta: " . $e->getMessage());
+    $_SESSION['erro_consulta'] = "Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.";
+    header("Location: resultado_tutores.php"); // Altera para redirecionar para a página de tutores
+    exit();
 }
 
 // Fecha a conexão
