@@ -29,6 +29,8 @@ try {
 
     $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // Debug: verifique os resultados obtidos
+    var_dump($resultados); // Adicionei isso para verificar os resultados
     // Verifica se há resultados
     if ($resultados) {
         $_SESSION['tutores_resultados'] = $resultados;
