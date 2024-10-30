@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
     $senha = password_hash($_POST["senha"], PASSWORD_DEFAULT); // Criptografa a senha
     $cidade = $_POST["cidade"];  // Cidade selecionada no dropdown
     $estado = $_POST["estado"];  // Estado selecionado no dropdown
-    $data_nascimento = $_POST["data_nascimento"];
+    $data_nascimento = !empty($_POST["data_nascimento"]) ? $_POST["data_nascimento"] : null; // Define como NULL se estiver vazio
     $biografia = $_POST["biografia"];
     $idiomas = $_POST["idiomas"]; // Array de idiomas
     $tipo_usuario = $_POST["tipo_usuario"]; // Indica se é aluno ou tutor
