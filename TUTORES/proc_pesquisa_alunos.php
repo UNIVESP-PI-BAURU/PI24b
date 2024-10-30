@@ -14,6 +14,9 @@ if (empty($cidade) && empty($estado) && empty($idioma)) {
     exit();
 }
 
+// Debug: imprime os valores recebidos
+error_log("Cidade: $cidade, Estado: $estado, Idioma: $idioma");
+
 try {
     // Inicializa um array para armazenar resultados
     $resultados = [];
@@ -34,6 +37,9 @@ try {
         $sql .= " AND LOWER(TRIM(t.estado)) LIKE LOWER(TRIM(:estado))";
     }
 
+    // Debug: imprime a consulta SQL gerada
+    error_log("SQL: $sql");
+
     $stmt = $conn->prepare($sql);
 
     // Bind dos valores
@@ -51,9 +57,12 @@ try {
 
     $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // Debug: imprime os resultados
+    error_log("Resultados: " . print_r($resultados, true));
+
     // Verifica se há resultados
     if ($resultados) {
-        $_SESSION['tutores_resultados'] = $resultados; // Atualize aqui para tutores
+        $_SESSION['tutores_resultados'] = $resultados; 
         header("Location: resultado_tutores.php");
         exit();
     } else {

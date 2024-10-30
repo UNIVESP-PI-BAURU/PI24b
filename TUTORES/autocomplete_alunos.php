@@ -3,9 +3,12 @@ require_once '../conexao.php';
 
 // Recupera o termo de busca e tipo
 $termo = isset($_GET['term']) ? trim($_GET['term']) : '';
-$tipo = isset($_GET['tipo']) ? trim($_GET['tipo']) : ''; // Pode ser 'cidade', 'estado' ou 'idioma'
+$tipo = isset($_GET['tipo']) ? trim($_GET['tipo']) : ''; 
 
 $resultados = [];
+
+// Debug: imprime o termo e tipo recebidos
+error_log("Termo: $termo, Tipo: $tipo");
 
 try {
     // Verifica se o termo e o tipo são válidos
@@ -23,6 +26,9 @@ try {
         $sql = "SELECT DISTINCT idioma FROM IdiomaAlunos WHERE LOWER(TRIM(idioma)) LIKE LOWER(TRIM(:termo))";
     }
 
+    // Debug: imprime a consulta SQL
+    error_log("SQL: $sql");
+
     // Executa a consulta
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(':termo', "%$termo%", PDO::PARAM_STR);
@@ -30,7 +36,7 @@ try {
 
     // Manipula os resultados
     if ($tipo === 'idioma') {
-        $resultados = $stmt->fetchAll(PDO::FETCH_COLUMN); // Retorna uma lista simples de idiomas
+        $resultados = $stmt->fetchAll(PDO::FETCH_COLUMN);
     } else {
         $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $resultados = array_column($resultados, $tipo); // Extrai os valores de cidade ou estado
@@ -39,7 +45,7 @@ try {
     // Retorna os resultados como JSON
     echo json_encode($resultados);
 } catch (PDOException $e) {
-    // Tratamento de erro
+    error_log("Erro na execução: " . $e->getMessage());
     echo json_encode([]);
 }
 ?>

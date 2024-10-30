@@ -29,7 +29,7 @@
     <div class="main-content">
         <div class="signup-section">
             <h2>Pesquisar Alunos</h2>
-            <form class="signup-form" method="POST" action="proc_pesquisa_alunos.php">
+            <form class="signup-form" method="POST" action="proc_pesquisa_alunos.php" onsubmit="return handleSubmit();">
                 <input type="text" id="cidade" name="cidade" placeholder="Cidade..." />
                 <br>
                 <input type="text" id="estado" name="estado" placeholder="Estado..." />
@@ -95,6 +95,20 @@
                 }
             });
         });
+
+
+
+        function handleSubmit() {
+        console.log("Formulário enviado:");
+        console.log("Cidade:", $("#cidade").val());
+        console.log("Estado:", $("#estado").val());
+        console.log("Idioma:", $("#idioma").val());
+        return true; // Permite o envio do formulário
+        }
+
+
+
+
     </script>
 
     <!-- Rodapé -->

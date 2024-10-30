@@ -15,7 +15,11 @@ if (!isset($_SESSION['alunos_resultados'])) {
 }
 
 // Obtém os resultados da sessão
-$resultados = $_SESSION['alunos_resultados'];
+$resultados = $_SESSION['alunos_resultados'] ?? [];
+
+// Debug: imprime os resultados
+error_log("Resultados armazenados na sessão: " . print_r($resultados, true));
+
 
 // Limpa os resultados da sessão após a exibição
 unset($_SESSION['alunos_resultados']);
