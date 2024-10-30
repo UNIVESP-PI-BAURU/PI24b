@@ -8,6 +8,13 @@ $cidade = isset($_POST['cidade']) ? trim($_POST['cidade']) : '';
 $estado = isset($_POST['estado']) ? trim($_POST['estado']) : '';
 $idioma = isset($_POST['idioma']) ? trim($_POST['idioma']) : '';
 
+// Verifica se pelo menos um critério foi preenchido
+if (empty($cidade) && empty($estado) && empty($idioma)) {
+    $_SESSION['erro_consulta'] = "É necessário preencher pelo menos um critério.";
+    header("Location: resultado_alunos.php");
+    exit();
+}
+
 try {
     // Inicializa um array para armazenar resultados
     $resultados = [];
@@ -32,7 +39,7 @@ try {
         $resultados = array_merge($resultados, $resultadosEstado);
     }
 
-    // Consulta para idioma (de forma diferente)
+    // Consulta para idioma
     if (!empty($idioma)) {
         // Obtemos os IDs dos alunos que possuem o idioma específico
         $sqlIdioma = "SELECT id_aluno FROM IdiomaAlunos WHERE LOWER(TRIM(idioma)) LIKE LOWER(TRIM(:idioma))";
@@ -67,7 +74,6 @@ try {
     }
 
 } catch (PDOException $e) {
-    // Captura o erro e exibe para debug
     die("Erro na consulta: " . $e->getMessage());
 }
 
