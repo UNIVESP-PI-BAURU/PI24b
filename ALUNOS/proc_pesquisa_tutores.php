@@ -3,14 +3,12 @@ session_start();
 
 require_once '../conexao.php'; 
 
-// Coleta dos filtros
-$cidade = isset($_POST['cidade']) ? trim($_POST['cidade']) : '';
-$estado = isset($_POST['estado']) ? trim($_POST['estado']) : '';
+// Coleta do filtro de idioma
 $idioma = isset($_POST['idioma']) ? trim($_POST['idioma']) : '';
 
-// Verifica se pelo menos um critério foi preenchido
-if (empty($cidade) && empty($estado) && empty($idioma)) {
-    $_SESSION['erro_consulta'] = "É necessário preencher pelo menos um critério.";
+// Verifica se o filtro de idioma foi preenchido
+if (empty($idioma)) {
+    $_SESSION['erro_consulta'] = "É necessário preencher o critério de idioma.";
     header("Location: resultado_tutores.php");
     exit();
 }
@@ -19,39 +17,16 @@ try {
     // Inicializa um array para armazenar resultados
     $resultados = [];
 
-    // Consulta base
-    $sql = "SELECT t.id_tutor, t.nome, t.cidade, t.estado
+    // Consulta para obter tutores com o idioma específico
+    $sql = "SELECT t.id_tutor, t.nome, t.cidade, t.estado 
             FROM Tutores t
-            LEFT JOIN IdiomaTutor it ON t.id_tutor = it.id_tutor
-            WHERE 1=1";
+            INNER JOIN IdiomaTutor it ON t.id_tutor = it.id_tutor
+            WHERE LOWER(TRIM(it.idioma)) LIKE LOWER(TRIM(:idioma))";
 
-    // Adiciona filtros à consulta
-    if (!empty($cidade)) {
-        $sql .= " AND LOWER(TRIM(t.cidade)) LIKE LOWER(TRIM(:cidade))";
-    }
-    if (!empty($estado)) {
-        $sql .= " AND LOWER(TRIM(t.estado)) LIKE LOWER(TRIM(:estado))";
-    }
-    if (!empty($idioma)) {
-        $sql .= " AND LOWER(TRIM(it.idioma)) LIKE LOWER(TRIM(:idioma))";
-    }
-
-    // Prepara a consulta
     $stmt = $conn->prepare($sql);
-
-    // Bind dos parâmetros
-    if (!empty($cidade)) {
-        $stmt->bindValue(':cidade', "%$cidade%", PDO::PARAM_STR);
-    }
-    if (!empty($estado)) {
-        $stmt->bindValue(':estado', "%$estado%", PDO::PARAM_STR);
-    }
-    if (!empty($idioma)) {
-        $stmt->bindValue(':idioma', "%$idioma%", PDO::PARAM_STR);
-    }
-
-    // Executa a consulta
+    $stmt->bindValue(':idioma', "%$idioma%", PDO::PARAM_STR);
     $stmt->execute();
+
     $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Verifica se há resultados
