@@ -91,12 +91,12 @@
                 <input type="password" id="senha" name="senha" required>
 
                 <label for="estado">Estado:</label>
-                <select id="estado" name="estado" onchange="atualizarCidades()" required>
+                <select class="user-type" id="estado" name="estado" onchange="atualizarCidades()" required>
                     <option value="">Selecione um estado</option>
                 </select>
 
                 <label for="cidade">Cidade:</label>
-                <select id="cidade" name="cidade" required>
+                <select class="user-type" id="cidade" name="cidade" required>
                     <option value="">Selecione uma cidade</option>
                 </select>
 
