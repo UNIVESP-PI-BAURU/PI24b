@@ -20,7 +20,7 @@ try {
     } elseif ($tipo === 'estado') {
         $sql = "SELECT DISTINCT estado FROM Tutores WHERE LOWER(TRIM(estado)) LIKE LOWER(TRIM(:termo))";
     } elseif ($tipo === 'idioma') {
-        $sql = "SELECT DISTINCT idioma FROM IdiomaTutor WHERE LOWER(TRIM(idioma)) LIKE LOWER(TRIM(:termo))";
+        $stmt = $pdo->prepare("SELECT DISTINCT idioma FROM IdiomaTutor WHERE LOWER(TRIM(idioma)) LIKE LOWER(TRIM(:termo))");
     }
 
     // Executa a consulta

@@ -23,7 +23,8 @@ try {
     } elseif ($tipo === 'estado') {
         $sql = "SELECT DISTINCT estado FROM Alunos WHERE LOWER(TRIM(estado)) LIKE LOWER(TRIM(:termo))";
     } elseif ($tipo === 'idioma') {
-        $sql = "SELECT DISTINCT idioma FROM IdiomaAluno WHERE LOWER(TRIM(idioma)) LIKE LOWER(TRIM(:termo))";
+        $stmt = $pdo->prepare("SELECT DISTINCT idioma FROM IdiomaAluno WHERE LOWER(TRIM(idioma)) LIKE LOWER(TRIM(:termo))");
+
     }
 
     // Debug: imprime a consulta SQL
@@ -36,11 +37,11 @@ try {
 
     // Manipula os resultados
     if ($tipo === 'idioma') {
-        $resultados = $stmt->fetchAll(PDO::FETCH_COLUMN);
-    } else {
-        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $resultados = array_column($resultados, $tipo); // Extrai os valores de cidade ou estado
-    }
+   
+        $stmt = $pdo->prepare("SELECT DISTINCT idioma FROM IdiomaAluno WHERE LOWER(TRIM(idioma)) LIKE LOWER(TRIM(:termo))");
+        } elseif ($tipo === 'estado') {
+            $stmt = $pdo->prepare("SELECT DISTINCT estado FROM Alunos WHERE LOWER(TRIM(estado)) LIKE LOWER(TRIM(:termo))");
+        }
 
     // Retorna os resultados como JSON
     echo json_encode($resultados);
