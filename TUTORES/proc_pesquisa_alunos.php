@@ -62,7 +62,7 @@ try {
 
     // Verifica se há resultados
     if ($resultados) {
-        $_SESSION['tutores_resultados'] = $resultados; 
+        $_SESSION['alunos_resultados'] = $resultados; 
         header("Location: resultado_tutores.php");
         exit();
     } else {
