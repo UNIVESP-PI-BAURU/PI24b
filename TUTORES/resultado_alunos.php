@@ -2,10 +2,8 @@
 session_start();
 
 // Verifica se há erros na sessão
-if (isset($_SESSION['erro_consulta'])) {
-    $erro = $_SESSION['erro_consulta'];
-    unset($_SESSION['erro_consulta']); // Limpa o erro após exibição
-}
+$erro = $_SESSION['erro_consulta'] ?? null;
+unset($_SESSION['erro_consulta']); // Limpa o erro após exibição
 
 // Verifica se há resultados armazenados na sessão
 if (!isset($_SESSION['alunos_resultados'])) {
@@ -15,10 +13,7 @@ if (!isset($_SESSION['alunos_resultados'])) {
 }
 
 // Obtém os resultados da sessão
-$resultados = $_SESSION['alunos_resultados'] ?? [];
-
-// Debug: imprime os resultados
-error_log("Resultados armazenados na sessão: " . print_r($resultados, true));
+$resultados = $_SESSION['alunos_resultados'];
 
 // Limpa os resultados da sessão após a exibição
 unset($_SESSION['alunos_resultados']);
@@ -47,7 +42,7 @@ unset($_SESSION['alunos_resultados']);
     </nav>
 
     <!-- Mensagem de erro, se houver -->
-    <?php if (isset($erro)): ?>
+    <?php if ($erro): ?>
         <div class="error-message">
             <p><?php echo htmlspecialchars($erro); ?></p>
         </div>

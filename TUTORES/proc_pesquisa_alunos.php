@@ -14,31 +14,25 @@ if (empty($cidade) && empty($estado) && empty($idioma)) {
     exit();
 }
 
-// Debug: imprime os valores recebidos
-error_log("Cidade: $cidade, Estado: $estado, Idioma: $idioma");
-
 try {
     // Inicializa um array para armazenar resultados
     $resultados = [];
-    
+
     // Construir a consulta dependendo dos filtros preenchidos
-    $sql = "SELECT t.id AS id_tutor, t.nome, t.cidade, t.estado
-            FROM Tutores t
-            INNER JOIN IdiomaTutor it ON t.id = it.id_tutor
+    $sql = "SELECT a.id AS id_aluno, a.nome, a.cidade, a.estado
+            FROM Alunos a
+            INNER JOIN IdiomaAluno ia ON a.id = ia.id_aluno
             WHERE 1=1"; // Para facilitar a adição de condições
 
     if (!empty($idioma)) {
-        $sql .= " AND LOWER(TRIM(it.idioma)) LIKE LOWER(TRIM(:idioma))";
+        $sql .= " AND LOWER(TRIM(ia.idioma)) LIKE LOWER(TRIM(:idioma))";
     }
     if (!empty($cidade)) {
-        $sql .= " AND LOWER(TRIM(t.cidade)) LIKE LOWER(TRIM(:cidade))";
+        $sql .= " AND LOWER(TRIM(a.cidade)) LIKE LOWER(TRIM(:cidade))";
     }
     if (!empty($estado)) {
-        $sql .= " AND LOWER(TRIM(t.estado)) LIKE LOWER(TRIM(:estado))";
+        $sql .= " AND LOWER(TRIM(a.estado)) LIKE LOWER(TRIM(:estado))";
     }
-
-    // Debug: imprime a consulta SQL gerada
-    error_log("SQL: $sql");
 
     $stmt = $conn->prepare($sql);
 
@@ -57,24 +51,21 @@ try {
 
     $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Debug: imprime os resultados
-    error_log("Resultados: " . print_r($resultados, true));
-
     // Verifica se há resultados
-    if ($resultados) {
-        $_SESSION['alunos_resultados'] = $resultados; 
-        header("Location: resultado_tutores.php");
+    if (!empty($resultados)) {
+        $_SESSION['alunos_resultados'] = $resultados; // Armazena os resultados na sessão
+        header("Location: resultado_alunos.php"); // Redireciona para a página de resultados
         exit();
     } else {
         $_SESSION['erro_consulta'] = "Não conseguimos encontrar registros, tente novamente.";
-        header("Location: resultado_tutores.php");
+        header("Location: resultado_alunos.php"); // Redireciona para a página de resultados
         exit();
     }
 
 } catch (PDOException $e) {
     error_log("Erro na consulta: " . $e->getMessage());
     $_SESSION['erro_consulta'] = "Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.";
-    header("Location: resultado_tutores.php");
+    header("Location: resultado_alunos.php"); // Redireciona para a página de resultados
     exit();
 }
 
