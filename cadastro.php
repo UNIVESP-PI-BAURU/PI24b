@@ -52,39 +52,49 @@
             });
         }
 
+        // Função para carregar idiomas do arquivo JSON
+        let idiomas = [];
+
+        async function carregarIdiomas() {
+            try {
+                const response = await fetch('idioma.json');
+                idiomas = await response.json();
+            } catch (error) {
+                console.error('Erro ao carregar idiomas:', error);
+            }
+        }
+
         // Função para autocomplete de idiomas
-        async function autocompleteIdiomas(inputIdioma, suggestions) {
+        function autocompleteIdiomas(inputIdioma, suggestions) {
             suggestions.innerHTML = ''; // Limpa as sugestões anteriores
             suggestions.style.display = 'none'; // Esconde as sugestões
 
             const valor = inputIdioma.value;
 
             if (valor.length > 1) { // Começa a mostrar sugestões a partir de 2 caracteres
-                try {
-                    const res = await fetch(`autocomplete_idiomas.php?q=${encodeURIComponent(valor)}`);
-                    const resultados = await res.json();
+                const resultados = idiomas.filter(idioma => idioma.idioma.toLowerCase().startsWith(valor.toLowerCase()));
 
-                    resultados.forEach(idioma => {
-                        const li = document.createElement('li');
-                        li.textContent = idioma; // Altera para idioma
-                        li.onclick = () => {
-                            inputIdioma.value = idioma; // Preenche o campo com o idioma selecionado
-                            suggestions.style.display = 'none'; // Esconde as sugestões
-                        };
-                        suggestions.appendChild(li);
-                    });
+                resultados.forEach(idioma => {
+                    const li = document.createElement('li');
+                    li.textContent = idioma.idioma; // Altera para idioma
+                    li.onclick = () => {
+                        inputIdioma.value = idioma.idioma; // Preenche o campo com o idioma selecionado
+                        suggestions.style.display = 'none'; // Esconde as sugestões
+                    };
+                    suggestions.appendChild(li);
+                });
 
-                    if (resultados.length > 0) {
-                        suggestions.style.display = 'block'; // Mostra as sugestões se houver resultados
-                    }
-                } catch (error) {
-                    console.error('Erro ao buscar idiomas:', error);
+                if (resultados.length > 0) {
+                    suggestions.style.display = 'block'; // Mostra as sugestões se houver resultados
                 }
             }
         }
 
         // Carrega os dados assim que a página for aberta
-        window.onload = carregarDados;
+        window.onload = () => {
+            carregarDados();
+            carregarIdiomas();
+        };
 
         // Função para adicionar novo campo de idioma
         function addCampoIdioma() {
