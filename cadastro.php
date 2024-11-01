@@ -6,11 +6,12 @@
     <title>Criar Nova Conta</title>
     <link rel="stylesheet" href="ASSETS/CSS/style.css">
     <script>
-        // Variáveis globais para armazenar estados e cidades
+        // Variáveis globais para armazenar estados, municípios e idiomas
         let estados = [];
         let municipios = [];
+        let idiomas = []; // Adicionando a variável para idiomas
 
-        // Função para carregar JSON de estados e municípios
+        // Função para carregar JSON de estados, municípios e idiomas
         async function carregarDados() {
             try {
                 const resEstados = await fetch('estados.json');
@@ -18,6 +19,9 @@
 
                 const resMunicipios = await fetch('municipios.json');
                 municipios = await resMunicipios.json();
+
+                const resIdiomas = await fetch('language.json'); // Carregar idiomas
+                idiomas = await resIdiomas.json();
 
                 preencherEstados();
             } catch (error) {
@@ -50,6 +54,34 @@
                 option.textContent = cidade.nome;
                 cidadeSelect.appendChild(option);
             });
+        }
+
+        // Função para autocomplete de idiomas
+        function autocompleteIdiomas() {
+            const inputIdioma = document.getElementById('idioma');
+            const suggestions = document.getElementById('suggestions');
+            suggestions.innerHTML = ''; // Limpa as sugestões anteriores
+            suggestions.style.display = 'none'; // Esconde as sugestões
+
+            const valor = inputIdioma.value.toLowerCase();
+
+            if (valor.length > 1) { // Começa a mostrar sugestões a partir de 2 caracteres
+                const resultados = idiomas.filter(idioma => idioma.name.toLowerCase().includes(valor));
+                
+                resultados.forEach(id => {
+                    const li = document.createElement('li');
+                    li.textContent = id.name;
+                    li.onclick = () => {
+                        inputIdioma.value = id.name; // Preenche o campo com o idioma selecionado
+                        suggestions.style.display = 'none'; // Esconde as sugestões
+                    };
+                    suggestions.appendChild(li);
+                });
+
+                if (resultados.length > 0) {
+                    suggestions.style.display = 'block'; // Mostra as sugestões se houver resultados
+                }
+            }
         }
 
         // Carrega os dados assim que a página for aberta
@@ -108,8 +140,9 @@
 
                 <div id="idiomas">
                     <label for="idioma">Idioma:</label>
-                    <input type="text" id="idioma" name="idiomas[]" required>
+                    <input type="text" id="idioma" name="idiomas[]" required oninput="autocompleteIdiomas()">
                     <button type="button" onclick="addCampoIdioma()">Adicionar mais um</button>
+                    <ul id="suggestions" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; max-height:150px; overflow-y:auto; z-index:1000;"></ul> <!-- Lista de sugestões -->
                 </div>
 
                 <label for="foto_perfil">Foto de Perfil:</label>
@@ -129,7 +162,8 @@
             const divIdiomas = document.getElementById('idiomas');
             const novoCampo = document.createElement('div');
             novoCampo.innerHTML = '<label for="idioma">Idioma:</label>' +
-                                  '<input type="text" name="idiomas[]" required>';
+                                  '<input type="text" name="idiomas[]" required oninput="autocompleteIdiomas()">' +
+                                  '<ul id="suggestions" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; max-height:150px; overflow-y:auto; z-index:1000;"></ul>'; // Novo campo com autocomplete
             divIdiomas.appendChild(novoCampo);
         }
     </script>
