@@ -57,22 +57,20 @@
         }
 
         // Função para autocomplete de idiomas
-        function autocompleteIdiomas() {
-            const inputIdioma = document.getElementById('idioma');
-            const suggestions = document.getElementById('suggestions');
+        function autocompleteIdiomas(inputIdioma, suggestions) {
             suggestions.innerHTML = ''; // Limpa as sugestões anteriores
             suggestions.style.display = 'none'; // Esconde as sugestões
 
             const valor = inputIdioma.value.toLowerCase();
 
             if (valor.length > 1) { // Começa a mostrar sugestões a partir de 2 caracteres
-                const resultados = idiomas.filter(idioma => idioma.name.toLowerCase().includes(valor));
+                const resultados = idiomas.filter(idioma => idioma.idioma.toLowerCase().includes(valor)); // Alterado para usar idioma.idioma
                 
-                resultados.forEach(id => {
+                resultados.forEach(idioma => {
                     const li = document.createElement('li');
-                    li.textContent = id.name;
+                    li.textContent = idioma.idioma; // Altera para idioma.idioma
                     li.onclick = () => {
-                        inputIdioma.value = id.name; // Preenche o campo com o idioma selecionado
+                        inputIdioma.value = idioma.idioma; // Preenche o campo com o idioma selecionado
                         suggestions.style.display = 'none'; // Esconde as sugestões
                     };
                     suggestions.appendChild(li);
@@ -86,6 +84,18 @@
 
         // Carrega os dados assim que a página for aberta
         window.onload = carregarDados;
+
+        // Função para adicionar novo campo de idioma
+        function addCampoIdioma() {
+            const divIdiomas = document.getElementById('idiomas');
+            const novoCampo = document.createElement('div');
+            novoCampo.innerHTML = `
+                <label for="idioma">Idioma:</label>
+                <input type="text" name="idiomas[]" required oninput="autocompleteIdiomas(this, this.nextElementSibling)">
+                <ul style="display:none; position:absolute; background:#fff; border:1px solid #ccc; max-height:150px; overflow-y:auto; z-index:1000;"></ul>
+            `; // Novo campo com autocomplete
+            divIdiomas.appendChild(novoCampo);
+        }
     </script>
 </head>
 
@@ -140,9 +150,9 @@
 
                 <div id="idiomas">
                     <label for="idioma">Idioma:</label>
-                    <input type="text" id="idioma" name="idiomas[]" required oninput="autocompleteIdiomas()">
+                    <input type="text" id="idioma" name="idiomas[]" required oninput="autocompleteIdiomas(this, this.nextElementSibling)">
+                    <ul style="display:none; position:absolute; background:#fff; border:1px solid #ccc; max-height:150px; overflow-y:auto; z-index:1000;"></ul> <!-- Lista de sugestões -->
                     <button type="button" onclick="addCampoIdioma()">Adicionar mais um</button>
-                    <ul id="suggestions" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; max-height:150px; overflow-y:auto; z-index:1000;"></ul> <!-- Lista de sugestões -->
                 </div>
 
                 <label for="foto_perfil">Foto de Perfil:</label>
@@ -156,16 +166,5 @@
     <div class="footer">
         UNIVESP PI 2024
     </div>
-
-    <script>
-        function addCampoIdioma() {
-            const divIdiomas = document.getElementById('idiomas');
-            const novoCampo = document.createElement('div');
-            novoCampo.innerHTML = '<label for="idioma">Idioma:</label>' +
-                                  '<input type="text" name="idiomas[]" required oninput="autocompleteIdiomas()">' +
-                                  '<ul id="suggestions" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; max-height:150px; overflow-y:auto; z-index:1000;"></ul>'; // Novo campo com autocomplete
-            divIdiomas.appendChild(novoCampo);
-        }
-    </script>
 </body>
 </html>

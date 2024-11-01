@@ -7,16 +7,16 @@ session_start();
 
 // Verifica se foi enviado um formulário de cadastro
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
-    // Recupera os dados do formulário
-    $nome = $_POST["nome"];
-    $email = $_POST["email"];
-    $senha = password_hash($_POST["senha"], PASSWORD_DEFAULT); // Criptografa a senha
-    $cidade = $_POST["cidade"];  // Cidade selecionada no dropdown
-    $estado = $_POST["estado"];  // Estado selecionado no dropdown
-    $data_nascimento = !empty($_POST["data_nascimento"]) ? $_POST["data_nascimento"] : null; // Define como NULL se estiver vazio
-    $biografia = $_POST["biografia"];
+    // Recupera os dados do formulário com limpeza
+    $nome = htmlspecialchars(trim($_POST["nome"]));
+    $email = htmlspecialchars(trim($_POST["email"]));
+    $senha = password_hash(trim($_POST["senha"]), PASSWORD_DEFAULT); // Criptografa a senha
+    $cidade = htmlspecialchars(trim($_POST["cidade"]));
+    $estado = htmlspecialchars(trim($_POST["estado"]));
+    $data_nascimento = !empty($_POST["data_nascimento"]) ? htmlspecialchars(trim($_POST["data_nascimento"])) : null;
+    $biografia = htmlspecialchars(trim($_POST["biografia"]));
     $idiomas = $_POST["idiomas"]; // Array de idiomas
-    $tipo_usuario = $_POST["tipo_usuario"]; // Indica se é aluno ou tutor
+    $tipo_usuario = htmlspecialchars(trim($_POST["tipo_usuario"])); // Indica se é aluno ou tutor
 
     // Verifica se uma imagem foi enviada e define o caminho
     $foto_perfil = null;
@@ -29,25 +29,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
         // Verifica se o arquivo é uma imagem
         $check = getimagesize($_FILES["foto_perfil"]["tmp_name"]);
         if ($check === false) {
-            echo "O arquivo não é uma imagem.";
+            $_SESSION['error'] = "O arquivo não é uma imagem.";
             $uploadOk = 0;
         }
 
         // Verifica se o arquivo já existe
         if (file_exists($target_file)) {
-            echo "Desculpe, o arquivo já existe.";
+            $_SESSION['error'] = "Desculpe, o arquivo já existe.";
             $uploadOk = 0;
         }
 
         // Verifica o tamanho do arquivo
         if ($_FILES["foto_perfil"]["size"] > 500000) { // 500KB
-            echo "Desculpe, o arquivo é muito grande.";
+            $_SESSION['error'] = "Desculpe, o arquivo é muito grande.";
             $uploadOk = 0;
         }
 
         // Permite apenas certos formatos de imagem
         if (!in_array($imageFileType, ['jpg', 'png', 'jpeg', 'gif'])) {
-            echo "Desculpe, apenas arquivos JPG, JPEG, PNG e GIF são permitidos.";
+            $_SESSION['error'] = "Desculpe, apenas arquivos JPG, JPEG, PNG e GIF são permitidos.";
             $uploadOk = 0;
         }
 
@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
             if (move_uploaded_file($_FILES["foto_perfil"]["tmp_name"], $target_file)) {
                 $foto_perfil = $target_file; // Salva o caminho da imagem
             } else {
-                echo "Desculpe, ocorreu um erro ao enviar o arquivo.";
+                $_SESSION['error'] = "Desculpe, ocorreu um erro ao enviar o arquivo.";
             }
         }
     }
@@ -88,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
             } else {
                 $stmt = $conn->prepare("INSERT INTO IdiomaTutor (id_tutor, idioma) VALUES (?, ?)");
             }
-            $stmt->execute([$id_usuario, $idioma]);
+            $stmt->execute([$id_usuario, htmlspecialchars(trim($idioma))]); // Sanitizando o idioma
         }
 
         // Mensagem de sucesso na sessão
@@ -98,7 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
         header("Location: login.php");
         exit(); // Para garantir que o script pare aqui
     } catch (PDOException $e) {
-        echo "Erro ao cadastrar: " . $e->getMessage();
+        $_SESSION['error'] = "Erro ao cadastrar: " . $e->getMessage();
     }
 }
 ?>
