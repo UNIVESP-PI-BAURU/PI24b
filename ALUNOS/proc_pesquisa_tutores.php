@@ -19,13 +19,13 @@ try {
     $resultados = [];
 
     // Construir a consulta dependendo dos filtros preenchidos
-    $sql = "SELECT t.id AS id_tutor, t.nome, t.cidade, t.estado
+    $sql = "SELECT t.id AS id_tutor, t.nome, t.cidade, t.estado, GROUP_CONCAT(DISTINCT ia.idioma SEPARATOR ', ') AS idiomas
             FROM Tutores t
-            INNER JOIN IdiomaTutor it ON t.id = it.id_tutor
+            INNER JOIN IdiomaTutor ia ON t.id = ia.id_tutor
             WHERE 1=1"; // Para facilitar a adição de condições
 
     if (!empty($idioma)) {
-        $sql .= " AND LOWER(TRIM(it.idioma)) LIKE LOWER(TRIM(:idioma))";
+        $sql .= " AND LOWER(TRIM(ia.idioma)) LIKE LOWER(TRIM(:idioma))";
     }
     if (!empty($cidade)) {
         $sql .= " AND LOWER(TRIM(t.cidade)) LIKE LOWER(TRIM(:cidade))";
@@ -33,6 +33,7 @@ try {
     if (!empty($estado)) {
         $sql .= " AND LOWER(TRIM(t.estado)) LIKE LOWER(TRIM(:estado))";
     }
+    $sql .= " GROUP BY t.id"; // Agrupar por tutor
 
     $stmt = $conn->prepare($sql);
 

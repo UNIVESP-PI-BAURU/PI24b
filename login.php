@@ -18,7 +18,7 @@
     <nav class="navbar">
         <a href="./index.php">Home</a>
         <a href="./sobre_nos.php">Sobre nós</a>
-        <a href="./cadastro.html">Cadastro</a>
+        <a href="./cadastro.php">Cadastro</a>
     </nav>
 
     <!-- Mensagens de erro ou sucesso -->

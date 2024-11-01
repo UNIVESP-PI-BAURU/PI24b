@@ -50,32 +50,35 @@ unset($_SESSION['alunos_resultados']);
 
     <!-- Resultados da Pesquisa -->
     <div class="main-content">
-        <h2>Resultados da Pesquisa de Alunos</h2>
+        <div class="signup-section">
+            <h2>Resultados da Pesquisa de Alunos</h2>
         
-        <?php if (!empty($resultados)): ?>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Cidade</th>
-                        <th>Estado</th>
-                        <th>Idioma</th> <!-- Adiciona a coluna de idioma -->
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($resultados as $aluno): ?>
+            <?php if (!empty($resultados)): ?>
+                <table>
+                    <thead>
                         <tr>
-                            <td><?php echo htmlspecialchars($aluno['nome']); ?></td>
-                            <td><?php echo htmlspecialchars($aluno['cidade']); ?></td>
-                            <td><?php echo htmlspecialchars($aluno['estado']); ?></td>
-                            <td><?php echo htmlspecialchars($aluno['idiomas']); ?></td> <!-- Exibe os idiomas -->
+                            <th>Nome</th>
+                            <th>Cidade</th>
+                            <th>Estado</th>
+                            <th>Idioma</th> <!-- Adiciona a coluna de idioma -->
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        <?php else: ?>
-            <p>Nenhum aluno encontrado com os critérios informados.</p>
-        <?php endif; ?>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($resultados as $aluno): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($aluno['nome']); ?></td>
+                                <td><?php echo htmlspecialchars($aluno['cidade']); ?></td>
+                                <td><?php echo htmlspecialchars($aluno['estado']); ?></td>
+                                <td><?php echo htmlspecialchars($aluno['idiomas']); ?></td> <!-- Exibe os idiomas -->
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p>Nenhum aluno encontrado com os critérios informados.</p>
+            <?php endif; ?>
+
+        </div>
     </div>
 
     <!-- Rodapé -->

@@ -8,7 +8,7 @@ unset($_SESSION['erro_consulta']); // Limpa o erro após exibição
 // Verifica se há resultados armazenados na sessão
 if (!isset($_SESSION['tutores_resultados'])) {
     // Redireciona para a pesquisa se não houver resultados
-    header("Location: pesquisa_tutores.php");
+    header("Location: pesquisa_tutor.php");
     exit();
 }
 
@@ -50,30 +50,35 @@ unset($_SESSION['tutores_resultados']);
 
     <!-- Resultados da Pesquisa -->
     <div class="main-content">
-        <h2>Resultados da Pesquisa de Tutores</h2>
-        
-        <?php if (!empty($resultados)): ?>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Cidade</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($resultados as $tutor): ?>
+        <div class="signup-section">
+            <h2>Resultados da Pesquisa de Tutores</h2>
+            
+            <?php if (!empty($resultados)): ?>
+                <table>
+                    <thead>
                         <tr>
-                            <td><?php echo htmlspecialchars($tutor['nome']); ?></td>
-                            <td><?php echo htmlspecialchars($tutor['cidade']); ?></td>
-                            <td><?php echo htmlspecialchars($tutor['estado']); ?></td>
+                            <th>Nome</th>
+                            <th>Cidade</th>
+                            <th>Estado</th>
+                            <th>Idioma</th> <!-- Adiciona a coluna de idioma -->
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        <?php else: ?>
-            <p>Nenhum tutor encontrado com os critérios informados.</p>
-        <?php endif; ?>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($resultados as $tutor): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($tutor['nome']); ?></td>
+                                <td><?php echo htmlspecialchars($tutor['cidade']); ?></td>
+                                <td><?php echo htmlspecialchars($tutor['estado']); ?></td>
+                                <td><?php echo htmlspecialchars($tutor['idiomas']); ?></td> <!-- Exibe os idiomas -->
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p>Nenhum tutor encontrado com os critérios informados.</p>
+            <?php endif; ?>
+
+        </div>
     </div>
 
     <!-- Rodapé -->
