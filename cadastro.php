@@ -6,12 +6,11 @@
     <title>Criar Nova Conta</title>
     <link rel="stylesheet" href="ASSETS/CSS/style.css">
     <script>
-        // Variáveis globais para armazenar estados, municípios e idiomas
+        // Variáveis globais para armazenar estados e municípios
         let estados = [];
         let municipios = [];
-        let idiomas = []; // Adicionando a variável para idiomas
 
-        // Função para carregar JSON de estados, municípios e idiomas
+        // Função para carregar JSON de estados e municípios
         async function carregarDados() {
             try {
                 const resEstados = await fetch('estados.json');
@@ -19,9 +18,6 @@
 
                 const resMunicipios = await fetch('municipios.json');
                 municipios = await resMunicipios.json();
-
-                const resIdiomas = await fetch('idioma.json'); // Carregar idiomas
-                idiomas = await resIdiomas.json();
 
                 preencherEstados();
             } catch (error) {
@@ -57,27 +53,32 @@
         }
 
         // Função para autocomplete de idiomas
-        function autocompleteIdiomas(inputIdioma, suggestions) {
+        async function autocompleteIdiomas(inputIdioma, suggestions) {
             suggestions.innerHTML = ''; // Limpa as sugestões anteriores
             suggestions.style.display = 'none'; // Esconde as sugestões
 
-            const valor = inputIdioma.value.toLowerCase();
+            const valor = inputIdioma.value;
 
             if (valor.length > 1) { // Começa a mostrar sugestões a partir de 2 caracteres
-                const resultados = idiomas.filter(idioma => idioma.idioma.toLowerCase().includes(valor)); // Alterado para usar idioma.idioma
-                
-                resultados.forEach(idioma => {
-                    const li = document.createElement('li');
-                    li.textContent = idioma.idioma; // Altera para idioma.idioma
-                    li.onclick = () => {
-                        inputIdioma.value = idioma.idioma; // Preenche o campo com o idioma selecionado
-                        suggestions.style.display = 'none'; // Esconde as sugestões
-                    };
-                    suggestions.appendChild(li);
-                });
+                try {
+                    const res = await fetch(`autocomplete_idiomas.php?q=${encodeURIComponent(valor)}`);
+                    const resultados = await res.json();
 
-                if (resultados.length > 0) {
-                    suggestions.style.display = 'block'; // Mostra as sugestões se houver resultados
+                    resultados.forEach(idioma => {
+                        const li = document.createElement('li');
+                        li.textContent = idioma; // Altera para idioma
+                        li.onclick = () => {
+                            inputIdioma.value = idioma; // Preenche o campo com o idioma selecionado
+                            suggestions.style.display = 'none'; // Esconde as sugestões
+                        };
+                        suggestions.appendChild(li);
+                    });
+
+                    if (resultados.length > 0) {
+                        suggestions.style.display = 'block'; // Mostra as sugestões se houver resultados
+                    }
+                } catch (error) {
+                    console.error('Erro ao buscar idiomas:', error);
                 }
             }
         }
