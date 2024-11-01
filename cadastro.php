@@ -20,7 +20,7 @@
                 const resMunicipios = await fetch('municipios.json');
                 municipios = await resMunicipios.json();
 
-                const resIdiomas = await fetch('language.json'); // Carregar idiomas
+                const resIdiomas = await fetch('idioma.json'); // Carregar idiomas
                 idiomas = await resIdiomas.json();
 
                 preencherEstados();
