@@ -1,29 +1,24 @@
 <?php
-// Caminho do arquivo JSON original
-$jsonFilePath = 'language.json';
+// Lê o arquivo JSON
+$jsonData = file('idioma.json');
 
-// Lê o conteúdo do arquivo JSON
-$jsonData = file_get_contents($jsonFilePath);
+// Cria um array para armazenar os dados
+$languages = [];
 
-// Decodifica o JSON em um array associativo
-$arrayData = json_decode($jsonData, true);
-
-// Verifica se a decodificação foi bem-sucedida
-if ($arrayData === null) {
-    die("Erro ao decodificar JSON.");
+// Percorre cada linha do arquivo
+foreach ($jsonData as $line) {
+    // Remove espaços em branco e decodifica a linha JSON
+    $decoded = json_decode(trim($line), true);
+    if ($decoded) {
+        // Adiciona cada par chave-valor ao array
+        $languages = array_merge($languages, $decoded);
+    }
 }
 
-// Cria ou abre um novo arquivo para gravação
-$outputFilePath = 'idioma.json';
-$outputFile = fopen($outputFilePath, 'w');
+// Converte o array para JSON
+$jsonOutput = json_encode($languages, JSON_PRETTY_PRINT);
 
-// Escreve cada idioma em uma linha
-foreach ($arrayData as $code => $language) {
-    fwrite($outputFile, json_encode([$code => $language]) . PHP_EOL);
-}
-
-// Fecha o arquivo
-fclose($outputFile);
-
-echo "Conversão concluída. O arquivo formatado foi salvo como '$outputFilePath'.";
+// Salva o novo JSON em um arquivo
+file_put_contents('idioma_corrigido.json', $jsonOutput);
+echo "Arquivo corrigido e salvo como 'idioma_corrigido.json'.";
 ?>
