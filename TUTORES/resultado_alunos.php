@@ -1,4 +1,4 @@
-<?php
+<?php 
 session_start();
 
 // Verifica se há erros na sessão
@@ -50,7 +50,7 @@ unset($_SESSION['alunos_resultados']);
 
     <!-- Resultados da Pesquisa -->
     <div class="main-content">
-        <div class="signup-section">
+        <div class="result-section">
             <h2>Resultados da Pesquisa de Alunos</h2>
         
             <?php if (!empty($resultados)): ?>
@@ -61,6 +61,7 @@ unset($_SESSION['alunos_resultados']);
                             <th>Cidade</th>
                             <th>Estado</th>
                             <th>Idioma</th> <!-- Adiciona a coluna de idioma -->
+                            <th>Ações</th> <!-- Nova coluna para ações -->
                         </tr>
                     </thead>
                     <tbody>
@@ -70,7 +71,9 @@ unset($_SESSION['alunos_resultados']);
                                 <td><?php echo htmlspecialchars($aluno['cidade']); ?></td>
                                 <td><?php echo htmlspecialchars($aluno['estado']); ?></td>
                                 <td><?php echo htmlspecialchars($aluno['idiomas']); ?></td> <!-- Exibe os idiomas -->
+                                <td><a href="about.php?id=<?php echo htmlspecialchars($aluno['id']); ?>">Ver mais</a></td> <!-- Botão "Ver mais" -->
                             </tr>
+                            <tr><td colspan="5" style="height: 10px;"></td></tr> <!-- Espaço entre resultados -->
                         <?php endforeach; ?>
                     </tbody>
                 </table>

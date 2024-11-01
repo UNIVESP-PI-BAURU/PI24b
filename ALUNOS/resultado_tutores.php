@@ -1,4 +1,4 @@
-<?php
+<?php 
 session_start();
 
 // Verifica se há erros na sessão
@@ -8,7 +8,7 @@ unset($_SESSION['erro_consulta']); // Limpa o erro após exibição
 // Verifica se há resultados armazenados na sessão
 if (!isset($_SESSION['tutores_resultados'])) {
     // Redireciona para a pesquisa se não houver resultados
-    header("Location: pesquisa_tutor.php");
+    header("Location: pesquisa_tutores.php");
     exit();
 }
 
@@ -50,9 +50,9 @@ unset($_SESSION['tutores_resultados']);
 
     <!-- Resultados da Pesquisa -->
     <div class="main-content">
-        <div class="signup-section">
+        <div class="result-section">
             <h2>Resultados da Pesquisa de Tutores</h2>
-            
+        
             <?php if (!empty($resultados)): ?>
                 <table>
                     <thead>
@@ -61,6 +61,7 @@ unset($_SESSION['tutores_resultados']);
                             <th>Cidade</th>
                             <th>Estado</th>
                             <th>Idioma</th> <!-- Adiciona a coluna de idioma -->
+                            <th>Ações</th> <!-- Nova coluna para ações -->
                         </tr>
                     </thead>
                     <tbody>
@@ -70,7 +71,9 @@ unset($_SESSION['tutores_resultados']);
                                 <td><?php echo htmlspecialchars($tutor['cidade']); ?></td>
                                 <td><?php echo htmlspecialchars($tutor['estado']); ?></td>
                                 <td><?php echo htmlspecialchars($tutor['idiomas']); ?></td> <!-- Exibe os idiomas -->
+                                <td><a href="about.php?id=<?php echo htmlspecialchars($tutor['id']); ?>">Ver mais</a></td> <!-- Botão "Ver mais" -->
                             </tr>
+                            <tr><td colspan="5" style="height: 10px;"></td></tr> <!-- Espaço entre resultados -->
                         <?php endforeach; ?>
                     </tbody>
                 </table>

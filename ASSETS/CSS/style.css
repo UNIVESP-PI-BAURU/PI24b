@@ -236,7 +236,31 @@ button:hover, .signup-button:hover {
     border-radius: 50%; /* Bordas arredondadas da imagem */
 }
 
-/* paginas de resultados da pesquisa aluno ou tutor */
+
+/* resultado pesquisa */
+.result-section {
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 95%;
+    max-width: 500px;
+    box-sizing: border-box;
+    margin-top: 2rem;
+}
+.result-section h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+.result-section input {
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+/*paginação resultado pesquisa */
 .pagination a {
     text-decoration: none;
     padding: 8px 12px;
