@@ -19,7 +19,7 @@ try {
     $resultados = [];
 
     // Construir a consulta dependendo dos filtros preenchidos
-    $sql = "SELECT a.id AS id_aluno, a.nome, a.cidade, a.estado
+    $sql = "SELECT a.id AS id_aluno, a.nome, a.cidade, a.estado, GROUP_CONCAT(ia.idioma SEPARATOR ', ') AS idiomas
             FROM Alunos a
             INNER JOIN IdiomaAluno ia ON a.id = ia.id_aluno
             WHERE 1=1"; // Para facilitar a adição de condições
@@ -33,6 +33,8 @@ try {
     if (!empty($estado)) {
         $sql .= " AND LOWER(TRIM(a.estado)) LIKE LOWER(TRIM(:estado))";
     }
+
+    $sql .= " GROUP BY a.id"; // Agrupa os resultados para evitar duplicação
 
     $stmt = $conn->prepare($sql);
 

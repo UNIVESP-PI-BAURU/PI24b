@@ -59,6 +59,7 @@ unset($_SESSION['alunos_resultados']);
                         <th>Nome</th>
                         <th>Cidade</th>
                         <th>Estado</th>
+                        <th>Idioma</th> <!-- Adiciona a coluna de idioma -->
                     </tr>
                 </thead>
                 <tbody>
@@ -67,6 +68,7 @@ unset($_SESSION['alunos_resultados']);
                             <td><?php echo htmlspecialchars($aluno['nome']); ?></td>
                             <td><?php echo htmlspecialchars($aluno['cidade']); ?></td>
                             <td><?php echo htmlspecialchars($aluno['estado']); ?></td>
+                            <td><?php echo htmlspecialchars($aluno['idiomas']); ?></td> <!-- Exibe os idiomas -->
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
