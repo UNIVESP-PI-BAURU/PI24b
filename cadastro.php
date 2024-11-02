@@ -5,6 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar Nova Conta</title>
     <link rel="stylesheet" href="ASSETS/CSS/style.css">
+</head>
+<body>
+    <form action="proc_cadastro.php" method="POST" enctype="multipart/form-data">
+        <label for="tipo_usuario">Tipo de Usuário:</label>
+        <select id="tipo_usuario" name="tipo_usuario" required>
+            <option value="aluno">Aluno</option>
+            <option value="tutor">Tutor</option>
+        </select>
+
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" required>
+
+        <label for="estado">Estado:</label>
+        <select id="estado" name="estado" onchange="atualizarCidades()" required></select>
+
+        <label for="cidade">Cidade:</label>
+        <select id="cidade" name="cidade" required></select>
+
+        <label for="data_nascimento">Data de Nascimento:</label>
+        <input type="date" id="data_nascimento" name="data_nascimento">
+
+        <label for="biografia">Biografia:</label>
+        <textarea id="biografia" name="biografia"></textarea>
+
+        <label for="idiomas">Idiomas:</label>
+        <input type="text" id="idiomas" name="idiomas" oninput="autocompleteIdiomas(this, document.getElementById('sugestoesIdiomas'))">
+        <ul id="sugestoesIdiomas" style="display:none;"></ul>
+
+        <label for="foto_perfil">Foto de Perfil:</label>
+        <input type="file" id="foto_perfil" name="foto_perfil" accept="image/*">
+
+        <button type="submit" name="registrar">Registrar</button>
+    </form>
+
     <script>
         // Função para exibir mensagens
         function mostrarMensagem(mensagem) {
@@ -27,8 +67,7 @@
                 <?php unset($_SESSION['error']); ?>
             <?php endif; ?>
         };
-    </script>
-    <script>
+
         // Variáveis globais para armazenar estados e municípios
         let estados = [];
         let municipios = [];
@@ -119,44 +158,5 @@
             }
         }
     </script>
-</head>
-<body>
-    <form action="proc_cadastro.php" method="POST" enctype="multipart/form-data">
-        <label for="tipo_usuario">Tipo de Usuário:</label>
-        <select id="tipo_usuario" name="tipo_usuario" required>
-            <option value="aluno">Aluno</option>
-            <option value="tutor">Tutor</option>
-        </select>
-
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" required>
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-
-        <label for="senha">Senha:</label>
-        <input type="password" id="senha" name="senha" required>
-
-        <label for="estado">Estado:</label>
-        <select id="estado" name="estado" onchange="atualizarCidades()" required></select>
-
-        <label for="cidade">Cidade:</label>
-        <select id="cidade" name="cidade" required></select>
-
-        <label for="data_nascimento">Data de Nascimento:</label>
-        <input type="date" id="data_nascimento" name="data_nascimento">
-
-        <label for="biografia">Biografia:</label>
-        <textarea id="biografia" name="biografia"></textarea>
-
-        <label for="idiomas">Idiomas:</label>
-        <input type="text" id="idiomas" name="idiomas" oninput="autocompleteIdiomas(this, document.getElementById('sugestoesIdiomas'))">
-        <ul id="sugestoesIdiomas" style="display:none;"></ul>
-
-        <label for="foto_perfil">Foto de Perfil:</label>
-        <input type="file" id="foto_perfil" name="foto_perfil" accept="image/*">
-
-        <button type="submit" name="registrar">Registrar</button>
-    </form>
 </body>
 </html>
