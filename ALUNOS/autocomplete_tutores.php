@@ -9,28 +9,35 @@ $term = $_GET['term'] ?? '';
 // Inicializa um array para armazenar os resultados
 $resultados = [];
 
-if ($tipo === 'cidade') {
-    $sql = "SELECT DISTINCT cidade FROM Tutores WHERE cidade LIKE :term";
-} elseif ($tipo === 'estado') {
-    $sql = "SELECT DISTINCT estado FROM Tutores WHERE estado LIKE :term";
-} elseif ($tipo === 'idioma') {
-    $sql = "SELECT DISTINCT idioma FROM IdiomaTutor WHERE idioma LIKE :term";
-} else {
-    echo json_encode([]);
+if (empty($term) || !in_array($tipo, ['cidade', 'estado', 'idioma'])) {
+    echo json_encode([]); // Termo vazio ou tipo inválido
     exit();
 }
 
-$stmt = $conn->prepare($sql);
-$stmt->bindValue(':term', "%$term%", PDO::PARAM_STR);
-$stmt->execute();
+try {
+    if ($tipo === 'cidade') {
+        $sql = "SELECT DISTINCT cidade FROM Tutores WHERE LOWER(TRIM(cidade)) LIKE LOWER(TRIM(:term))";
+    } elseif ($tipo === 'estado') {
+        $sql = "SELECT DISTINCT estado FROM Tutores WHERE LOWER(TRIM(estado)) LIKE LOWER(TRIM(:term))";
+    } elseif ($tipo === 'idioma') {
+        $sql = "SELECT DISTINCT idioma FROM IdiomaTutor WHERE LOWER(TRIM(idioma)) LIKE LOWER(TRIM(:term))";
+    } else {
+        echo json_encode([]);
+        exit();
+    }
 
-if ($tipo === 'cidade') {
+    // Prepara e executa a consulta
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(':term', "%$term%", PDO::PARAM_STR);
+    $stmt->execute();
+
+    // Armazena os resultados
     $resultados = $stmt->fetchAll(PDO::FETCH_COLUMN);
-} elseif ($tipo === 'estado') {
-    $resultados = $stmt->fetchAll(PDO::FETCH_COLUMN);
-} elseif ($tipo === 'idioma') {
-    $resultados = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    // Retorna os resultados como JSON
+    echo json_encode($resultados);
+} catch (PDOException $e) {
+    error_log("Erro na execução: " . $e->getMessage());
+    echo json_encode([]);
 }
-
-echo json_encode($resultados);
 ?>

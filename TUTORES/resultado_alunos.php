@@ -50,8 +50,7 @@ unset($_SESSION['alunos_resultados']);
 
     <!-- Resultados da Pesquisa -->
     <div class="main-result">
-        <div class="result" style="padding: 1rem; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                 width: 95%; max-width: 1000px; box-sizing: border-box; margin-top: 2rem;">
+        <div class="result" style="padding: 1rem; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 95%; max-width: 1000px; box-sizing: border-box; margin-top: 2rem;">
             <h2 style="text-align: center; margin-bottom: 1rem;">Resultados da Pesquisa de Alunos</h2>
         
             <?php if (!empty($resultados)): ?>
@@ -74,14 +73,13 @@ unset($_SESSION['alunos_resultados']);
                                 <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($aluno['idiomas']); ?></td>
                                 <td style="border: 1px solid #ddd; padding: 4px;"><a href="about_aluno.php?id=<?php echo htmlspecialchars($aluno['id']); ?>">Ver mais</a></td>
                             </tr>
-                            <tr><td colspan="5" style="height: 4px;"></td></tr>
+                            <tr><td colspan="5" style="height: 4px;"></td></tr> <!-- Espaço entre resultados -->
                         <?php endforeach; ?>
                     </tbody>
                 </table>
             <?php else: ?>
                 <p>Nenhum aluno encontrado com os critérios informados.</p>
             <?php endif; ?>
-
         </div>
     </div>
 
