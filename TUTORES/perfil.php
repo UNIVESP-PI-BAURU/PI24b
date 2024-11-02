@@ -35,8 +35,8 @@ require_once 'proc_perfil.php';
 <!-- Conteúdo Principal -->
 <main class="main-content">
     <div class="signup-section">
-        <h2>Perfil: <?php echo htmlspecialchars($usuario['nome']); ?></h2>
-        <p><strong>ID:</strong> <?php echo htmlspecialchars($usuario['id']); ?></p> <!-- Exibindo ID do usuário -->
+        <h2>Perfil: <?php echo isset($usuario['nome']) ? htmlspecialchars($usuario['nome']) : 'Usuário não encontrado'; ?></h2>
+        <p><strong>ID:</strong> <?php echo isset($usuario['id']) ? htmlspecialchars($usuario['id']) : 'N/A'; ?></p>
 
         <div class="foto-perfil">
             <div class="foto-moldura-perfil">
@@ -49,11 +49,11 @@ require_once 'proc_perfil.php';
         </div>
 
         <div class="info-usuario">
-            <p><strong>Email:</strong> <?php echo htmlspecialchars($usuario['email']); ?></p>
-            <p><strong>Cidade/Estado:</strong> <?php echo htmlspecialchars($usuario['cidade']) . ', ' . htmlspecialchars($usuario['estado']); ?></p>
-            <p><strong>Data de Nascimento:</strong> <?php echo !empty($usuario['data_nascimento']) ? htmlspecialchars($usuario['data_nascimento']) : 'Não informado'; ?></p>
-            <p><strong>Idiomas:</strong> <?php echo implode(', ', array_map('htmlspecialchars', $idiomas)); ?></p>
-            <p><strong>Biografia:</strong> <?php echo htmlspecialchars($usuario['biografia']); ?></p>
+            <p><strong>Email:</strong> <?php echo isset($usuario['email']) ? htmlspecialchars($usuario['email']) : 'Não informado'; ?></p>
+            <p><strong>Cidade/Estado:</strong> <?php echo isset($usuario['cidade']) ? htmlspecialchars($usuario['cidade']) : 'Não informado'; ?>, <?php echo isset($usuario['estado']) ? htmlspecialchars($usuario['estado']) : 'Não informado'; ?></p>
+            <p><strong>Data de Nascimento:</strong> <?php echo isset($usuario['data_nascimento']) ? htmlspecialchars($usuario['data_nascimento']) : 'Não informado'; ?></p>
+            <p><strong>Idiomas:</strong> <?php echo isset($idiomas) ? implode(', ', array_map('htmlspecialchars', $idiomas)) : 'Nenhum idioma encontrado'; ?></p>
+            <p><strong>Biografia:</strong> <?php echo isset($usuario['biografia']) ? htmlspecialchars($usuario['biografia']) : 'Não informada'; ?></p>
         </div>
 
         <div class="actions">

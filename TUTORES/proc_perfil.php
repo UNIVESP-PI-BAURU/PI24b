@@ -18,40 +18,46 @@ if (isset($_SESSION['id_aluno'])) {
 }
 
 // Recupera os dados do usuário
-if ($tipo_usuario === 'aluno') {
-    $query = $conn->prepare("SELECT * FROM Alunos WHERE id = :id");
-    error_log("Query para recuperar aluno: " . $query->queryString); // Debug: Query do aluno
-} else {
-    $query = $conn->prepare("SELECT * FROM Tutores WHERE id = :id");
-    error_log("Query para recuperar tutor: " . $query->queryString); // Debug: Query do tutor
-}
+try {
+    if ($tipo_usuario === 'aluno') {
+        $query = $conn->prepare("SELECT * FROM Alunos WHERE id = :id");
+        error_log("Query para recuperar aluno: " . $query->queryString); // Debug: Query do aluno
+    } else {
+        $query = $conn->prepare("SELECT * FROM Tutores WHERE id = :id");
+        error_log("Query para recuperar tutor: " . $query->queryString); // Debug: Query do tutor
+    }
 
-$query->bindParam(':id', $id_usuario);
-$query->execute();
+    $query->bindParam(':id', $id_usuario);
+    $query->execute();
 
-$usuario = $query->fetch(PDO::FETCH_ASSOC);
+    $usuario = $query->fetch(PDO::FETCH_ASSOC);
 
-// Se o usuário não for encontrado, redireciona
-if (!$usuario) {
-    error_log("Usuário não encontrado: ID = $id_usuario, redirecionando para login."); // Debug: usuário não encontrado
-    header("Location: ../login.php");
+    // Se o usuário não for encontrado, redireciona
+    if (!$usuario) {
+        error_log("Usuário não encontrado: ID = $id_usuario, redirecionando para login."); // Debug: usuário não encontrado
+        header("Location: ../login.php");
+        exit();
+    }
+
+    // Recupera idiomas se necessário
+    $idiomas = [];
+    if ($tipo_usuario === 'aluno') {
+        $query_idiomas = $conn->prepare("SELECT idioma FROM IdiomaAluno WHERE aluno_id = :id");
+        error_log("Query para recuperar idiomas do aluno: " . $query_idiomas->queryString); // Debug: Query de idiomas do aluno
+    } else {
+        $query_idiomas = $conn->prepare("SELECT idioma FROM IdiomaTutor WHERE tutor_id = :id");
+        error_log("Query para recuperar idiomas do tutor: " . $query_idiomas->queryString); // Debug: Query de idiomas do tutor
+    }
+
+    $query_idiomas->bindParam(':id', $id_usuario);
+    $query_idiomas->execute();
+    $idiomas = $query_idiomas->fetchAll(PDO::FETCH_COLUMN);
+
+    // Debug: Exibe idiomas recuperados
+    error_log("Idiomas recuperados: " . implode(", ", $idiomas));
+} catch (PDOException $e) {
+    error_log("Erro ao recuperar dados: " . $e->getMessage()); // Captura erros de consulta
+    header("Location: ../login.php"); // Redireciona em caso de erro
     exit();
 }
-
-// Recupera idiomas se necessário
-$idiomas = [];
-if ($tipo_usuario === 'aluno') {
-    $query_idiomas = $conn->prepare("SELECT idioma FROM IdiomaAluno WHERE aluno_id = :id");
-    error_log("Query para recuperar idiomas do aluno: " . $query_idiomas->queryString); // Debug: Query de idiomas do aluno
-} else {
-    $query_idiomas = $conn->prepare("SELECT idioma FROM IdiomaTutor WHERE tutor_id = :id");
-    error_log("Query para recuperar idiomas do tutor: " . $query_idiomas->queryString); // Debug: Query de idiomas do tutor
-}
-
-$query_idiomas->bindParam(':id', $id_usuario);
-$query_idiomas->execute();
-$idiomas = $query_idiomas->fetchAll(PDO::FETCH_COLUMN);
-
-// Debug: Exibe idiomas recuperados
-error_log("Idiomas recuperados: " . implode(", ", $idiomas));
 ?>
