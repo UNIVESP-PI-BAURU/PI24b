@@ -1,114 +1,77 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<?php
+session_start();
+require_once '../conexao.php';
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesquisa de Tutores</title>
-    <link rel="stylesheet" href="ASSETS/CSS/style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-</head>
+// Coleta dos filtros
+$cidade = isset($_POST['cidade']) ? trim($_POST['cidade']) : '';
+$estado = isset($_POST['estado']) ? trim($_POST['estado']) : '';
+$idioma = isset($_POST['idioma']) ? trim($_POST['idioma']) : '';
+$id_aluno = isset($_POST['id_aluno']) ? trim($_POST['id_aluno']) : ''; // Captura a ID do aluno
 
-<body>
+// Verifica se pelo menos um dos filtros foi preenchido
+if (empty($cidade) && empty($estado) && empty($idioma)) {
+    $_SESSION['erro_consulta'] = "É necessário preencher pelo menos um critério de pesquisa.";
+    header("Location: resultado_tutores.php");
+    exit();
+}
 
-    <!-- Cabeçalho -->
-    <div class="header">
-        <img src="ASSETS/IMG/capa.png" alt="Imagem de Capa">
-    </div>
+try {
+    // Inicializa um array para armazenar resultados
+    $resultados = [];
 
-    <!-- Navegação -->
-    <nav class="navbar">
-        <a href="./index.php">Home</a>
-        <a href="./sobre_nos.php">Sobre nós</a>
-        <a href="./dashboard.php">Dashboard</a>
-    </nav>
+    // Construir a consulta dependendo dos filtros preenchidos
+    $sql = "SELECT t.id AS id_tutor, t.nome, t.cidade, t.estado, GROUP_CONCAT(it.idioma SEPARATOR ', ') AS idiomas
+            FROM Tutores t
+            INNER JOIN IdiomaTutor it ON t.id = it.id_tutor
+            WHERE 1=1"; // Para facilitar a adição de condições
 
-    <!-- Pesquisa de Tutores -->
-    <div class="main-content">
-        <div class="signup-section">
-            <h2>Pesquisar Tutores</h2>
-            <form class="signup-form" method="POST" action="proc_pesquisa_tutores.php" onsubmit="return handleSubmit();">
-                <input type="text" id="cidade" name="cidade" placeholder="Cidade..." />
-                <br>
-                <input type="text" id="estado" name="estado" placeholder="Estado..." />
-                <br>
-                <input type="text" id="idioma" name="idioma" placeholder="Idioma..." />
-                <br>
-                <button type="submit">Pesquisar</button>
-            </form>
-        </div>
-    </div>
+    if (!empty($idioma)) {
+        $sql .= " AND LOWER(TRIM(it.idioma)) LIKE LOWER(TRIM(:idioma))";
+    }
+    if (!empty($cidade)) {
+        $sql .= " AND LOWER(TRIM(t.cidade)) LIKE LOWER(TRIM(:cidade))";
+    }
+    if (!empty($estado)) {
+        $sql .= " AND LOWER(TRIM(t.estado)) LIKE LOWER(TRIM(:estado))";
+    }
 
-    <!-- Script para Autocomplete -->
-    <script>
-        $(document).ready(function() {
-            $("#cidade").autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "autocomplete_tutores.php",
-                        type: "GET",
-                        dataType: "json",
-                        data: {
-                            term: request.term,
-                            tipo: 'cidade'
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                }
-            });
+    $sql .= " GROUP BY t.id"; // Agrupa os resultados para evitar duplicação
 
-            $("#estado").autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "autocomplete_tutores.php",
-                        type: "GET",
-                        dataType: "json",
-                        data: {
-                            term: request.term,
-                            tipo: 'estado'
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                }
-            });
+    $stmt = $conn->prepare($sql);
 
-            $("#idioma").autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "autocomplete_tutores.php",
-                        type: "GET",
-                        dataType: "json",
-                        data: {
-                            term: request.term,
-                            tipo: 'idioma'
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                }
-            });
-        });
+    // Bind dos valores
+    if (!empty($idioma)) {
+        $stmt->bindValue(':idioma', "%$idioma%", PDO::PARAM_STR);
+    }
+    if (!empty($cidade)) {
+        $stmt->bindValue(':cidade', "%$cidade%", PDO::PARAM_STR);
+    }
+    if (!empty($estado)) {
+        $stmt->bindValue(':estado', "%$estado%", PDO::PARAM_STR);
+    }
 
-        function handleSubmit() {
-            console.log("Formulário enviado:");
-            console.log("Cidade:", $("#cidade").val());
-            console.log("Estado:", $("#estado").val());
-            console.log("Idioma:", $("#idioma").val());
-            return true; // Permite o envio do formulário
-        }
-    </script>
+    $stmt->execute();
 
-    <!-- Rodapé -->
-    <div class="footer">
-        UNIVESP PI 2024
-    </div>
+    $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-</body>
-</html>
+    // Verifica se há resultados
+    if (!empty($resultados)) {
+        $_SESSION['tutores_resultados'] = $resultados; // Armazena os resultados na sessão
+        $_SESSION['id_aluno'] = $id_aluno; // Armazena a ID do aluno na sessão (se necessário)
+        header("Location: resultado_tutores.php"); // Redireciona para a página de resultados
+        exit();
+    } else {
+        $_SESSION['erro_consulta'] = "Não conseguimos encontrar registros, tente novamente.";
+        header("Location: resultado_tutores.php"); // Redireciona para a página de resultados
+        exit();
+    }
+
+} catch (PDOException $e) {
+    $_SESSION['erro_consulta'] = "Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.";
+    header("Location: resultado_tutores.php"); // Redireciona para a página de resultados
+    exit();
+}
+
+// Fecha a conexão
+$conn = null;
+?>

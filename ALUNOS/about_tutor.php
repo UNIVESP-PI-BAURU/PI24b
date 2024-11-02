@@ -2,13 +2,17 @@
 session_start();
 
 // Verifica se o ID do tutor foi passado na URL
-if (!isset($_GET['id'])) {
+if (!isset($_GET['id']) || empty($_GET['id'])) {
+    // Redireciona para a página de pesquisa se o ID não for fornecido ou estiver vazio
     header("Location: pesquisa_tutores.php");
     exit();
 }
 
 // Obtém o ID do tutor da URL
 $id_tutor = intval($_GET['id']);
+
+// Armazena a ID do aluno que está logado na sessão
+$id_aluno = $_SESSION['aluno_id']; // Supondo que a ID do aluno esteja armazenada na sessão
 
 require_once '../conexao.php'; // Inclui a conexão com o banco
 
@@ -57,6 +61,10 @@ try {
         <p><strong>Cidade:</strong> <?php echo htmlspecialchars($tutor['cidade']); ?></p>
         <p><strong>Estado:</strong> <?php echo htmlspecialchars($tutor['estado']); ?></p>
         <p><strong>Idiomas:</strong> <?php echo htmlspecialchars($tutor['idiomas']); ?></p>
+        
+        <!-- Campo oculto para a ID do tutor e ID do aluno -->
+        <input type="hidden" id="id_tutor" value="<?php echo htmlspecialchars($id_tutor); ?>">
+        <input type="hidden" id="id_aluno" value="<?php echo htmlspecialchars($id_aluno); ?>">
     </div>
 
     <!-- Funcionalidades de interação -->

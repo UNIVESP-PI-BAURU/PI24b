@@ -1,46 +1,71 @@
 <?php
-// Inicia a sessão
 session_start();
-if (!isset($_SESSION['id_tutor'])) {
+require_once '../conexao.php';
+
+// Verifica se o usuário está logado
+if (isset($_SESSION['id_aluno'])) {
+    $id_usuario = $_SESSION['id_aluno'];
+    $tipo_usuario = 'aluno';
+} elseif (isset($_SESSION['id_tutor'])) {
+    $id_usuario = $_SESSION['id_tutor'];
+    $tipo_usuario = 'tutor';
+} else {
     header("Location: ../login.php");
     exit();
 }
 
-// Inclui conexão com o banco de dados
-require_once '../conexao.php';
-if (!$conn) {
-    die("Falha na conexão com o banco de dados.");
+// Recupera os dados do usuário
+if ($tipo_usuario === 'aluno') {
+    $query = $pdo->prepare("SELECT * FROM Alunos WHERE id = :id");
+} else {
+    $query = $pdo->prepare("SELECT * FROM Tutores WHERE id = :id");
 }
 
-// Define o tipo de usuário e realiza a consulta
-$tipo_usuario = 'tutor';
-$id_usuario = $_SESSION['id_tutor'];
+$query->bindParam(':id', $id_usuario);
+$query->execute();
 
-// Consulta SQL para buscar dados do tutor
-$sql = "SELECT nome, email, foto_perfil, cidade, estado, data_nascimento, biografia 
-        FROM Tutores 
-        WHERE id = :id";
-$stmt = $conn->prepare($sql);
-$stmt->bindParam(':id', $id_usuario, PDO::PARAM_INT);
-$stmt->execute();
+$usuario = $query->fetch(PDO::FETCH_ASSOC);
 
-$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Verifica se encontrou o tutor
+// Se o usuário não for encontrado, redireciona
 if (!$usuario) {
-    die("Usuário não encontrado.");
+    header("Location: ../login.php");
+    exit();
 }
 
-// Consulta SQL para buscar idiomas do tutor
-$sql_idiomas = "SELECT idioma FROM IdiomaTutor WHERE id_tutor = :id_tutor";
-$stmt_idiomas = $conn->prepare($sql_idiomas);
-$stmt_idiomas->bindParam(':id_tutor', $id_usuario, PDO::PARAM_INT);
-$stmt_idiomas->execute();
-
-$idiomas = $stmt_idiomas->fetchAll(PDO::FETCH_COLUMN);
-
-// Verifica se encontrou idiomas
-if (!$idiomas) {
-    $idiomas = []; // Caso não tenha idiomas, inicializa como array vazio
+// Recupera idiomas se necessário
+$idiomas = [];
+if ($tipo_usuario === 'aluno') {
+    $query_idiomas = $pdo->prepare("SELECT idioma FROM IdiomaAluno WHERE aluno_id = :id");
+} else {
+    $query_idiomas = $pdo->prepare("SELECT idioma FROM IdiomaTutor WHERE tutor_id = :id");
 }
+
+$query_idiomas->bindParam(':id', $id_usuario);
+$query_idiomas->execute();
+$idiomas = $query_idiomas->fetchAll(PDO::FETCH_COLUMN);
+
+// Renderiza o perfil
 ?>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1><?php echo htmlspecialchars($usuario['nome']); ?></h1>
+        <p>ID: <?php echo htmlspecialchars($usuario['id']); ?></p> <!-- Exibe o ID do usuário -->
+        
+        <h2>Idiomas</h2>
+        <ul>
+            <?php foreach ($idiomas as $idioma): ?>
+                <li><?php echo htmlspecialchars($idioma); ?></li>
+            <?php endforeach; ?>
+        </ul>
+        
+        <a href="../index.php">Voltar</a>
+    </div>
+</body>
+</html>

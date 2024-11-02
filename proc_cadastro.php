@@ -81,6 +81,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
         // Recupera o ID do usuário recém-criado
         $id_usuario = $conn->lastInsertId();
 
+        // Armazena o ID do usuário na sessão
+        $_SESSION['id_usuario'] = $id_usuario; // Armazena o ID para uso futuro
+
         // Insere os idiomas no banco
         foreach ($idiomas as $idioma) {
             if ($tipo_usuario === 'aluno') {

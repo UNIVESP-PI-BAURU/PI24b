@@ -57,18 +57,17 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
                             <?php echo htmlspecialchars($usuario['estado']) ? htmlspecialchars($usuario['estado']) : ''; ?>
                         </p>
                     <?php endif; ?>
+                    <!-- Aqui vamos recuperar a id do usuario, aluno nesse caso -->
+                    <p>ID-A: # <?php echo htmlspecialchars($id_usuario); ?></p>
                     <button onclick="window.location.href='./perfil.php'">Ver meu perfil</button>
                 </div>
             </div>
-
-
 
             <!-- Pesquisa -->
             <div class="signup-section" style="margin-top: 20px;">
                 <h3>Encontre seu tutor aqui!</h3>
                 <button onclick="window.location.href='./pesquisa_tutores.php'">Pesquisar Tutores</button>
             </div>
-
 
             <!-- Aulas -->
             <div class="signup-section" style="margin-top: 30px;">

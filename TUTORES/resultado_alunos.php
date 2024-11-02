@@ -17,6 +17,9 @@ $resultados = $_SESSION['alunos_resultados'];
 
 // Limpa os resultados da sessão após a exibição
 unset($_SESSION['alunos_resultados']);
+
+// Presumindo que a ID do tutor está armazenada na sessão
+$id_tutor = $_SESSION['id_tutor'] ?? null;
 ?>
 
 <!DOCTYPE html>
@@ -71,7 +74,13 @@ unset($_SESSION['alunos_resultados']);
                                 <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($aluno['cidade']); ?></td>
                                 <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($aluno['estado']); ?></td>
                                 <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($aluno['idiomas']); ?></td>
-                                <td style="border: 1px solid #ddd; padding: 4px;"><a href="about_aluno.php?id=<?php echo htmlspecialchars($aluno['id']); ?>">Ver mais</a></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;">
+                                    <a href="about_aluno.php?id=<?php echo isset($aluno['id_aluno']) ? htmlspecialchars($aluno['id_aluno']) : ''; ?>">Ver mais</a>
+                                    <!-- Campo oculto para a ID do aluno -->
+                                    <input type="hidden" name="id_aluno[]" value="<?php echo isset($aluno['id_aluno']) ? htmlspecialchars($aluno['id_aluno']) : ''; ?>" />
+                                    <!-- Campo oculto para a ID do tutor -->
+                                    <input type="hidden" name="id_tutor" value="<?php echo htmlspecialchars($id_tutor); ?>" />
+                                </td>
                             </tr>
                             <tr><td colspan="5" style="height: 4px;"></td></tr> <!-- Espaço entre resultados -->
                         <?php endforeach; ?>

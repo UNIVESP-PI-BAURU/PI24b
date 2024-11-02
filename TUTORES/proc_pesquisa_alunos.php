@@ -6,6 +6,7 @@ require_once '../conexao.php';
 $cidade = isset($_POST['cidade']) ? trim($_POST['cidade']) : '';
 $estado = isset($_POST['estado']) ? trim($_POST['estado']) : '';
 $idioma = isset($_POST['idioma']) ? trim($_POST['idioma']) : '';
+$id_tutor = isset($_POST['id_tutor']) ? trim($_POST['id_tutor']) : ''; // Captura a ID do tutor
 
 // Verifica se pelo menos um dos filtros foi preenchido
 if (empty($cidade) && empty($estado) && empty($idioma)) {
@@ -56,6 +57,7 @@ try {
     // Verifica se há resultados
     if (!empty($resultados)) {
         $_SESSION['alunos_resultados'] = $resultados; // Armazena os resultados na sessão
+        $_SESSION['id_tutor'] = $id_tutor; // Armazena a ID do tutor na sessão (se necessário)
         header("Location: resultado_alunos.php"); // Redireciona para a página de resultados
         exit();
     } else {
@@ -65,7 +67,6 @@ try {
     }
 
 } catch (PDOException $e) {
-    error_log("Erro na consulta: " . $e->getMessage());
     $_SESSION['erro_consulta'] = "Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.";
     header("Location: resultado_alunos.php"); // Redireciona para a página de resultados
     exit();

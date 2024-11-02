@@ -8,7 +8,7 @@ require_once 'conexao.php';
 // Verifica se foi enviado um formulário de login
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
     // Recupera os dados do formulário
-    $email = $_POST["email"];
+    $email = htmlspecialchars(trim($_POST["email"])); // Sanitização
     $senha = $_POST["senha"];
     $tipo_usuario = $_POST["tipo_usuario"]; // Tipo de usuário (aluno ou tutor)
 
