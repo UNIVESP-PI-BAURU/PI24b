@@ -11,17 +11,20 @@
             alert(mensagem);
         }
 
-        // Chama a função para mostrar a mensagem se existir
+        // Carrega os dados na inicialização da página
         window.onload = () => {
+            carregarDados();
+            carregarIdiomas();
+
             <?php session_start(); ?>
             <?php if (isset($_SESSION['message'])): ?>
                 mostrarMensagem("<?= $_SESSION['message'] ?>");
-                <?php unset($_SESSION['message']); // Limpa a mensagem após exibir ?>
+                <?php unset($_SESSION['message']); ?>
             <?php endif; ?>
 
             <?php if (isset($_SESSION['error'])): ?>
                 mostrarMensagem("<?= $_SESSION['error'] ?>");
-                <?php unset($_SESSION['error']); // Limpa a mensagem após exibir ?>
+                <?php unset($_SESSION['error']); ?>
             <?php endif; ?>
         };
     </script>
@@ -115,17 +118,10 @@
                 }
             }
         }
-
-        // Carrega os dados na inicialização da página
-        window.onload = () => {
-            carregarDados();
-            carregarIdiomas();
-        };
     </script>
 </head>
 <body>
     <form action="proc_cadastro.php" method="POST" enctype="multipart/form-data">
-
         <label for="tipo_usuario">Tipo de Usuário:</label>
         <select id="tipo_usuario" name="tipo_usuario" required>
             <option value="aluno">Aluno</option>
