@@ -31,7 +31,8 @@ if (!isset($_SESSION['id_tutor'])) {
     <nav class="navbar">
         <a href="./index.php">Home</a>
         <a href="./sobre_nos.php">Sobre nós</a>
-        <a href="./dashboard.php">Dashboard</a>
+        <a href="<?php echo isset($_SESSION['id_tutor']) ? './dashboard_tutor.php' : './dashboard_aluno.php'; ?>">Dashboard</a>
+        <a href="../logout.php">Logout</a>
     </nav>
 
     <!-- Pesquisa de Alunos -->

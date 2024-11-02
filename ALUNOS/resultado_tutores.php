@@ -42,9 +42,10 @@ error_log("Resultados recebidos: " . print_r($resultados, true));
 
     <!-- Navegação -->
     <nav class="navbar">
-        <a href="./index.php">Home</a>
-        <a href="./sobre_nos.php">Sobre nós</a>
-        <a href="./dashboard.php">Dashboard</a>
+        <a href="../index.php">Home</a>
+        <a href="../sobre_nos.php">Sobre nós</a>
+        <a href="<?php echo isset($_SESSION['id_tutor']) ? './dashboard_tutor.php' : './dashboard_aluno.php'; ?>">Dashboard</a>
+        <a href="../logout.php">Logout</a>
     </nav>
 
     <!-- Mensagem de erro, se houver -->
@@ -94,6 +95,11 @@ error_log("Resultados recebidos: " . print_r($resultados, true));
             <?php else: ?>
                 <p>Nenhum tutor encontrado com os critérios informados.</p>
             <?php endif; ?>
+            <br>
+            <div class="actions" style="text-align: center; margin: 20px 0;">
+                <button onclick="window.location.href='pesquisa_tutores.php'">Voltar para Pesquisa de Tutores</button>
+            </div>
+
         </div>
     </div>
 
