@@ -259,3 +259,63 @@ button:hover, .signup-button:hover {
     color: white; /* Cor do texto para contraste */
     border-radius: 4px; /* Bordas arredondadas */
 }
+
+
+/*ABOUT tutor ou aluno*/
+/* Estrutura principal */
+.about-section {
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 1000px;
+    box-sizing: border-box;
+    margin: 2rem auto;
+}
+
+/* Título */
+.about-section h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    color: #333;
+}
+
+/* Informações do perfil */
+.about-section p {
+    font-size: 1rem;
+    color: #555;
+    margin: 0.5rem 0;
+}
+
+/* Área de interação */
+.interactions {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #ddd;
+}
+
+.interactions h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.interactions button {
+    padding: 0.5rem 1rem;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin: 0.5rem;
+}
+
+.interactions button:hover {
+    background-color: #575757;
+}
+
+

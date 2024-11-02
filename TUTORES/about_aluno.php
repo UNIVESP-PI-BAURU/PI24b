@@ -3,31 +3,32 @@ session_start();
 
 // Verifica se o ID do aluno foi passado na URL
 if (!isset($_GET['id']) || empty($_GET['id'])) {
-    // Redireciona para a página de pesquisa se o ID não for fornecido ou estiver vazio
     header("Location: pesquisa_alunos.php");
     exit();
 }
 
-// Obtém o ID do aluno da URL
+// Obtém o ID do aluno e a ID do tutor que está logado
 $id_aluno = intval($_GET['id']);
+$id_tutor = $_SESSION['id_tutor'] ?? null;
 
-// Armazena a ID do tutor que está logado na sessão
-$id_tutor = $_SESSION['tutor_id']; // Supondo que a ID do tutor esteja armazenada na sessão
-
-require_once '../conexao.php'; // Inclui a conexão com o banco
+require_once '../conexao.php';
 
 try {
-    // Utiliza o objeto de conexão $conn já existente
-    $stmt = $conn->prepare("SELECT * FROM Alunos WHERE id = :id");
+    // Recupera as informações do aluno
+    $stmt = $pdo->prepare("SELECT * FROM Alunos WHERE id = :id");
     $stmt->execute(['id' => $id_aluno]);
     $aluno = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // Verifica se o aluno foi encontrado
     if (!$aluno) {
-        header("Location: pesquisa_alunos.php"); // Redireciona se o aluno não for encontrado
+        header("Location: pesquisa_alunos.php");
         exit();
     }
 
+    // Recupera os idiomas do aluno
+    $stmt_idiomas = $pdo->prepare("SELECT idioma FROM IdiomaAluno WHERE aluno_id = :id");
+    $stmt_idiomas->execute(['id' => $id_aluno]);
+    $idiomas = $stmt_idiomas->fetchAll(PDO::FETCH_COLUMN);
 } catch (PDOException $e) {
     echo "Erro na consulta: " . $e->getMessage();
     exit();
@@ -56,13 +57,30 @@ try {
     </nav>
 
     <!-- Detalhes do Aluno -->
-    <div class="main-content">
+    <div class="about-section">
         <h2>Perfil de Aluno: <?php echo htmlspecialchars($aluno['nome']); ?></h2>
-        <p><strong>Cidade:</strong> <?php echo htmlspecialchars($aluno['cidade']); ?></p>
-        <p><strong>Estado:</strong> <?php echo htmlspecialchars($aluno['estado']); ?></p>
-        <p><strong>Idiomas:</strong> <?php echo htmlspecialchars($aluno['idiomas']); ?></p>
-        
-        <!-- Campo oculto para a ID do aluno e ID do tutor -->
+        <p><strong>ID:</strong> <?php echo htmlspecialchars($aluno['id']); ?></p>
+
+        <!-- Exibe a foto de perfil, se disponível -->
+        <div class="foto-perfil">
+            <div class="foto-moldura-perfil">
+                <?php if (!empty($aluno['foto_perfil'])): ?>
+                    <img src="<?php echo htmlspecialchars($aluno['foto_perfil']); ?>" alt="Foto de Perfil" class="avatar-perfil">
+                <?php else: ?>
+                    <p>Sem foto</p>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <div class="info-usuario">
+            <p><strong>Email:</strong> <?php echo htmlspecialchars($aluno['email']); ?></p>
+            <p><strong>Cidade/Estado:</strong> <?php echo htmlspecialchars($aluno['cidade']) . ', ' . htmlspecialchars($aluno['estado']); ?></p>
+            <p><strong>Data de Nascimento:</strong> <?php echo !empty($aluno['data_nascimento']) ? htmlspecialchars($aluno['data_nascimento']) : 'Não informado'; ?></p>
+            <p><strong>Idiomas:</strong> <?php echo implode(', ', array_map('htmlspecialchars', $idiomas)); ?></p>
+            <p><strong>Biografia:</strong> <?php echo htmlspecialchars($aluno['biografia']); ?></p>
+        </div>
+
+        <!-- Campos ocultos para armazenar IDs do aluno e do tutor -->
         <input type="hidden" id="id_aluno" value="<?php echo htmlspecialchars($id_aluno); ?>">
         <input type="hidden" id="id_tutor" value="<?php echo htmlspecialchars($id_tutor); ?>">
     </div>
