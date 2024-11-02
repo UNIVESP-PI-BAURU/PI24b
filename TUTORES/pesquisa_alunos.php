@@ -1,4 +1,4 @@
-<?php
+<?php 
 session_start();
 if (!isset($_SESSION['id_tutor'])) {
     error_log("Tutor não logado, redirecionando para login.");
@@ -18,6 +18,25 @@ if (!isset($_SESSION['id_tutor'])) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+        /* Estilo do botão, aplicado inline para garantir prioridade */
+        .custom-button {
+            padding: 0.5rem 1rem;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+        .custom-button:hover {
+            background-color: #575757;
+        }
+    </style>
 </head>
 
 <body>
@@ -40,19 +59,14 @@ if (!isset($_SESSION['id_tutor'])) {
         <div class="signup-section">
             <h2>Pesquisar Alunos</h2>
             <form class="signup-form" method="POST" action="proc_pesquisa_alunos.php">
-                <input type="hidden" name="id_tutor" value="<?php echo htmlspecialchars($_SESSION['id_tutor']); ?>" /> <!-- Campo oculto para ID do tutor -->
+                <input type="hidden" name="id_tutor" value="<?php echo htmlspecialchars($_SESSION['id_tutor']); ?>" />
                 <input type="text" id="cidade" name="cidade" placeholder="Cidade..." />
                 <br>
                 <input type="text" id="estado" name="estado" placeholder="Estado..." />
                 <br>
                 <input type="text" id="idioma" name="idioma" placeholder="Idioma..." />
                 <br>
-                <button type="submit" name="pesquisar" class="login-button" 
-                    style="padding: 0.5rem 1rem; background-color: #333; color: white; border: none; border-radius: 5px;
-                    cursor: pointer; font-size: 16px; text-align: center; text-decoration: none; display: inline-block;
-                     margin-top: 1rem;"
-                    onmouseover="this.style.backgroundColor='#575757';" 
-                    onmouseout="this.style.backgroundColor='#333';">
+                <button type="submit" name="pesquisar" class="custom-button">
                     Pesquisar
                 </button>
             </form>
