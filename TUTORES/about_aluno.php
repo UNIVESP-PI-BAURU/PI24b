@@ -85,17 +85,20 @@ try {
             <p><strong>Biografia:</strong> <?php echo htmlspecialchars($aluno['biografia']); ?></p>
         </div>
 
+        <!-- Funcionalidades de interação -->
+        <div class="interactions">
+            <h3>Interação</h3>
+            <button>Enviar Mensagem</button>
+            <button>Adicionar aos Favoritos</button>
+        </div>
+
+
         <!-- Campos ocultos para armazenar IDs do aluno e do tutor -->
         <input type="hidden" id="id_aluno" value="<?php echo htmlspecialchars($id_aluno); ?>">
         <input type="hidden" id="id_tutor" value="<?php echo htmlspecialchars($id_tutor); ?>">
     </div>
 
-    <!-- Funcionalidades de interação -->
-    <div class="interactions">
-        <h3>Interação</h3>
-        <button>Enviar Mensagem</button>
-        <button>Adicionar aos Favoritos</button>
-    </div>
+
 
     <!-- Rodapé -->
     <div class="footer">
