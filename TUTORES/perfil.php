@@ -2,6 +2,7 @@
 // Inicia a sessão e verifica login
 session_start();
 if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
+    error_log("Usuário não logado, redirecionando para login.");
     header("Location: ../login.php");
     exit();
 }
@@ -35,6 +36,7 @@ require_once 'proc_perfil.php';
 <main class="main-content">
     <div class="signup-section">
         <h2>Perfil: <?php echo htmlspecialchars($usuario['nome']); ?></h2>
+        <p><strong>ID:</strong> <?php echo htmlspecialchars($usuario['id']); ?></p> <!-- Exibindo ID do usuário -->
 
         <div class="foto-perfil">
             <div class="foto-moldura-perfil">

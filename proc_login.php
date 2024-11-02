@@ -12,6 +12,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
     $senha = $_POST["senha"];
     $tipo_usuario = $_POST["tipo_usuario"]; // Tipo de usuário (aluno ou tutor)
 
+    // Debug: Exibir os dados recebidos
+    error_log("Dados do login: Email: $email, Tipo: $tipo_usuario");
+
     // Define a tabela do banco de dados com base no tipo de usuário
     $tabela_usuario = ($tipo_usuario == "aluno") ? "Alunos" : "Tutores";
 
@@ -22,8 +25,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
     $stmt->execute();
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Se o usuário existir, verifica a senha
+    // Debug: Verificando se o usuário foi encontrado
     if ($usuario) {
+        error_log("Usuário encontrado: " . print_r($usuario, true));
+
         // Verifica a senha usando password_verify
         if (password_verify($senha, $usuario['senha'])) {
             // Armazena o ID do usuário e o nome na sessão
@@ -53,5 +58,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
         header("Location: login.php"); // Redireciona de volta para o login
         exit();
     }
+} else {
+    // Se não for uma requisição POST
+    $_SESSION['error'] = "Método de requisição inválido.";
+    header("Location: login.php");
+    exit();
 }
 ?>

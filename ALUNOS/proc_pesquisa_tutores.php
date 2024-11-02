@@ -6,6 +6,10 @@ require_once '../conexao.php';
 $cidade = isset($_POST['cidade']) ? trim($_POST['cidade']) : '';
 $estado = isset($_POST['estado']) ? trim($_POST['estado']) : '';
 $idioma = isset($_POST['idioma']) ? trim($_POST['idioma']) : '';
+$id_aluno = isset($_POST['id_aluno']) ? trim($_POST['id_aluno']) : ''; // Captura a ID do aluno
+
+// Debug: Exibir filtros recebidos
+error_log("Filtros recebidos: cidade = $cidade, estado = $estado, idioma = $idioma, id_aluno = $id_aluno");
 
 // Verifica se pelo menos um dos filtros foi preenchido
 if (empty($cidade) && empty($estado) && empty($idioma)) {
@@ -19,13 +23,13 @@ try {
     $resultados = [];
 
     // Construir a consulta dependendo dos filtros preenchidos
-    $sql = "SELECT t.id AS id_tutor, t.nome, t.cidade, t.estado, GROUP_CONCAT(DISTINCT ia.idioma SEPARATOR ', ') AS idiomas
+    $sql = "SELECT t.id AS id_tutor, t.nome, t.cidade, t.estado, GROUP_CONCAT(it.idioma SEPARATOR ', ') AS idiomas
             FROM Tutores t
-            INNER JOIN IdiomaTutor ia ON t.id = ia.id_tutor
+            INNER JOIN IdiomaTutor it ON t.id = it.id_tutor
             WHERE 1=1"; // Para facilitar a adição de condições
 
     if (!empty($idioma)) {
-        $sql .= " AND LOWER(TRIM(ia.idioma)) LIKE LOWER(TRIM(:idioma))";
+        $sql .= " AND LOWER(TRIM(it.idioma)) LIKE LOWER(TRIM(:idioma))";
     }
     if (!empty($cidade)) {
         $sql .= " AND LOWER(TRIM(t.cidade)) LIKE LOWER(TRIM(:cidade))";
@@ -33,7 +37,8 @@ try {
     if (!empty($estado)) {
         $sql .= " AND LOWER(TRIM(t.estado)) LIKE LOWER(TRIM(:estado))";
     }
-    $sql .= " GROUP BY t.id"; // Agrupar por tutor
+
+    $sql .= " GROUP BY t.id"; // Agrupa os resultados para evitar duplicação
 
     $stmt = $conn->prepare($sql);
 
@@ -48,28 +53,26 @@ try {
         $stmt->bindValue(':estado', "%$estado%", PDO::PARAM_STR);
     }
 
+    // Executa a consulta
     $stmt->execute();
 
+    // Armazena os resultados
     $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Verifica se há resultados
-    if (!empty($resultados)) {
-        $_SESSION['tutores_resultados'] = $resultados; // Armazena os resultados na sessão
-        header("Location: resultado_tutores.php"); // Redireciona para a página de resultados
-        exit();
-    } else {
-        $_SESSION['erro_consulta'] = "Não conseguimos encontrar registros, tente novamente.";
-        header("Location: resultado_tutores.php"); // Redireciona para a página de resultados
-        exit();
-    }
+    // Debug: Exibir resultados obtidos
+    error_log("Resultados obtidos: " . print_r($resultados, true));
 
-} catch (PDOException $e) {
-    error_log("Erro na consulta: " . $e->getMessage());
-    $_SESSION['erro_consulta'] = "Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.";
-    header("Location: resultado_tutores.php"); // Redireciona para a página de resultados
+} catch (Exception $e) {
+    // Captura erros de execução
+    error_log("Erro: " . $e->getMessage());
+    $_SESSION['erro_consulta'] = "Erro ao realizar a consulta.";
+    header("Location: resultado_tutores.php");
     exit();
 }
 
-// Fecha a conexão
-$conn = null;
-?>
+// Armazena resultados na sessão para exibição
+$_SESSION['resultados_tutores'] = $resultados;
+
+// Redireciona para a página de resultados
+header("Location: resultado_tutores.php");
+exit();

@@ -15,7 +15,7 @@ require_once '../conexao.php';
 
 try {
     // Recupera as informações do aluno
-    $stmt = $pdo->prepare("SELECT * FROM Alunos WHERE id = :id");
+    $stmt = $conn->prepare("SELECT * FROM Alunos WHERE id = :id");
     $stmt->execute(['id' => $id_aluno]);
     $aluno = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -26,9 +26,13 @@ try {
     }
 
     // Recupera os idiomas do aluno
-    $stmt_idiomas = $pdo->prepare("SELECT idioma FROM IdiomaAluno WHERE aluno_id = :id");
+    $stmt_idiomas = $conn->prepare("SELECT idioma FROM IdiomaAluno WHERE aluno_id = :id");
     $stmt_idiomas->execute(['id' => $id_aluno]);
     $idiomas = $stmt_idiomas->fetchAll(PDO::FETCH_COLUMN);
+
+    // Debug: Registrar informações do aluno e dos idiomas
+    error_log("Aluno encontrado: " . print_r($aluno, true));
+    error_log("Idiomas do aluno: " . print_r($idiomas, true));
 } catch (PDOException $e) {
     echo "Erro na consulta: " . $e->getMessage();
     exit();

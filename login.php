@@ -74,9 +74,5 @@
         UNIVESP PI 2024
     </div>
 
-    <script>
-        // Scripts adicionais, se necessário
-    </script>
-
 </body>
 </html>

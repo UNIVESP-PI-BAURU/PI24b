@@ -51,7 +51,7 @@ require_once 'proc_dashboard_tutor.php'; // Importa a lógica da dashboard do tu
                 </div>
                 <div style="flex: 2; padding-left: 10px;">
                     <p>Tutor(a): <?php echo htmlspecialchars($usuario['nome']); ?></p>
-                    <p>ID-T: # <?php echo htmlspecialchars($_SESSION['id_tutor']); ?></p> <!-- Exibe o ID do tutor -->
+                    <p>ID-T: # <?php echo htmlspecialchars($_SESSION['id_tutor']); ?></p>
                     <?php if (!empty($usuario['cidade']) || !empty($usuario['estado'])): ?>
                         <p>
                             <?php echo htmlspecialchars($usuario['cidade']) ? htmlspecialchars($usuario['cidade']) . ', ' : ''; ?>

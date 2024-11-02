@@ -15,9 +15,11 @@
             try {
                 const resEstados = await fetch('estados.json');
                 estados = await resEstados.json();
+                console.log('Estados carregados:', estados); // Debug
 
                 const resMunicipios = await fetch('municipios.json');
                 municipios = await resMunicipios.json();
+                console.log('Municípios carregados:', municipios); // Debug
 
                 preencherEstados();
             } catch (error) {
@@ -50,6 +52,8 @@
                 option.textContent = cidade.nome;
                 cidadeSelect.appendChild(option);
             });
+
+            console.log('Cidades atualizadas para o estado:', estadoSelecionado); // Debug
         }
 
         // Função para carregar idiomas do arquivo JSON
@@ -59,6 +63,7 @@
             try {
                 const response = await fetch('idioma.json');
                 idiomas = await response.json();
+                console.log('Idiomas carregados:', idiomas); // Debug
             } catch (error) {
                 console.error('Erro ao carregar idiomas:', error);
             }
@@ -73,6 +78,7 @@
 
             if (valor.length > 1) { // Começa a mostrar sugestões a partir de 2 caracteres
                 const resultados = idiomas.filter(idioma => idioma.idioma.toLowerCase().startsWith(valor.toLowerCase()));
+                console.log('Resultados do autocomplete para', valor, ':', resultados); // Debug
 
                 resultados.forEach(idioma => {
                     const li = document.createElement('li');

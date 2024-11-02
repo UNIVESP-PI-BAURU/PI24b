@@ -8,6 +8,9 @@ $estado = isset($_POST['estado']) ? trim($_POST['estado']) : '';
 $idioma = isset($_POST['idioma']) ? trim($_POST['idioma']) : '';
 $id_tutor = isset($_POST['id_tutor']) ? trim($_POST['id_tutor']) : ''; // Captura a ID do tutor
 
+// Debug: Exibir filtros recebidos
+error_log("Filtros recebidos: cidade = $cidade, estado = $estado, idioma = $idioma, id_tutor = $id_tutor");
+
 // Verifica se pelo menos um dos filtros foi preenchido
 if (empty($cidade) && empty($estado) && empty($idioma)) {
     $_SESSION['erro_consulta'] = "É necessário preencher pelo menos um critério de pesquisa.";
@@ -50,28 +53,26 @@ try {
         $stmt->bindValue(':estado', "%$estado%", PDO::PARAM_STR);
     }
 
+    // Executa a consulta
     $stmt->execute();
 
+    // Armazena os resultados
     $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Verifica se há resultados
-    if (!empty($resultados)) {
-        $_SESSION['alunos_resultados'] = $resultados; // Armazena os resultados na sessão
-        $_SESSION['id_tutor'] = $id_tutor; // Armazena a ID do tutor na sessão (se necessário)
-        header("Location: resultado_alunos.php"); // Redireciona para a página de resultados
-        exit();
-    } else {
-        $_SESSION['erro_consulta'] = "Não conseguimos encontrar registros, tente novamente.";
-        header("Location: resultado_alunos.php"); // Redireciona para a página de resultados
-        exit();
-    }
+    // Debug: Exibir resultados obtidos
+    error_log("Resultados obtidos: " . print_r($resultados, true));
 
-} catch (PDOException $e) {
-    $_SESSION['erro_consulta'] = "Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.";
-    header("Location: resultado_alunos.php"); // Redireciona para a página de resultados
+} catch (Exception $e) {
+    // Captura erros de execução
+    error_log("Erro: " . $e->getMessage());
+    $_SESSION['erro_consulta'] = "Erro ao realizar a consulta.";
+    header("Location: resultado_alunos.php");
     exit();
 }
 
-// Fecha a conexão
-$conn = null;
-?>
+// Armazena resultados na sessão para exibição
+$_SESSION['resultados_alunos'] = $resultados;
+
+// Redireciona para a página de resultados
+header("Location: resultado_alunos.php");
+exit();

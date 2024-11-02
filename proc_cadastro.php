@@ -102,6 +102,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
         exit(); // Para garantir que o script pare aqui
     } catch (PDOException $e) {
         $_SESSION['error'] = "Erro ao cadastrar: " . $e->getMessage();
+        error_log("Erro ao cadastrar: " . $e->getMessage()); // Log do erro
+    } catch (Exception $e) {
+        $_SESSION['error'] = "Erro inesperado: " . $e->getMessage();
+        error_log("Erro inesperado: " . $e->getMessage()); // Log do erro
     }
 }
 ?>

@@ -2,6 +2,7 @@
 // Inicia a sessão e verifica login
 session_start();
 if (!isset($_SESSION['id_tutor'])) {
+    error_log("Tutor não logado, redirecionando para login.");
     header("Location: ../login.php");
     exit();
 }
@@ -108,14 +109,14 @@ require_once 'proc_editar_perfil.php';
 <script>
     function addCampoIdioma() {
         var divIdiomas = document.getElementById('idiomas');
-        var novoCampo = document.createElement('div');
-        novoCampo.innerHTML = '<label for="idioma">Idioma:</label>' +
-                              '<input type="text" name="idiomas[]" required>';
-        divIdiomas.appendChild(novoCampo);
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'idiomas[]';
+        divIdiomas.appendChild(input);
     }
-
+    
     function retornarPerfil() {
-        window.location.href = 'perfil.php'; // Redireciona para o perfil
+        window.location.href = 'perfil.php';
     }
 </script>
 

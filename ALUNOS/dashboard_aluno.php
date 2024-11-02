@@ -1,5 +1,5 @@
 <?php
-require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
+require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard do aluno
 ?>
 
 <!DOCTYPE html>
@@ -7,7 +7,7 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Conectando Interesses</title>
+    <title>Dashboard - Aluno</title>
     <link rel="stylesheet" href="../ASSETS/CSS/style.css">
 </head>
 <body>
@@ -21,7 +21,7 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
     <nav class="navbar">
         <a href="../index.php">Home</a>
         <a href="../sobre_nos.php">Sobre nós</a>
-        <?php if (isset($_SESSION['id_aluno']) || isset($_SESSION['id_tutor'])): ?>
+        <?php if (isset($_SESSION['id_aluno'])): ?>
             <a href="../logout.php">Logout</a>
         <?php else: ?>
             <a href="../login.php">Login</a>
@@ -35,7 +35,7 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
 
             <!-- Saudação -->
             <div class="signup-section">
-                <h3>Bem-vindo, <?php echo htmlspecialchars($usuario['nome']); ?>!</h3>
+                <h3>Bem-vindo (a), aluno(a) <?php echo htmlspecialchars($usuario['nome']); ?>!</h3>
             </div>
 
             <!-- Perfil -->
@@ -50,28 +50,27 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
                     </div>
                 </div>
                 <div style="flex: 2; padding-left: 10px;">
-                    <p><?php echo ($tipo_usuario === "tutor" ? "Tutor(a): " : "Aluno(a): ") . htmlspecialchars($usuario['nome']); ?></p>
+                    <p>Aluno(a): <?php echo htmlspecialchars($usuario['nome']); ?></p>
+                    <p>ID-A: # <?php echo htmlspecialchars($_SESSION['id_aluno']); ?></p>
                     <?php if (!empty($usuario['cidade']) || !empty($usuario['estado'])): ?>
                         <p>
                             <?php echo htmlspecialchars($usuario['cidade']) ? htmlspecialchars($usuario['cidade']) . ', ' : ''; ?>
                             <?php echo htmlspecialchars($usuario['estado']) ? htmlspecialchars($usuario['estado']) : ''; ?>
                         </p>
                     <?php endif; ?>
-                    <!-- Aqui vamos recuperar a id do usuario, aluno nesse caso -->
-                    <p>ID-A: # <?php echo htmlspecialchars($id_usuario); ?></p>
                     <button onclick="window.location.href='./perfil.php'">Ver meu perfil</button>
                 </div>
             </div>
 
             <!-- Pesquisa -->
             <div class="signup-section" style="margin-top: 20px;">
-                <h3>Encontre seu tutor aqui!</h3>
+                <h3>Encontre seus tutores aqui!</h3>
                 <button onclick="window.location.href='./pesquisa_tutores.php'">Pesquisar Tutores</button>
             </div>
 
             <!-- Aulas -->
             <div class="signup-section" style="margin-top: 30px;">
-                <h3>Aulas em andamento:</h3>
+                <h3>Aulas atribuídas:</h3>
                 <!-- Conteúdo das aulas será inserido aqui -->
             </div>
 

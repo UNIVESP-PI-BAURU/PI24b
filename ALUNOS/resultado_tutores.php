@@ -6,20 +6,23 @@ $erro = $_SESSION['erro_consulta'] ?? null;
 unset($_SESSION['erro_consulta']); // Limpa o erro após exibição
 
 // Verifica se há resultados armazenados na sessão
-if (!isset($_SESSION['tutores_resultados'])) {
+if (!isset($_SESSION['resultados_tutores'])) {
     // Redireciona para a pesquisa se não houver resultados
     header("Location: pesquisa_tutores.php");
     exit();
 }
 
 // Obtém os resultados da sessão
-$resultados = $_SESSION['tutores_resultados'];
+$resultados = $_SESSION['resultados_tutores'];
 
 // Limpa os resultados da sessão após a exibição
-unset($_SESSION['tutores_resultados']);
+unset($_SESSION['resultados_tutores']);
 
 // Presumindo que a ID do aluno está armazenada na sessão
 $id_aluno = $_SESSION['id_aluno'] ?? null;
+
+// Debug: Exibir resultados recebidos
+error_log("Resultados recebidos: " . print_r($resultados, true));
 ?>
 
 <!DOCTYPE html>
