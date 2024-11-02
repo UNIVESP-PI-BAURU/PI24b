@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
     $estado = htmlspecialchars(trim($_POST["estado"]));
     $data_nascimento = !empty($_POST["data_nascimento"]) ? htmlspecialchars(trim($_POST["data_nascimento"])) : null;
     $biografia = htmlspecialchars(trim($_POST["biografia"]));
-    $tipo_usuario = htmlspecialchars(trim($_POST["tipo_usuario"]));
+    $tipo_usuario = isset($_POST["tipo_usuario"]) ? $_POST["tipo_usuario"] : [];
 
     // Verifica se uma imagem foi enviada e define o caminho
     $foto_perfil = null;
@@ -59,20 +59,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
 
     // Inserindo dados na tabela correta
     try {
-        if ($tipo_usuario === 'aluno') {
-            $stmt = $conn->prepare(
-                "INSERT INTO Alunos (nome, email, senha, cidade, estado, data_nascimento, biografia, foto_perfil) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-            );
-        } else {
-            $stmt = $conn->prepare(
-                "INSERT INTO Tutores (nome, email, senha, cidade, estado, data_nascimento, biografia, foto_perfil) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-            );
-        }
+        foreach ($tipo_usuario as $usuario) {
+            if ($usuario === 'aluno') {
+                $stmt = $conn->prepare(
+                    "INSERT INTO Alunos (nome, email, senha, cidade, estado, data_nascimento, biografia, foto_perfil) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+                );
+            } elseif ($usuario === 'tutor') {
+                $stmt = $conn->prepare(
+                    "INSERT INTO Tutores (nome, email, senha, cidade, estado, data_nascimento, biografia, foto_perfil) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+                );
+            }
 
-        $stmt->bind_param("ssssssss", $nome, $email, $senha, $cidade, $estado, $data_nascimento, $biografia, $foto_perfil);
-        $stmt->execute();
+            if (isset($stmt)) {
+                $stmt->bind_param("ssssssss", $nome, $email, $senha, $cidade, $estado, $data_nascimento, $biografia, $foto_perfil);
+                $stmt->execute();
+            }
+        }
 
         $_SESSION['message'] = "Cadastro realizado com sucesso!";
         header("Location: cadastro.php");

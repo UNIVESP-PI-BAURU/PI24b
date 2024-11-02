@@ -25,11 +25,15 @@
             <h2>Cadastre-se</h2>
 
             <form action="proc_cadastro.php" method="POST" enctype="multipart/form-data">
-                <label for="tipo_usuario">Tipo de Usuário:</label>
-                <select id="tipo_usuario" name="tipo_usuario" required>
-                    <option value="aluno">Aluno</option>
-                    <option value="tutor">Tutor</option>
-                </select>
+                <label>Tipo de Usuário:</label>
+                <div>
+                    <input type="checkbox" id="aluno" name="tipo_usuario[]" value="aluno">
+                    <label for="aluno">Aluno</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="tutor" name="tipo_usuario[]" value="tutor">
+                    <label for="tutor">Tutor</label>
+                </div>
 
                 <label for="nome">Nome:</label>
                 <input type="text" id="nome" name="nome" required>
