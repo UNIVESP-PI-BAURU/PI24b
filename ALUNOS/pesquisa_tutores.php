@@ -46,8 +46,15 @@ if (!isset($_SESSION['id_tutor'])) {
                 <input type="text" id="estado" name="estado" placeholder="Estado..." />
                 <br>
                 <input type="text" id="idioma" name="idioma" placeholder="Idioma..." />
-                <br> 
-                <button type="submit" name="pesquisar" class="login-button">Pesquisar</button>
+                <br>
+                <button type="submit" name="pesquisar" class="login-button" 
+                    style="padding: 0.5rem 1rem; background-color: #333; color: white; border: none; border-radius: 5px;
+                     cursor: pointer; font-size: 16px; text-align: center; text-decoration: none; display: inline-block;
+                      margin-top: 1rem;"
+                    onmouseover="this.style.backgroundColor='#575757';" 
+                    onmouseout="this.style.backgroundColor='#333';">
+                    Pesquisar
+                </button>
             </form>
         </div>
     </div>
