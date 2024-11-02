@@ -61,7 +61,7 @@ require_once 'proc_perfil.php';
             <button onclick="if(confirm('Você tem certeza que deseja excluir sua conta?')) { window.location.href='excluir_conta.php'; }">Excluir Conta</button>
         </div>
 
-        <button onclick="window.location.href='./dashboard.php'">Voltar para Dashboard</button>
+        <button onclick="window.location.href='<?php echo isset($_SESSION['id_tutor']) ? 'dashboard_tutor.php' : 'dashboard_aluno.php'; ?>'">Voltar para Dashboard</button>
     </div>
 </main>
 

@@ -26,14 +26,16 @@
             <h2>Cadastre-se</h2>
 
             <form action="proc_cadastro.php" method="POST" enctype="multipart/form-data">
-                <label>Tipo de Usuário:</label>
-                <div>
-                    <input type="radio" id="aluno" name="tipo_usuario" value="aluno" required>
-                    <label for="aluno">Aluno</label>
-                </div>
-                <div>
-                    <input type="radio" id="tutor" name="tipo_usuario" value="tutor" required>
-                    <label for="tutor">Tutor</label>
+                 <!-- Tipo de Usuário -->
+                 <div class="user-type">
+                    <div>
+                        <input type="radio" id="aluno" name="tipo_usuario" value="aluno" checked>
+                        <label for="aluno">Aluno</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="tutor" name="tipo_usuario" value="tutor">
+                        <label for="tutor">Tutor</label>
+                    </div>
                 </div>
 
                 <label for="nome">Nome:</label>
