@@ -239,9 +239,6 @@ button:hover, .signup-button:hover {
 
 /* resultado pesquisa */
 .result-section {
-    background-color: #e0e0e0; /* Cor de fundo para teste */
-    border: 1px solid #333; /* Borda para teste */
-    padding: 1rem;
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
