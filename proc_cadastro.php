@@ -2,21 +2,17 @@
 // Inclui o arquivo de conexão com o banco de dados
 require_once 'conexao.php';
 
-// Inicia a sessão
-session_start();
-
 // Verifica se foi enviado um formulário de cadastro
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
     // Recupera os dados do formulário com limpeza
     $nome = htmlspecialchars(trim($_POST["nome"]));
     $email = htmlspecialchars(trim($_POST["email"]));
-    $senha = password_hash(trim($_POST["senha"]), PASSWORD_DEFAULT); // Criptografa a senha
+    $senha = password_hash(trim($_POST["senha"]), PASSWORD_DEFAULT);
     $cidade = htmlspecialchars(trim($_POST["cidade"]));
     $estado = htmlspecialchars(trim($_POST["estado"]));
     $data_nascimento = !empty($_POST["data_nascimento"]) ? htmlspecialchars(trim($_POST["data_nascimento"])) : null;
     $biografia = htmlspecialchars(trim($_POST["biografia"]));
-    $idiomas = $_POST["idiomas"]; // Array de idiomas
-    $tipo_usuario = htmlspecialchars(trim($_POST["tipo_usuario"])); // Indica se é aluno ou tutor
+    $tipo_usuario = htmlspecialchars(trim($_POST["tipo_usuario"]));
 
     // Verifica se uma imagem foi enviada e define o caminho
     $foto_perfil = null;
@@ -40,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
         }
 
         // Verifica o tamanho do arquivo
-        if ($_FILES["foto_perfil"]["size"] > 5000000) { // 5000KB
+        if ($_FILES["foto_perfil"]["size"] > 5000000) {
             $_SESSION['error'] = "Desculpe, o arquivo é muito grande.";
             $uploadOk = 0;
         }
@@ -54,14 +50,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
         // Verifica se tudo está ok para fazer o upload
         if ($uploadOk == 1) {
             if (move_uploaded_file($_FILES["foto_perfil"]["tmp_name"], $target_file)) {
-                $foto_perfil = $target_file; // Salva o caminho da imagem
+                $foto_perfil = $target_file;
             } else {
                 $_SESSION['error'] = "Desculpe, ocorreu um erro ao enviar o arquivo.";
             }
         }
     }
 
-    // Inserindo dados na tabela correta (Alunos ou Tutores)
+    // Inserindo dados na tabela correta
     try {
         if ($tipo_usuario === 'aluno') {
             $stmt = $conn->prepare(
@@ -75,27 +71,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
             );
         }
 
-        // Executa a inserção dos dados principais
-        $stmt->execute([$nome, $email, $senha, $cidade, $estado, $data_nascimento, $biografia, $foto_perfil]);
+        $stmt->bind_param("ssssssss", $nome, $email, $senha, $cidade, $estado, $data_nascimento, $biografia, $foto_perfil);
+        $stmt->execute();
 
-        // Recupera o ID do usuário recém-criado
-        $id_usuario = $conn->lastInsertId();
-
-        // Armazena o ID do usuário na sessão
-        $_SESSION['id_usuario'] = $id_usuario; // Armazena o ID para uso futuro
-
-        // Mensagem de sucesso na sessão
-        $_SESSION['message'] = 'Cadastro realizado com sucesso!';
-
-        // Redireciona para a página de login
-        header("Location: login.php");
-        exit(); // Para garantir que o script pare aqui
-    } catch (PDOException $e) {
-        $_SESSION['error'] = "Erro ao cadastrar: " . $e->getMessage();
-        error_log("Erro ao cadastrar: " . $e->getMessage()); // Log do erro
+        $_SESSION['message'] = "Cadastro realizado com sucesso!";
+        header("Location: cadastro.php");
+        exit;
     } catch (Exception $e) {
-        $_SESSION['error'] = "Erro inesperado: " . $e->getMessage();
-        error_log("Erro inesperado: " . $e->getMessage()); // Log do erro
+        $_SESSION['error'] = "Erro ao cadastrar: " . $e->getMessage();
+        header("Location: cadastro.php");
+        exit;
     }
 }
+
+// Se a requisição não for POST, redireciona para a página de cadastro
+header("Location: cadastro.php");
+exit;
 ?>

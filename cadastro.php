@@ -1,4 +1,3 @@
-<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,7 +8,6 @@
     <script>
         // Função para debugar o carregamento do CSS
         window.onload = function() {
-            // Verifica se o CSS foi carregado
             const link = document.querySelector('link[rel="stylesheet"]');
             if (link.sheet) {
                 console.log('CSS carregado com sucesso:', link.href);
@@ -59,12 +57,10 @@
     </form>
 
     <script>
-        // Função para exibir mensagens
         function mostrarMensagem(mensagem) {
             alert(mensagem);
         }
 
-        // Carrega os dados na inicialização da página
         window.onload = () => {
             carregarDados();
             carregarIdiomas();
@@ -80,20 +76,18 @@
             <?php endif; ?>
         };
 
-        // Variáveis globais para armazenar estados e municípios
         let estados = [];
         let municipios = [];
 
-        // Função para carregar JSON de estados e municípios
         async function carregarDados() {
             try {
                 const resEstados = await fetch('estados.json');
                 estados = await resEstados.json();
-                console.log('Estados carregados:', estados); // Debug
+                console.log('Estados carregados:', estados);
 
                 const resMunicipios = await fetch('municipios.json');
                 municipios = await resMunicipios.json();
-                console.log('Municípios carregados:', municipios); // Debug
+                console.log('Municípios carregados:', municipios);
 
                 preencherEstados();
             } catch (error) {
@@ -101,7 +95,6 @@
             }
         }
 
-        // Preenche o dropdown de estados
         function preencherEstados() {
             const estadoSelect = document.getElementById('estado');
             estados.forEach(estado => {
@@ -112,11 +105,10 @@
             });
         }
 
-        // Atualiza o dropdown de cidades baseado no estado selecionado
         function atualizarCidades() {
             const estadoSelecionado = document.getElementById('estado').value;
             const cidadeSelect = document.getElementById('cidade');
-            cidadeSelect.innerHTML = ''; // Limpa as opções anteriores
+            cidadeSelect.innerHTML = '';
 
             const cidadesFiltradas = municipios.filter(m => m.microrregiao.mesorregiao.UF.sigla === estadoSelecionado);
 
@@ -127,45 +119,43 @@
                 cidadeSelect.appendChild(option);
             });
 
-            console.log('Cidades atualizadas para o estado:', estadoSelecionado); // Debug
+            console.log('Cidades atualizadas para o estado:', estadoSelecionado);
         }
 
-        // Função para carregar idiomas do arquivo JSON
         let idiomas = [];
 
         async function carregarIdiomas() {
             try {
                 const response = await fetch('idioma.json');
                 idiomas = await response.json();
-                console.log('Idiomas carregados:', idiomas); // Debug
+                console.log('Idiomas carregados:', idiomas);
             } catch (error) {
                 console.error('Erro ao carregar idiomas:', error);
             }
         }
 
-        // Função para autocomplete de idiomas
         function autocompleteIdiomas(inputIdioma, suggestions) {
-            suggestions.innerHTML = ''; // Limpa as sugestões anteriores
-            suggestions.style.display = 'none'; // Esconde as sugestões
+            suggestions.innerHTML = '';
+            suggestions.style.display = 'none';
 
             const valor = inputIdioma.value;
 
-            if (valor.length > 1) { // Começa a mostrar sugestões a partir de 2 caracteres
+            if (valor.length > 1) {
                 const resultados = idiomas.filter(idioma => idioma.idioma.toLowerCase().startsWith(valor.toLowerCase()));
-                console.log('Resultados do autocomplete para', valor, ':', resultados); // Debug
+                console.log('Resultados do autocomplete para', valor, ':', resultados);
 
                 resultados.forEach(idioma => {
                     const li = document.createElement('li');
-                    li.textContent = idioma.idioma; // Altera para idioma
+                    li.textContent = idioma.idioma;
                     li.onclick = () => {
-                        inputIdioma.value = idioma.idioma; // Preenche o campo com o idioma selecionado
-                        suggestions.style.display = 'none'; // Esconde as sugestões
+                        inputIdioma.value = idioma.idioma;
+                        suggestions.style.display = 'none';
                     };
                     suggestions.appendChild(li);
                 });
 
                 if (resultados.length > 0) {
-                    suggestions.style.display = 'block'; // Mostra as sugestões se houver resultados
+                    suggestions.style.display = 'block';
                 }
             }
         }
