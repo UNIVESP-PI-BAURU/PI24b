@@ -26,7 +26,7 @@ try {
     }
 
     // Recupera os idiomas do aluno
-    $stmt_idiomas = $conn->prepare("SELECT idioma FROM IdiomaAluno WHERE aluno_id = :id");
+    $stmt_idiomas = $conn->prepare("SELECT idioma FROM IdiomaAluno WHERE id_aluno = :id");
     $stmt_idiomas->execute(['id' => $id_aluno]);
     $idiomas = $stmt_idiomas->fetchAll(PDO::FETCH_COLUMN);
 
