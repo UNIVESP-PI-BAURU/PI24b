@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once '../conexao.php';
 
 // Verifica se o usuário está logado
@@ -45,7 +44,8 @@ try {
         $query_idiomas = $conn->prepare("SELECT idioma FROM IdiomaAluno WHERE aluno_id = :id");
         error_log("Query para recuperar idiomas do aluno: " . $query_idiomas->queryString); // Debug: Query de idiomas do aluno
     } else {
-        $query_idiomas = $conn->prepare("SELECT idioma FROM IdiomaTutor WHERE tutor_id = :id");
+        // Verifique se 'tutor_id' é o nome correto da coluna - o certo e id_aluno ou id_tutor
+        $query_idiomas = $conn->prepare("SELECT idioma FROM IdiomaTutor WHERE id_tutor = :id");
         error_log("Query para recuperar idiomas do tutor: " . $query_idiomas->queryString); // Debug: Query de idiomas do tutor
     }
 
