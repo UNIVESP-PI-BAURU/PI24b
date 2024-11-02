@@ -72,7 +72,7 @@ unset($_SESSION['tutores_resultados']);
                                 <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($tutor['cidade']); ?></td>
                                 <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($tutor['estado']); ?></td>
                                 <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($tutor['idiomas']); ?></td>
-                                <td style="border: 1px solid #ddd; padding: 4px;"><a href="about.php?id=<?php echo htmlspecialchars($tutor['id']); ?>">Ver mais</a></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><a href="about_tutor.php?id=<?php echo htmlspecialchars($tutor['id']); ?>">Ver mais</a></td>
                             </tr>
                             <tr><td colspan="5" style="height: 4px;"></td></tr> <!-- Espaço entre resultados -->
                         <?php endforeach; ?>

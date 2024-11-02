@@ -72,7 +72,7 @@ unset($_SESSION['alunos_resultados']);
                                 <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($aluno['cidade']); ?></td>
                                 <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($aluno['estado']); ?></td>
                                 <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($aluno['idiomas']); ?></td>
-                                <td style="border: 1px solid #ddd; padding: 4px;"><a href="about.php?id=<?php echo htmlspecialchars($aluno['id']); ?>">Ver mais</a></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><a href="about_aluno.php?id=<?php echo htmlspecialchars($aluno['id']); ?>">Ver mais</a></td>
                             </tr>
                             <tr><td colspan="5" style="height: 4px;"></td></tr>
                         <?php endforeach; ?>
