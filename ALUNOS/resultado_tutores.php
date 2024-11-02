@@ -51,7 +51,7 @@ unset($_SESSION['tutores_resultados']);
     <!-- Resultados da Pesquisa -->
     <div class="main-result">
         <div class="result" style="padding: 1rem; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-             width: 100%; max-width: 400px; box-sizing: border-box; margin-top: 2rem;">
+             width: 95%; max-width: 1000px; box-sizing: border-box; margin-top: 2rem;">
             <h2 style="text-align: center; margin-bottom: 1rem;">Resultados da Pesquisa de Tutores</h2>
         
             <?php if (!empty($resultados)): ?>
