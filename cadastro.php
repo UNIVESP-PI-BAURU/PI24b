@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -5,6 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar Nova Conta</title>
     <link rel="stylesheet" href="ASSETS/CSS/style.css">
+    <script>
+        // Função para debugar o carregamento do CSS
+        window.onload = function() {
+            // Verifica se o CSS foi carregado
+            const link = document.querySelector('link[rel="stylesheet"]');
+            if (link.sheet) {
+                console.log('CSS carregado com sucesso:', link.href);
+            } else {
+                console.error('Erro ao carregar o CSS:', link.href);
+            }
+        };
+    </script>
 </head>
 <body>
     <form action="proc_cadastro.php" method="POST" enctype="multipart/form-data">
@@ -56,7 +69,6 @@
             carregarDados();
             carregarIdiomas();
 
-            <?php session_start(); ?>
             <?php if (isset($_SESSION['message'])): ?>
                 mostrarMensagem("<?= $_SESSION['message'] ?>");
                 <?php unset($_SESSION['message']); ?>
