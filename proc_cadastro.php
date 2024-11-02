@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
         }
 
         // Verifica o tamanho do arquivo
-        if ($_FILES["foto_perfil"]["size"] > 500000) { // 500KB
+        if ($_FILES["foto_perfil"]["size"] > 5000000) { // 5000KB
             $_SESSION['error'] = "Desculpe, o arquivo é muito grande.";
             $uploadOk = 0;
         }
@@ -83,16 +83,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
 
         // Armazena o ID do usuário na sessão
         $_SESSION['id_usuario'] = $id_usuario; // Armazena o ID para uso futuro
-
-        // Insere os idiomas no banco
-        foreach ($idiomas as $idioma) {
-            if ($tipo_usuario === 'aluno') {
-                $stmt = $conn->prepare("INSERT INTO IdiomaAluno (id_aluno, idioma) VALUES (?, ?)");
-            } else {
-                $stmt = $conn->prepare("INSERT INTO IdiomaTutor (id_tutor, idioma) VALUES (?, ?)");
-            }
-            $stmt->execute([$id_usuario, htmlspecialchars(trim($idioma))]); // Sanitizando o idioma
-        }
 
         // Mensagem de sucesso na sessão
         $_SESSION['message'] = 'Cadastro realizado com sucesso!';

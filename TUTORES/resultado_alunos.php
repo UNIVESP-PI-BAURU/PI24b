@@ -63,6 +63,7 @@ error_log("Resultados recebidos: " . print_r($resultados, true));
                 <table style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr>
+                            <th style="border: 1px solid #ddd; padding: 4px;">ID do Aluno</th>
                             <th style="border: 1px solid #ddd; padding: 4px;">Nome</th>
                             <th style="border: 1px solid #ddd; padding: 4px;">Cidade</th>
                             <th style="border: 1px solid #ddd; padding: 4px;">Estado</th>
@@ -73,6 +74,7 @@ error_log("Resultados recebidos: " . print_r($resultados, true));
                     <tbody>
                         <?php foreach ($resultados as $aluno): ?>
                             <tr>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($aluno['id_aluno']); ?></td>
                                 <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($aluno['nome']); ?></td>
                                 <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($aluno['cidade']); ?></td>
                                 <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($aluno['estado']); ?></td>
@@ -85,7 +87,7 @@ error_log("Resultados recebidos: " . print_r($resultados, true));
                                     <input type="hidden" name="id_tutor" value="<?php echo htmlspecialchars($id_tutor); ?>" />
                                 </td>
                             </tr>
-                            <tr><td colspan="5" style="height: 4px;"></td></tr> <!-- Espaço entre resultados -->
+                            <tr><td colspan="6" style="height: 4px;"></td></tr> <!-- Espaço entre resultados -->
                         <?php endforeach; ?>
                     </tbody>
                 </table>

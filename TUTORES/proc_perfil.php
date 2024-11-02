@@ -19,10 +19,10 @@ if (isset($_SESSION['id_aluno'])) {
 
 // Recupera os dados do usuário
 if ($tipo_usuario === 'aluno') {
-    $query = $pdo->prepare("SELECT * FROM Alunos WHERE id = :id");
+    $query = $conn->prepare("SELECT * FROM Alunos WHERE id = :id");
     error_log("Query para recuperar aluno: " . $query->queryString); // Debug: Query do aluno
 } else {
-    $query = $pdo->prepare("SELECT * FROM Tutores WHERE id = :id");
+    $query = $conn->prepare("SELECT * FROM Tutores WHERE id = :id");
     error_log("Query para recuperar tutor: " . $query->queryString); // Debug: Query do tutor
 }
 
@@ -41,10 +41,10 @@ if (!$usuario) {
 // Recupera idiomas se necessário
 $idiomas = [];
 if ($tipo_usuario === 'aluno') {
-    $query_idiomas = $pdo->prepare("SELECT idioma FROM IdiomaAluno WHERE aluno_id = :id");
+    $query_idiomas = $conn->prepare("SELECT idioma FROM IdiomaAluno WHERE aluno_id = :id");
     error_log("Query para recuperar idiomas do aluno: " . $query_idiomas->queryString); // Debug: Query de idiomas do aluno
 } else {
-    $query_idiomas = $pdo->prepare("SELECT idioma FROM IdiomaTutor WHERE tutor_id = :id");
+    $query_idiomas = $conn->prepare("SELECT idioma FROM IdiomaTutor WHERE tutor_id = :id");
     error_log("Query para recuperar idiomas do tutor: " . $query_idiomas->queryString); // Debug: Query de idiomas do tutor
 }
 
@@ -54,29 +54,4 @@ $idiomas = $query_idiomas->fetchAll(PDO::FETCH_COLUMN);
 
 // Debug: Exibe idiomas recuperados
 error_log("Idiomas recuperados: " . implode(", ", $idiomas));
-
-// Renderiza o perfil
 ?>
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Perfil</title>
-    <link rel="stylesheet" href="../css/style.css">
-</head>
-<body>
-    <div class="container">
-        <h1><?php echo htmlspecialchars($usuario['nome']); ?></h1>
-        <p>ID: <?php echo htmlspecialchars($usuario['id']); ?></p> <!-- Exibe o ID do usuário -->
-        
-        <h2>Idiomas</h2>
-        <ul>
-            <?php foreach ($idiomas as $idioma): ?>
-                <li><?php echo htmlspecialchars($idioma); ?></li>
-            <?php endforeach; ?>
-        </ul>
-        
-        <a href="../index.php">Voltar</a>
-    </div>
-</body>
-</html>

@@ -7,16 +7,16 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
     exit();
 }
 
-// Obtém o ID do tutor e a ID do aluno que está logado
-$id_tutor = intval($_GET['id']);
-$id_aluno = $_SESSION['id_aluno'] ?? null;
+// Obtém o ID do tutor e a ID do tutor que está logado
+$id_tutor_exibido = intval($_GET['id']);
+$id_tutor_logado = $_SESSION['id_tutor'] ?? null;
 
 require_once '../conexao.php'; // Certifique-se de que o caminho para o arquivo de conexão está correto
 
 try {
     // Recupera as informações do tutor
     $stmt = $conn->prepare("SELECT * FROM Tutores WHERE id = :id");
-    $stmt->execute(['id' => $id_tutor]);
+    $stmt->execute(['id' => $id_tutor_exibido]);
     $tutor = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // Verifica se o tutor foi encontrado
@@ -27,7 +27,7 @@ try {
 
     // Recupera os idiomas do tutor
     $stmt_idiomas = $conn->prepare("SELECT idioma FROM IdiomaTutor WHERE tutor_id = :id");
-    $stmt_idiomas->execute(['id' => $id_tutor]);
+    $stmt_idiomas->execute(['id' => $id_tutor_exibido]);
     $idiomas = $stmt_idiomas->fetchAll(PDO::FETCH_COLUMN);
 
     // Debug: Registrar informações do tutor e dos idiomas
@@ -84,9 +84,9 @@ try {
             <p><strong>Biografia:</strong> <?php echo htmlspecialchars($tutor['biografia']); ?></p>
         </div>
 
-        <!-- Campos ocultos para armazenar IDs do tutor e do aluno -->
-        <input type="hidden" id="id_tutor" value="<?php echo htmlspecialchars($id_tutor); ?>">
-        <input type="hidden" id="id_aluno" value="<?php echo htmlspecialchars($id_aluno); ?>">
+        <!-- Campos ocultos para armazenar IDs do tutor e do tutor logado -->
+        <input type="hidden" id="id_tutor_exibido" value="<?php echo htmlspecialchars($id_tutor_exibido); ?>">
+        <input type="hidden" id="id_tutor_logado" value="<?php echo htmlspecialchars($id_tutor_logado); ?>">
     </div>
 
     <!-- Funcionalidades de interação -->

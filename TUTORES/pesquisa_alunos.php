@@ -1,3 +1,12 @@
+<?php
+session_start();
+if (!isset($_SESSION['id_tutor'])) {
+    error_log("Tutor não logado, redirecionando para login.");
+    header("Location: ../login.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -30,7 +39,7 @@
         <div class="signup-section">
             <h2>Pesquisar Alunos</h2>
             <form class="signup-form" method="POST" action="proc_pesquisa_alunos.php">
-                <input type="hidden" name="id_tutor" value="<?php echo $_SESSION['id_usuario']; ?>" /> <!-- Campo oculto para ID do tutor -->
+                <input type="hidden" name="id_tutor" value="<?php echo htmlspecialchars($_SESSION['id_tutor']); ?>" /> <!-- Campo oculto para ID do tutor -->
                 <input type="text" id="cidade" name="cidade" placeholder="Cidade..." />
                 <br>
                 <input type="text" id="estado" name="estado" placeholder="Estado..." />

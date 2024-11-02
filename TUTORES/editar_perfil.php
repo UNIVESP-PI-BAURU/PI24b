@@ -29,16 +29,11 @@ require_once 'proc_editar_perfil.php';
 <nav class="navbar">
     <a href="../index.php">Home</a>
     <a href="../sobre_nos.php">Sobre nós</a>
-    <?php if (isset($_SESSION['id_tutor'])): ?>
-        <a href="../logout.php">Logout</a>
-    <?php else: ?>
-        <a href="../login.php">Login</a>
-    <?php endif; ?>
+    <a href="../logout.php">Logout</a>
 </nav>
 
 <!-- Conteúdo Principal -->
 <div class="main-content">
-
     <div class="signup-section">
         <h2>Editar Perfil de Tutor</h2>
 
@@ -97,7 +92,6 @@ require_once 'proc_editar_perfil.php';
         <button type="button" onclick="retornarPerfil()">Retornar ao Perfil</button>
 
     </div>
-
 </div>
 
 <!-- Rodapé -->

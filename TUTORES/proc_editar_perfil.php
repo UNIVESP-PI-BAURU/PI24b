@@ -26,6 +26,13 @@ $stmt->bindParam(':id', $id_usuario);
 $stmt->execute();
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// Verifica se o usuário foi encontrado
+if (!$usuario) {
+    error_log("Usuário não encontrado para ID: $id_usuario");
+    header("Location: ../login.php");
+    exit();
+}
+
 $nome = $usuario['nome'];
 $email = $usuario['email'];
 $cidade = $usuario['cidade'];
@@ -41,7 +48,7 @@ $stmt_idiomas->execute();
 $idiomas = $stmt_idiomas->fetchAll(PDO::FETCH_COLUMN);
 
 // Processa a atualização se for uma requisição POST
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['atualizar'])) {
     $nome = $_POST['nome'];
     $email = $_POST['email'];
     $cidade = $_POST['cidade'];
@@ -74,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Redireciona para o perfil
-    header("Location: ./perfil.php");
+    header("Location: perfil.php");
     exit();
 }
 ?>

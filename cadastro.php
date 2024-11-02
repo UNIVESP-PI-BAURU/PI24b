@@ -6,6 +6,26 @@
     <title>Criar Nova Conta</title>
     <link rel="stylesheet" href="ASSETS/CSS/style.css">
     <script>
+        // Função para exibir mensagens
+        function mostrarMensagem(mensagem) {
+            alert(mensagem);
+        }
+
+        // Chama a função para mostrar a mensagem se existir
+        window.onload = () => {
+            <?php session_start(); ?>
+            <?php if (isset($_SESSION['message'])): ?>
+                mostrarMensagem("<?= $_SESSION['message'] ?>");
+                <?php unset($_SESSION['message']); // Limpa a mensagem após exibir ?>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['error'])): ?>
+                mostrarMensagem("<?= $_SESSION['error'] ?>");
+                <?php unset($_SESSION['error']); // Limpa a mensagem após exibir ?>
+            <?php endif; ?>
+        };
+    </script>
+    <script>
         // Variáveis globais para armazenar estados e municípios
         let estados = [];
         let municipios = [];
@@ -96,92 +116,51 @@
             }
         }
 
-        // Carrega os dados assim que a página for aberta
+        // Carrega os dados na inicialização da página
         window.onload = () => {
             carregarDados();
             carregarIdiomas();
         };
-
-        // Função para adicionar novo campo de idioma
-        function addCampoIdioma() {
-            const divIdiomas = document.getElementById('idiomas');
-            const novoCampo = document.createElement('div');
-            novoCampo.innerHTML = `
-                <label for="idioma">Idioma:</label>
-                <input type="text" name="idiomas[]" required oninput="autocompleteIdiomas(this, this.nextElementSibling)">
-                <ul style="display:none; position:absolute; background:#fff; border:1px solid #ccc; max-height:150px; overflow-y:auto; z-index:1000;"></ul>
-            `; // Novo campo com autocomplete
-            divIdiomas.appendChild(novoCampo);
-        }
     </script>
 </head>
-
 <body>
-    <div class="header">
-        <img src="ASSETS/IMG/capa.png" alt="Imagem de Capa">
-    </div>
+    <form action="proc_cadastro.php" method="POST" enctype="multipart/form-data">
 
-    <nav class="navbar">
-        <a href="./index.php">Home</a>
-        <a href="./sobre_nos.php">Sobre nós</a>
-        <a href="./login.php">Login</a>
-    </nav>
+        <label for="tipo_usuario">Tipo de Usuário:</label>
+        <select id="tipo_usuario" name="tipo_usuario" required>
+            <option value="aluno">Aluno</option>
+            <option value="tutor">Tutor</option>
+        </select>
 
-    <div class="main-content">
-        <div class="signup-section">
-            <h2>Criar Nova Conta</h2>
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required>
 
-            <form class="signup-form" action="proc_cadastro.php" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
-                <label for="tipo_usuario">Eu sou:</label>
-                <div class="user-type">
-                    <input type="radio" id="aluno" name="tipo_usuario" value="aluno" required>
-                    <label for="aluno">Aluno</label>
-                    <input type="radio" id="tutor" name="tipo_usuario" value="tutor" required>
-                    <label for="tutor">Tutor</label>
-                </div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
 
-                <label for="nome">Nome:</label>
-                <input type="text" id="nome" name="nome" required>
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" required>
 
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+        <label for="estado">Estado:</label>
+        <select id="estado" name="estado" onchange="atualizarCidades()" required></select>
 
-                <label for="senha">Senha:</label>
-                <input type="password" id="senha" name="senha" required>
+        <label for="cidade">Cidade:</label>
+        <select id="cidade" name="cidade" required></select>
 
-                <label for="estado">Estado:</label>
-                <select class="user-type" id="estado" name="estado" onchange="atualizarCidades()" required>
-                    <option value="">Selecione um estado</option>
-                </select>
+        <label for="data_nascimento">Data de Nascimento:</label>
+        <input type="date" id="data_nascimento" name="data_nascimento">
 
-                <label for="cidade">Cidade:</label>
-                <select class="user-type" id="cidade" name="cidade" required>
-                    <option value="">Selecione uma cidade</option>
-                </select>
+        <label for="biografia">Biografia:</label>
+        <textarea id="biografia" name="biografia"></textarea>
 
-                <label for="data_nascimento">Data de Nascimento:</label>
-                <input type="date" id="data_nascimento" name="data_nascimento">
+        <label for="idiomas">Idiomas:</label>
+        <input type="text" id="idiomas" name="idiomas" oninput="autocompleteIdiomas(this, document.getElementById('sugestoesIdiomas'))">
+        <ul id="sugestoesIdiomas" style="display:none;"></ul>
 
-                <label for="biografia">Biografia:</label>
-                <textarea id="biografia" name="biografia"></textarea>
+        <label for="foto_perfil">Foto de Perfil:</label>
+        <input type="file" id="foto_perfil" name="foto_perfil" accept="image/*">
 
-                <div id="idiomas">
-                    <label for="idioma">Idioma:</label>
-                    <input type="text" id="idioma" name="idiomas[]" required oninput="autocompleteIdiomas(this, this.nextElementSibling)">
-                    <ul style="display:none; position:absolute; background:#fff; border:1px solid #ccc; max-height:150px; overflow-y:auto; z-index:1000;"></ul> <!-- Lista de sugestões -->
-                    <button type="button" onclick="addCampoIdioma()">Adicionar mais um</button>
-                </div>
-
-                <label for="foto_perfil">Foto de Perfil:</label>
-                <input type="file" id="foto_perfil" name="foto_perfil" accept="image/*">
-
-                <button type="submit" name="registrar">Registrar</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="footer">
-        UNIVESP PI 2024
-    </div>
+        <button type="submit" name="registrar">Registrar</button>
+    </form>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <?php
-session_start();
+session_start(); // Inicia a sessão
 
 // Verifica se o tutor está logado e redireciona para login se não estiver
 if (!isset($_SESSION['id_tutor'])) {

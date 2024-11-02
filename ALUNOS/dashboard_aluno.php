@@ -1,5 +1,33 @@
 <?php
-require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard do aluno
+session_start(); // Inicia a sessão
+
+// Verifica se o aluno está logado e redireciona para login se não estiver
+if (!isset($_SESSION['id_aluno'])) {
+    header("Location: ../login.php");
+    exit();
+}
+
+require_once '../conexao.php'; // Inclui a conexão com o banco
+
+// Define o tipo de usuário como aluno
+$tipo_usuario = 'aluno';
+$id_usuario = $_SESSION['id_aluno'];
+$tabela_usuario = 'Alunos';
+
+// Consulta os dados do aluno
+$sql = "SELECT nome, foto_perfil, cidade, estado FROM $tabela_usuario WHERE id = :id";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':id', $id_usuario);
+$stmt->execute();
+$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Finaliza a execução se o aluno não for encontrado
+if (!$usuario) {
+    header("Location: ../login.php");
+    exit();
+}
+
+// O array $usuario agora está disponível para uso na dashboard de aluno
 ?>
 
 <!DOCTYPE html>
@@ -62,15 +90,9 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard do al
                 </div>
             </div>
 
-            <!-- Pesquisa -->
-            <div class="signup-section" style="margin-top: 20px;">
-                <h3>Encontre seus tutores aqui!</h3>
-                <button onclick="window.location.href='./pesquisa_tutores.php'">Pesquisar Tutores</button>
-            </div>
-
             <!-- Aulas -->
             <div class="signup-section" style="margin-top: 30px;">
-                <h3>Aulas atribuídas:</h3>
+                <h3>Aulas disponíveis:</h3>
                 <!-- Conteúdo das aulas será inserido aqui -->
             </div>
 

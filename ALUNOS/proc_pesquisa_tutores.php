@@ -2,14 +2,21 @@
 session_start();
 require_once '../conexao.php';
 
+// Verifica se o tutor está logado
+if (!isset($_SESSION['id_tutor'])) {
+    error_log("Tentativa de acesso não autorizada à pesquisa de tutores.");
+    header("Location: ../login.php");
+    exit();
+}
+
 // Coleta dos filtros
 $cidade = isset($_POST['cidade']) ? trim($_POST['cidade']) : '';
 $estado = isset($_POST['estado']) ? trim($_POST['estado']) : '';
 $idioma = isset($_POST['idioma']) ? trim($_POST['idioma']) : '';
-$id_aluno = isset($_POST['id_aluno']) ? trim($_POST['id_aluno']) : ''; // Captura a ID do aluno
+$id_tutor = $_SESSION['id_tutor']; // Captura a ID do tutor diretamente da sessão
 
 // Debug: Exibir filtros recebidos
-error_log("Filtros recebidos: cidade = $cidade, estado = $estado, idioma = $idioma, id_aluno = $id_aluno");
+error_log("Filtros recebidos: cidade = $cidade, estado = $estado, idioma = $idioma, id_tutor = $id_tutor");
 
 // Verifica se pelo menos um dos filtros foi preenchido
 if (empty($cidade) && empty($estado) && empty($idioma)) {
