@@ -5,19 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar Nova Conta</title>
     <link rel="stylesheet" href="ASSETS/CSS/style.css">
-    <script>
-        // Função para debugar o carregamento do CSS
-        window.onload = function() {
-            const link = document.querySelector('link[rel="stylesheet"]');
-            if (link.sheet) {
-                console.log('CSS carregado com sucesso:', link.href);
-            } else {
-                console.error('Erro ao carregar o CSS:', link.href);
-            }
-        };
-    </script>
 </head>
 <body>
+
+    <!-- Cabeçalho -->    
+    <div class="header">
+        <img src="ASSETS/IMG/capa.png" alt="Imagem de Capa">
+    </div>
+
+    <!-- Navegação -->
+    <nav class="navbar">
+        <a href="./index.php">Home</a>
+        <a href="./sobre_nos.php">Sobre nós</a>
+        <a href="./login.php">Login</a>
+    </nav>
 
     <!-- Main (conteúdo) -->
     <div class="main-content">
@@ -27,11 +28,11 @@
             <form action="proc_cadastro.php" method="POST" enctype="multipart/form-data">
                 <label>Tipo de Usuário:</label>
                 <div>
-                    <input type="checkbox" id="aluno" name="tipo_usuario[]" value="aluno">
+                    <input type="radio" id="aluno" name="tipo_usuario" value="aluno" required>
                     <label for="aluno">Aluno</label>
                 </div>
                 <div>
-                    <input type="checkbox" id="tutor" name="tipo_usuario[]" value="tutor">
+                    <input type="radio" id="tutor" name="tipo_usuario" value="tutor" required>
                     <label for="tutor">Tutor</label>
                 </div>
 
@@ -172,5 +173,11 @@
             }
         }
     </script>
+
+    <!-- Rodapé -->
+    <div class="footer">
+        UNIVESP PI 2024
+    </div>
+
 </body>
 </html>
