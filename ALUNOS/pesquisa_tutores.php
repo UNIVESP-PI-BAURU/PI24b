@@ -46,8 +46,8 @@ if (!isset($_SESSION['id_tutor'])) {
                 <input type="text" id="estado" name="estado" placeholder="Estado..." />
                 <br>
                 <input type="text" id="idioma" name="idioma" placeholder="Idioma..." />
-                <br>
-                <button type="submit">Pesquisar</button>
+                <br> 
+                <button type="submit" name="pesquisar" class="login-button">Pesquisar</button>
             </form>
         </div>
     </div>
