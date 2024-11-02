@@ -18,25 +18,6 @@ if (!isset($_SESSION['id_tutor'])) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <style>
-        /* Estilo do botão, aplicado inline para garantir prioridade */
-        .custom-button {
-            padding: 0.5rem 1rem;
-            background-color: #333;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 1rem;
-        }
-        .custom-button:hover {
-            background-color: #575757;
-        }
-    </style>
 </head>
 
 <body>
