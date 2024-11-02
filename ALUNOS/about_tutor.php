@@ -1,5 +1,5 @@
 <?php 
-session_start();
+session_start(); // Certifique-se de que a sessão é iniciada
 
 // Verifica se o ID do tutor foi passado na URL
 if (!isset($_GET['id']) || empty($_GET['id'])) {
@@ -11,11 +11,11 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 $id_tutor = intval($_GET['id']);
 $id_aluno = $_SESSION['id_aluno'] ?? null;
 
-require_once '../conexao.php';
+require_once '../conexao.php'; // Certifique-se de que o caminho para o arquivo de conexão está correto
 
 try {
     // Recupera as informações do tutor
-    $stmt = $conn->prepare("SELECT * FROM Tutores WHERE id_tutor = :id");
+    $stmt = $conn->prepare("SELECT * FROM Tutores WHERE id = :id");
     $stmt->execute(['id' => $id_tutor]);
     $tutor = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -29,7 +29,7 @@ try {
     $stmt_idiomas = $conn->prepare("SELECT idioma FROM IdiomaTutor WHERE tutor_id = :id");
     $stmt_idiomas->execute(['id' => $id_tutor]);
     $idiomas = $stmt_idiomas->fetchAll(PDO::FETCH_COLUMN);
-    
+
     // Debug: Registrar informações do tutor e dos idiomas
     error_log("Tutor encontrado: " . print_r($tutor, true));
     error_log("Idiomas do tutor: " . print_r($idiomas, true));
@@ -63,7 +63,7 @@ try {
     <!-- Detalhes do Tutor -->
     <div class="about-section">
         <h2>Perfil de Tutor: <?php echo htmlspecialchars($tutor['nome']); ?></h2>
-        <p><strong>ID:</strong> <?php echo htmlspecialchars($tutor['id_tutor']); ?></p>
+        <p><strong>ID:</strong> <?php echo htmlspecialchars($tutor['id']); ?></p>
 
         <!-- Exibe a foto de perfil, se disponível -->
         <div class="foto-perfil">

@@ -1,5 +1,5 @@
 <?php 
-session_start();
+session_start(); // Certifique-se de que a sessão é iniciada
 
 // Verifica se o ID do aluno foi passado na URL
 if (!isset($_GET['id']) || empty($_GET['id'])) {
@@ -11,7 +11,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 $id_aluno = intval($_GET['id']);
 $id_tutor = $_SESSION['id_tutor'] ?? null;
 
-require_once '../conexao.php';
+require_once '../conexao.php'; // Certifique-se de que o caminho para o arquivo de conexão está correto
 
 try {
     // Recupera as informações do aluno
