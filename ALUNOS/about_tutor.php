@@ -1,20 +1,26 @@
 <?php 
 session_start();
 
-// Verifica se o ID do tutor foi passado na URL
-if (!isset($_GET['id'])) {
-    // Redireciona para a página de pesquisa se o ID não for fornecido
-    header("Location: pesquisa_tutores.php");
+// Ativa a exibição de erros para debug
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Verifica se o ID do tutor foi passado na URL e é válido
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    echo "ID do tutor inválido ou não fornecido.";
     exit();
 }
 
 // Obtém o ID do tutor da URL
 $id_tutor = intval($_GET['id']);
 
-// Inclui a conexão com o banco (deve conter o objeto $pdo já configurado)
-require_once '../conexao.php';
+require_once '../conexao.php'; // Inclui a conexão com o banco
 
 try {
+    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
     // Consulta para obter os dados do tutor
     $stmt = $pdo->prepare("SELECT * FROM Tutores WHERE id = :id");
     $stmt->execute(['id' => $id_tutor]);
@@ -22,12 +28,12 @@ try {
 
     // Verifica se o tutor foi encontrado
     if (!$tutor) {
-        header("Location: pesquisa_tutores.php"); // Redireciona se o tutor não for encontrado
+        echo "Tutor não encontrado.";
         exit();
     }
 
 } catch (PDOException $e) {
-    echo "Erro na conexão: " . $e->getMessage();
+    echo "Erro na conexão ou consulta: " . $e->getMessage();
     exit();
 }
 ?>
@@ -60,7 +66,6 @@ try {
         <p><strong>Cidade:</strong> <?php echo htmlspecialchars($tutor['cidade']); ?></p>
         <p><strong>Estado:</strong> <?php echo htmlspecialchars($tutor['estado']); ?></p>
         <p><strong>Idiomas:</strong> <?php echo htmlspecialchars($tutor['idiomas']); ?></p>
-        <!-- Adicione mais informações do tutor conforme necessário -->
 
         <!-- Funcionalidades de interação (a serem implementadas posteriormente) -->
         <div class="interactions">
