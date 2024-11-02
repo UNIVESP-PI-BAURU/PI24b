@@ -50,7 +50,7 @@ unset($_SESSION['tutores_resultados']);
 
     <!-- Resultados da Pesquisa -->
     <div class="main-content">
-        <div class="result-section">
+        <div class="result">
             <h2>Resultados da Pesquisa de Tutores</h2>
         
             <?php if (!empty($resultados)): ?>
