@@ -91,6 +91,12 @@ if (!$usuario) {
                 </div>
             </div>
 
+            <!-- Pesquisa -->
+            <div class="signup-section" style="margin-top: 20px;">
+                <h3>Encontre seus tutores aqui!</h3>
+                <button onclick="window.location.href='./pesquisa_tutores.php'">Pesquisar Tutores</button>
+            </div>
+
             <!-- Aulas -->
             <div class="signup-section" style="margin-top: 30px;">
                 <h3>Aulas disponíveis:</h3>
