@@ -11,7 +11,7 @@ $message = $_POST['message'] ?? null;
 
 if ($message && $id_conversor && $tipo_conversor) {
     // Insere a mensagem no banco de dados
-    $stmt = $pdo->prepare("INSERT INTO mensagens (id_remetente, tipo_remetente, id_destinatario, tipo_destinatario, mensagem) VALUES (?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO Mensagens (id_remetente, tipo_usuario, id_destinatario, tipo_conversor, mensagem) VALUES (?, ?, ?, ?, ?)");
     $stmt->execute([$id_usuario, $tipo_usuario, $id_conversor, $tipo_conversor, $message]);
 }
 ?>

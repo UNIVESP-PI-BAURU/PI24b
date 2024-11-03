@@ -10,12 +10,12 @@ $tipo_conversor = $_GET['tipo_conversor'] ?? null;
 
 if ($id_conversor && $tipo_conversor) {
     // Carrega as mensagens do banco de dados
-    $stmt = $pdo->prepare("SELECT * FROM mensagens 
+    $stmt = $conn->prepare("SELECT * FROM Mensagens 
                            WHERE 
-                               (id_remetente = ? AND tipo_remetente = ? AND id_destinatario = ? AND tipo_destinatario = ?) 
+                               (id_remetente = ? AND tipo_usuario = ? AND id_destinatario = ? AND tipo_conversor = ?) 
                                OR 
-                               (id_remetente = ? AND tipo_remetente = ? AND id_destinatario = ? AND tipo_destinatario = ?) 
-                           ORDER BY data_criacao ASC");
+                               (id_remetente = ? AND tipo_usuario = ? AND id_destinatario = ? AND tipo_conversor = ?) 
+                           ORDER BY data_envio ASC");
     $stmt->execute([
         $id_usuario, $tipo_usuario, $id_conversor, $tipo_conversor,
         $id_conversor, $tipo_conversor, $id_usuario, $tipo_usuario
