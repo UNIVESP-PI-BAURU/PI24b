@@ -9,9 +9,6 @@ if (!isset($_SESSION['id_tutor'])) {
 
 require_once '../conexao.php'; // Inclui a conexão com o banco
 
-// Define o tipo de usuário como tutor
-$tipo_usuario = 'tutor';
-$tipo_conversor = 'tutor'; // Tipo de conversor para o tutor
 $id_usuario = $_SESSION['id_tutor'];
 $tabela_usuario = 'Tutores';
 

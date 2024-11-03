@@ -9,9 +9,6 @@ if (!isset($_SESSION['id_aluno'])) {
 
 require_once '../conexao.php'; // Inclui a conexão com o banco
 
-// Define o tipo de usuário como aluno
-$tipo_usuario = 'aluno';
-$tipo_conversor = 'aluno'; // Tipo de conversor para o aluno
 $id_usuario = $_SESSION['id_aluno'];
 $tabela_usuario = 'Alunos';
 
@@ -99,7 +96,7 @@ if (!$usuario) {
 
             <!-- Aulas -->
             <div class="signup-section" style="margin-top: 30px;">
-                <h3>Aulas disponíveis:</h3>
+                <h3>Aulas atribuídas:</h3>
                 <!-- Conteúdo das aulas será inserido aqui -->
             </div>
 
