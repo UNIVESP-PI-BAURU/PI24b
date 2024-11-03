@@ -1,7 +1,4 @@
 <?php
-// Inclui o arquivo de controle de sessão
-require_once 'session_control.php'; // Isso deve ser feito no início do arquivo
-
 // Inclui o arquivo de conexão com o banco de dados
 require_once 'conexao.php';
 
