@@ -1,5 +1,5 @@
 <?php 
-session_start(); // Certifique-se de que a sessão é iniciada
+require_once '../session_control.php'; // Certifique-se de que o caminho para o arquivo de controle de sessão está correto
 
 // Verifica se o ID do aluno foi passado na URL
 if (!isset($_GET['id']) || empty($_GET['id'])) {

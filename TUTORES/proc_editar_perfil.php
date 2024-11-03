@@ -1,23 +1,8 @@
 <?php
 require_once '../conexao.php';
 
-// Inicia a sessão
-session_start();
-
-// Verifica se o usuário está logado
-if (isset($_SESSION['id_aluno'])) {
-    $id_usuario = $_SESSION['id_aluno'];
-    $tipo_usuario = 'aluno';
-    $tipo_conversor = 'tutor';
-} elseif (isset($_SESSION['id_tutor'])) {
-    $id_usuario = $_SESSION['id_tutor'];
-    $tipo_usuario = 'tutor';
-    $tipo_conversor = 'aluno';
-} else {
-    error_log("Usuário não logado, redirecionando para login.");
-    header("Location: ../login.php");
-    exit();
-}
+// Inclui o controle de sessão
+require_once '../session_control.php'; // Inclua o session_control.php para gerenciar a sessão
 
 // Processa o formulário
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

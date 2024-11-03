@@ -1,5 +1,5 @@
 <?php
-session_start();
+require 'session_control.php'; // Inclui o controle de sessão
 require 'conexao.php';
 
 $id_usuario = $_SESSION['id_tutor'] ?? $_SESSION['id_aluno'];

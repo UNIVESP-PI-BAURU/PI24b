@@ -1,5 +1,5 @@
 <?php
-require_once '../conexao.php';
+require_once '../conexao.php'; // Inclui a conexão com o banco
 
 // Verifica se o usuário está logado
 if (isset($_SESSION['id_aluno'])) {

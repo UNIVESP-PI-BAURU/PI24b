@@ -1,5 +1,5 @@
 <?php 
-session_start();
+require_once '../session_control.php'; // Inclui o controle de sessão
 require_once '../conexao.php';
 
 // Verifica se o tutor está logado

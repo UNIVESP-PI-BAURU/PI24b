@@ -1,14 +1,6 @@
 <?php
-// Inicia a sessão e verifica login
-session_start();
-if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
-    error_log("Usuário não logado, redirecionando para login.");
-    header("Location: ../login.php");
-    exit();
-}
-
-// Inclui o processamento da página
-require_once 'proc_perfil.php';
+require_once '../session_control.php'; // Inclui o controle de sessão
+require_once 'proc_perfil.php'; // Inclui o processamento da página
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">

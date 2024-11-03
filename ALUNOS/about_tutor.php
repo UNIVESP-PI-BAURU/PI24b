@@ -1,38 +1,38 @@
 <?php 
-session_start(); // Certifique-se de que a sessão é iniciada
+require_once '../session_control.php'; // Certifique-se de que o caminho para o arquivo de controle de sessão está correto
 
-// Verifica se o ID do tutor foi passado na URL
+// Verifica se o ID do aluno foi passado na URL
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     header("Location: pesquisa_tutores.php");
     exit();
 }
 
-// Obtém o ID do tutor e a ID do tutor que está logado
-$id_tutor_exibido = intval($_GET['id']);
+// Obtém o ID do aluno e a ID do aluno que está logado
+$id_aluno_exibido = intval($_GET['id']);
 $id_tutor_logado = $_SESSION['id_tutor'] ?? null;
 
 require_once '../conexao.php'; // Certifique-se de que o caminho para o arquivo de conexão está correto
 
 try {
-    // Recupera as informações do tutor
-    $stmt = $conn->prepare("SELECT * FROM Tutores WHERE id = :id");
-    $stmt->execute(['id' => $id_tutor_exibido]);
-    $tutor = $stmt->fetch(PDO::FETCH_ASSOC);
+    // Recupera as informações do aluno
+    $stmt = $conn->prepare("SELECT * FROM Alunos WHERE id = :id");
+    $stmt->execute(['id' => $id_aluno_exibido]);
+    $aluno = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Verifica se o tutor foi encontrado
-    if (!$tutor) {
+    // Verifica se o aluno foi encontrado
+    if (!$aluno) {
         header("Location: pesquisa_tutores.php");
         exit();
     }
 
-    // Recupera os idiomas do tutor
-    $stmt_idiomas = $conn->prepare("SELECT idioma FROM IdiomaTutor WHERE id_tutor = :id");
-    $stmt_idiomas->execute(['id' => $id_tutor_exibido]);
+    // Recupera os idiomas do aluno (ajuste o nome da tabela conforme necessário)
+    $stmt_idiomas = $conn->prepare("SELECT idioma FROM IdiomaAluno WHERE id_aluno = :id");
+    $stmt_idiomas->execute(['id' => $id_aluno_exibido]);
     $idiomas = $stmt_idiomas->fetchAll(PDO::FETCH_COLUMN);
 
-    // Debug: Registrar informações do tutor e dos idiomas
-    error_log("Tutor encontrado: " . print_r($tutor, true));
-    error_log("Idiomas do tutor: " . print_r($idiomas, true));
+    // Debug: Registrar informações do aluno e dos idiomas
+    error_log("Aluno encontrado: " . print_r($aluno, true));
+    error_log("Idiomas do aluno: " . print_r($idiomas, true));
 } catch (PDOException $e) {
     echo "Erro na consulta: " . $e->getMessage();
     exit();
@@ -44,7 +44,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil de Tutor - <?php echo htmlspecialchars($tutor['nome']); ?></title>
+    <title>Perfil de Aluno - <?php echo htmlspecialchars($aluno['nome']); ?></title>
     <link rel="stylesheet" href="ASSETS/CSS/style.css">
 </head>
 <body>
@@ -61,16 +61,16 @@ try {
         <a href="../logout.php">Logout</a>
     </nav>
 
-    <!-- Detalhes do Tutor -->
+    <!-- Detalhes do Aluno -->
     <div class="about-section">
-        <h2>Perfil de Tutor: <?php echo htmlspecialchars($tutor['nome']); ?></h2>
-        <p><strong>ID:</strong> <?php echo htmlspecialchars($tutor['id']); ?></p>
+        <h2>Perfil de Aluno: <?php echo htmlspecialchars($aluno['nome']); ?></h2>
+        <p><strong>ID:</strong> <?php echo htmlspecialchars($aluno['id']); ?></p>
 
         <!-- Exibe a foto de perfil, se disponível -->
         <div class="foto-perfil">
             <div class="foto-moldura-perfil">
-                <?php if (!empty($tutor['foto_perfil'])): ?>
-                    <img src="<?php echo htmlspecialchars($tutor['foto_perfil']); ?>" alt="Foto de Perfil" class="avatar-perfil">
+                <?php if (!empty($aluno['foto_perfil'])): ?>
+                    <img src="<?php echo htmlspecialchars($aluno['foto_perfil']); ?>" alt="Foto de Perfil" class="avatar-perfil">
                 <?php else: ?>
                     <p>Sem foto</p>
                 <?php endif; ?>
@@ -78,11 +78,11 @@ try {
         </div>
 
         <div class="info-usuario">
-            <p><strong>Email:</strong> <?php echo htmlspecialchars($tutor['email']); ?></p>
-            <p><strong>Cidade/Estado:</strong> <?php echo htmlspecialchars($tutor['cidade']) . ', ' . htmlspecialchars($tutor['estado']); ?></p>
-            <p><strong>Data de Nascimento:</strong> <?php echo !empty($tutor['data_nascimento']) ? htmlspecialchars($tutor['data_nascimento']) : 'Não informado'; ?></p>
+            <p><strong>Email:</strong> <?php echo htmlspecialchars($aluno['email']); ?></p>
+            <p><strong>Cidade/Estado:</strong> <?php echo htmlspecialchars($aluno['cidade']) . ', ' . htmlspecialchars($aluno['estado']); ?></p>
+            <p><strong>Data de Nascimento:</strong> <?php echo !empty($aluno['data_nascimento']) ? htmlspecialchars($aluno['data_nascimento']) : 'Não informado'; ?></p>
             <p><strong>Idiomas:</strong> <?php echo implode(', ', array_map('htmlspecialchars', $idiomas)); ?></p>
-            <p><strong>Biografia:</strong> <?php echo htmlspecialchars($tutor['biografia']); ?></p>
+            <p><strong>Biografia:</strong> <?php echo htmlspecialchars($aluno['biografia']); ?></p>
         </div>
         <br><br>
 
@@ -91,7 +91,7 @@ try {
             <h3>Interação</h3>
             <div class="chat">
                 <!-- Botão Chat -->
-                <input type="hidden" id="id_usuario" value="<?php echo $id_tutor_exibido; ?>" />
+                <input type="hidden" id="id_usuario" value="<?php echo $id_aluno_exibido; ?>" />
                 <button type="button" class="chat-button" onclick="redirectToChat()">Chat</button>
                 <script>
                 function redirectToChat() {
@@ -103,8 +103,8 @@ try {
         </div>
         
         <br><br>
-        <!-- Campos ocultos para armazenar IDs do tutor e do tutor logado -->
-        <input type="hidden" id="id_tutor_exibido" value="<?php echo htmlspecialchars($id_tutor_exibido); ?>">
+        <!-- Campos ocultos para armazenar IDs do aluno e do tutor logado -->
+        <input type="hidden" id="id_aluno_exibido" value="<?php echo htmlspecialchars($id_aluno_exibido); ?>">
         <input type="hidden" id="id_tutor_logado" value="<?php echo htmlspecialchars($id_tutor_logado); ?>">
     </div>
 

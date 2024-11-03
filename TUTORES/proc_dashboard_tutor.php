@@ -1,13 +1,11 @@
 <?php
-session_start(); // Inicia a sessão
+require_once '../conexao.php'; // Inclui a conexão com o banco
 
 // Verifica se o tutor está logado e redireciona para login se não estiver
 if (!isset($_SESSION['id_tutor'])) {
     header("Location: ../login.php");
     exit();
 }
-
-require_once '../conexao.php'; // Inclui a conexão com o banco
 
 $id_usuario = $_SESSION['id_tutor'];
 $tabela_usuario = 'Tutores';

@@ -1,6 +1,6 @@
 <?php
-// Inicia a sessão no início do script
-session_start();
+// Inclui o arquivo de controle de sessão
+require_once 'session_control.php'; // Isso deve ser feito no início do arquivo
 
 // Inclui o arquivo de conexão com o banco de dados
 require_once 'conexao.php';
@@ -11,14 +11,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
     $email = htmlspecialchars(trim($_POST["email"])); // Sanitização
     $senha = $_POST["senha"];
     $tipo_usuario = $_POST["tipo_usuario"]; // Tipo de usuário (aluno ou tutor)
-    $tipo_conversor = ($tipo_usuario == "aluno") ? "tutor" : "aluno"; // Definindo tipo_conversor
-
-    // Adicionando à sessão
-    $_SESSION['tipo_usuario'] = $tipo_usuario; // Adicionando tipo_usuario à sessão
-    $_SESSION['tipo_conversor'] = $tipo_conversor; // Adicionando tipo_conversor à sessão
-
-    // Debug: Exibir os dados recebidos
-    error_log("Dados do login: Email: $email, Tipo: $tipo_usuario");
 
     // Define a tabela do banco de dados com base no tipo de usuário
     $tabela_usuario = ($tipo_usuario == "aluno") ? "Alunos" : "Tutores";
@@ -32,14 +24,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
 
     // Debug: Verificando se o usuário foi encontrado
     if ($usuario) {
-        error_log("Usuário encontrado: " . print_r($usuario, true));
-
         // Verifica a senha usando password_verify
         if (password_verify($senha, $usuario['senha'])) {
             // Armazena o ID do usuário e o nome na sessão
-            $id_usuario = $usuario['id']; // ID da tabela, que é o mesmo para ambos os tipos
-            $_SESSION['id_' . $tipo_usuario] = $id_usuario;
-            $_SESSION['nome'] = $usuario['nome']; // Armazena o nome na mesma variável para ambos os tipos
+            $_SESSION['id_usuario'] = $usuario['id']; // Armazena o ID do usuário
+            $_SESSION['nome'] = $usuario['nome']; // Armazena o nome do usuário
+            $_SESSION['tipo_usuario'] = $tipo_usuario; // Armazena o tipo de usuário
 
             // Mensagem de sucesso
             $_SESSION['success'] = "Login realizado com sucesso!";

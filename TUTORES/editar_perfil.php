@@ -1,11 +1,6 @@
 <?php
-// Inicia a sessão e verifica login
-session_start();
-if (!isset($_SESSION['id_tutor'])) {
-    error_log("Tutor não logado, redirecionando para login.");
-    header("Location: ../login.php");
-    exit();
-}
+// Inclui o controle de sessão
+require_once '../session_control.php'; // Inclua o session_control.php para gerenciar a sessão
 
 // Inclui o processamento dos dados para preencher o formulário
 require_once 'proc_editar_perfil.php';

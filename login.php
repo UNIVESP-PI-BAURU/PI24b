@@ -24,7 +24,7 @@
     <!-- Mensagens de erro ou sucesso -->
     <div class="message-area">
         <?php
-        session_start();
+        session_start(); // Inicia a sessão
         if (isset($_SESSION['success'])) {
             echo "<div class='success'>{$_SESSION['success']}</div>";
             unset($_SESSION['success']);

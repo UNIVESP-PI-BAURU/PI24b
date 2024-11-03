@@ -1,5 +1,5 @@
 <?php 
-session_start();
+require_once '../session_control.php'; // Inclui o controle de sessão
 
 // Verifica se há erros na sessão
 $erro = $_SESSION['erro_consulta'] ?? null;
@@ -18,9 +18,6 @@ $resultados = $_SESSION['resultados_tutores'];
 // Limpa os resultados da sessão após a exibição
 unset($_SESSION['resultados_tutores']);
 
-// Presumindo que a ID do aluno está armazenada na sessão
-$id_aluno = $_SESSION['id_aluno'] ?? null;
-
 // Debug: Exibir resultados recebidos
 error_log("Resultados recebidos: " . print_r($resultados, true));
 ?>
@@ -31,20 +28,20 @@ error_log("Resultados recebidos: " . print_r($resultados, true));
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultados da Pesquisa</title>
-    <link rel="stylesheet" href="ASSETS/CSS/style.css">
+    <link rel="stylesheet" href="../ASSETS/CSS/style.css">
 </head>
 <body>
 
     <!-- Cabeçalho -->
     <div class="header">
-        <img src="ASSETS/IMG/capa.png" alt="Imagem de Capa">
+        <img src="../ASSETS/IMG/capa.png" alt="Imagem de Capa">
     </div>
 
     <!-- Navegação -->
     <nav class="navbar">
         <a href="../index.php">Home</a>
         <a href="../sobre_nos.php">Sobre nós</a>
-        <a href="<?php echo isset($_SESSION['id_tutor']) ? './dashboard_tutor.php' : './dashboard_aluno.php'; ?>">Dashboard</a>
+        <a href="./dashboard_tutor.php">Dashboard</a>
         <a href="../logout.php">Logout</a>
     </nav>
 
@@ -86,10 +83,6 @@ error_log("Resultados recebidos: " . print_r($resultados, true));
                                 <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($tutor['tipo_conversor']); ?></td>
                                 <td style="border: 1px solid #ddd; padding: 4px;">
                                     <a href="about_tutor.php?id=<?php echo isset($tutor['id_tutor']) ? htmlspecialchars($tutor['id_tutor']) : ''; ?>">Ver mais</a>
-                                    <!-- Campo oculto para a ID do tutor -->
-                                    <input type="hidden" name="id_tutor[]" value="<?php echo isset($tutor['id_tutor']) ? htmlspecialchars($tutor['id_tutor']) : ''; ?>" />
-                                    <!-- Campo oculto para a ID do aluno -->
-                                    <input type="hidden" name="id_aluno" value="<?php echo htmlspecialchars($id_aluno); ?>" />
                                 </td>
                             </tr>
                             <tr><td colspan="8" style="height: 4px;"></td></tr> <!-- Espaço entre resultados -->

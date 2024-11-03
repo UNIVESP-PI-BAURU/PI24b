@@ -1,7 +1,9 @@
 <?php
-session_start();
-if (!isset($_SESSION['id_tutor']) && !isset($_SESSION['id_aluno'])) {
-    header("Location: login.php");
+require_once './session_control.php'; // Inclui o controle de sessão
+
+// Verifica se o usuário está logado (tutor ou aluno)
+if (!isset($_SESSION['id_usuario'])) {
+    header("Location: ./login.php"); // Redireciona para a página de login se não estiver logado
     exit();
 }
 
@@ -13,8 +15,8 @@ $id_conversor = $_GET['id'] ?? null;
 $tipo_conversor = $_GET['tipo_conversor'] ?? null;
 
 // ID e tipo do usuário atual
-$id_usuario = $_SESSION['id_tutor'] ?? $_SESSION['id_aluno'];
-$tipo_usuario = isset($_SESSION['id_tutor']) ? 'tutor' : 'aluno';
+$id_usuario = $_SESSION['id_usuario'];
+$tipo_usuario = $_SESSION['tipo_usuario']; // Assume que você já definiu isso no session_control.php
 ?>
 
 <!DOCTYPE html>

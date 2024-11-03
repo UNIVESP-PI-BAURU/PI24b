@@ -1,6 +1,6 @@
 <?php
-session_start();
 require_once '../conexao.php';
+require_once '../session_control.php'; // Inclui o controle de sessão
 
 // Verifica se o usuário está logado e define a tabela
 if (isset($_SESSION['id_aluno'])) {

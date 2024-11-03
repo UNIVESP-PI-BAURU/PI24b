@@ -1,16 +1,10 @@
 <?php
-session_start(); // Inicia a sessão
-
-// Verifica se o aluno está logado e redireciona para login se não estiver
-if (!isset($_SESSION['id_aluno'])) {
-    header("Location: ../login.php");
-    exit();
-}
+require_once '../session_control.php'; // Inclui o controle de sessão
 
 require_once '../conexao.php'; // Inclui a conexão com o banco
 
-$id_usuario = $_SESSION['id_aluno'];
-$tabela_usuario = 'Alunos';
+$id_usuario = $_SESSION['id_aluno']; // Mudança para id_aluno
+$tabela_usuario = 'Alunos'; // Mudança para Alunos
 
 // Consulta os dados do aluno
 $sql = "SELECT nome, foto_perfil, cidade, estado FROM $tabela_usuario WHERE id = :id";
@@ -33,7 +27,7 @@ if (!$usuario) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Aluno</title>
+    <title>Dashboard - Aluno</title> <!-- Mudança para Aluno -->
     <link rel="stylesheet" href="../ASSETS/CSS/style.css">
 </head>
 <body>
@@ -47,7 +41,7 @@ if (!$usuario) {
     <nav class="navbar">
         <a href="../index.php">Home</a>
         <a href="../sobre_nos.php">Sobre nós</a>
-        <?php if (isset($_SESSION['id_aluno'])): ?>
+        <?php if (isset($_SESSION['id_aluno'])): ?> <!-- Mudança para id_aluno -->
             <a href="../logout.php">Logout</a>
         <?php else: ?>
             <a href="../login.php">Login</a>
@@ -61,7 +55,7 @@ if (!$usuario) {
 
             <!-- Saudação -->
             <div class="signup-section">
-                <h3>Bem-vindo (a), aluno(a) <?php echo htmlspecialchars($usuario['nome']); ?>!</h3>
+                <h3>Bem-vindo (a), aluno(a) <?php echo htmlspecialchars($usuario['nome']); ?>!</h3> <!-- Mudança para aluno -->
             </div>
 
             <!-- Perfil -->
@@ -76,8 +70,8 @@ if (!$usuario) {
                     </div>
                 </div>
                 <div style="flex: 2; padding-left: 10px;">
-                    <p>Aluno(a): <?php echo htmlspecialchars($usuario['nome']); ?></p>
-                    <p>ID-A: # <?php echo htmlspecialchars($_SESSION['id_aluno']); ?></p>
+                    <p>Aluno(a): <?php echo htmlspecialchars($usuario['nome']); ?></p> <!-- Mudança para aluno -->
+                    <p>ID-A: # <?php echo htmlspecialchars($_SESSION['id_aluno']); ?></p> <!-- Mudança para id_aluno -->
                     <?php if (!empty($usuario['cidade']) || !empty($usuario['estado'])): ?>
                         <p>
                             <?php echo htmlspecialchars($usuario['cidade']) ? htmlspecialchars($usuario['cidade']) . ', ' : ''; ?>
@@ -90,8 +84,8 @@ if (!$usuario) {
 
             <!-- Pesquisa -->
             <div class="signup-section" style="margin-top: 20px;">
-                <h3>Encontre seus tutores aqui!</h3>
-                <button onclick="window.location.href='./pesquisa_tutores.php'">Pesquisar Tutores</button>
+                <h3>Encontre seus tutores aqui!</h3> <!-- Mudança para tutores -->
+                <button onclick="window.location.href='./pesquisa_tutores.php'">Pesquisar Tutores</button> <!-- Mudança para tutores -->
             </div>
 
             <!-- Aulas -->
