@@ -18,8 +18,8 @@ $resultados = $_SESSION['resultados_tutores'];
 // Limpa os resultados da sessão após a exibição
 unset($_SESSION['resultados_tutores']);
 
-// Presumindo que a ID do tutor está armazenada na sessão
-$id_tutor = $_SESSION['id_tutor'] ?? null;
+// Presumindo que a ID do aluno está armazenada na sessão
+$id_aluno = $_SESSION['id_aluno'] ?? null;
 
 // Debug: Exibir resultados recebidos
 error_log("Resultados recebidos: " . print_r($resultados, true));
@@ -69,6 +69,8 @@ error_log("Resultados recebidos: " . print_r($resultados, true));
                             <th style="border: 1px solid #ddd; padding: 4px;">Cidade</th>
                             <th style="border: 1px solid #ddd; padding: 4px;">Estado</th>
                             <th style="border: 1px solid #ddd; padding: 4px;">Idioma</th>
+                            <th style="border: 1px solid #ddd; padding: 4px;">Tipo Usuário</th>
+                            <th style="border: 1px solid #ddd; padding: 4px;">Tipo Conversor</th>
                             <th style="border: 1px solid #ddd; padding: 4px;">Ações</th>
                         </tr>
                     </thead>
@@ -80,15 +82,17 @@ error_log("Resultados recebidos: " . print_r($resultados, true));
                                 <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($tutor['cidade']); ?></td>
                                 <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($tutor['estado']); ?></td>
                                 <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($tutor['idiomas']); ?></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($tutor['tipo_usuario']); ?></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($tutor['tipo_conversor']); ?></td>
                                 <td style="border: 1px solid #ddd; padding: 4px;">
                                     <a href="about_tutor.php?id=<?php echo isset($tutor['id_tutor']) ? htmlspecialchars($tutor['id_tutor']) : ''; ?>">Ver mais</a>
                                     <!-- Campo oculto para a ID do tutor -->
                                     <input type="hidden" name="id_tutor[]" value="<?php echo isset($tutor['id_tutor']) ? htmlspecialchars($tutor['id_tutor']) : ''; ?>" />
-                                    <!-- Campo oculto para a ID do tutor que fez a pesquisa -->
-                                    <input type="hidden" name="id_tutor_investigador" value="<?php echo htmlspecialchars($id_tutor); ?>" />
+                                    <!-- Campo oculto para a ID do aluno -->
+                                    <input type="hidden" name="id_aluno" value="<?php echo htmlspecialchars($id_aluno); ?>" />
                                 </td>
                             </tr>
-                            <tr><td colspan="6" style="height: 4px;"></td></tr> <!-- Espaço entre resultados -->
+                            <tr><td colspan="8" style="height: 4px;"></td></tr> <!-- Espaço entre resultados -->
                         <?php endforeach; ?>
                     </tbody>
                 </table>

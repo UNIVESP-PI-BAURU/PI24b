@@ -1,4 +1,4 @@
-<?php
+<?php 
 session_start();
 require_once '../conexao.php';
 
@@ -14,6 +14,8 @@ $cidade = isset($_POST['cidade']) ? trim($_POST['cidade']) : '';
 $estado = isset($_POST['estado']) ? trim($_POST['estado']) : '';
 $idioma = isset($_POST['idioma']) ? trim($_POST['idioma']) : '';
 $id_tutor = $_SESSION['id_tutor']; // Captura a ID do tutor diretamente da sessão
+$tipo_usuario = 'tutor'; // Definindo tipo de usuário
+$tipo_conversor = 'tutor'; // Definindo tipo de conversor
 
 // Debug: Exibir filtros recebidos
 error_log("Filtros recebidos: cidade = $cidade, estado = $estado, idioma = $idioma, id_tutor = $id_tutor");

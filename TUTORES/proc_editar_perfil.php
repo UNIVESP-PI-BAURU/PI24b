@@ -1,87 +1,92 @@
 <?php
+require_once '../conexao.php';
+
 // Inicia a sessão
 session_start();
-if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
+
+// Verifica se o usuário está logado
+if (isset($_SESSION['id_aluno'])) {
+    $id_usuario = $_SESSION['id_aluno'];
+    $tipo_usuario = 'aluno';
+    $tipo_conversor = 'tutor';
+} elseif (isset($_SESSION['id_tutor'])) {
+    $id_usuario = $_SESSION['id_tutor'];
+    $tipo_usuario = 'tutor';
+    $tipo_conversor = 'aluno';
+} else {
+    error_log("Usuário não logado, redirecionando para login.");
     header("Location: ../login.php");
     exit();
 }
 
-// Conexão com o banco de dados
-require_once '../conexao.php';
-if (!$conn) {
-    die("Falha na conexão com o banco de dados.");
-}
-
-// Identifica o tipo de usuário e define a tabela correspondente
-$tipo_usuario = isset($_SESSION['id_aluno']) ? 'aluno' : 'tutor';
-$id_usuario = $_SESSION['id_' . $tipo_usuario];
-$tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
-$tabela_idioma = ($tipo_usuario === 'aluno') ? 'IdiomaAluno' : 'IdiomaTutor';
-
-// Recupera os dados do usuário
-$sql = "SELECT nome, email, cidade, estado, data_nascimento, biografia 
-        FROM $tabela_usuario WHERE id = :id";
-$stmt = $conn->prepare($sql);
-$stmt->bindParam(':id', $id_usuario);
-$stmt->execute();
-$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Verifica se o usuário foi encontrado
-if (!$usuario) {
-    error_log("Usuário não encontrado para ID: $id_usuario");
-    header("Location: ../login.php");
-    exit();
-}
-
-$nome = $usuario['nome'];
-$email = $usuario['email'];
-$cidade = $usuario['cidade'];
-$estado = $usuario['estado'];
-$data_nascimento = $usuario['data_nascimento'];
-$biografia = $usuario['biografia'];
-
-// Recupera os idiomas do usuário
-$sql_idiomas = "SELECT idioma FROM $tabela_idioma WHERE id_{$tipo_usuario} = :id_usuario";
-$stmt_idiomas = $conn->prepare($sql_idiomas);
-$stmt_idiomas->bindParam(':id_usuario', $id_usuario);
-$stmt_idiomas->execute();
-$idiomas = $stmt_idiomas->fetchAll(PDO::FETCH_COLUMN);
-
-// Processa a atualização se for uma requisição POST
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['atualizar'])) {
+// Processa o formulário
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = $_POST['nome'];
     $email = $_POST['email'];
     $cidade = $_POST['cidade'];
     $estado = $_POST['estado'];
     $data_nascimento = $_POST['data_nascimento'];
     $biografia = $_POST['biografia'];
-    
-    // Atualiza os dados pessoais
-    $sql_update = "UPDATE $tabela_usuario 
-                   SET nome = ?, email = ?, cidade = ?, estado = ?, data_nascimento = ?, biografia = ? 
-                   WHERE id = ?";
-    $stmt_update = $conn->prepare($sql_update);
-    $stmt_update->execute([$nome, $email, $cidade, $estado, $data_nascimento, $biografia, $id_usuario]);
 
-    // Recupera os idiomas do formulário
-    $idiomas = array_map('trim', $_POST['idiomas']);
-
-    // Remove os idiomas antigos
-    $sql_delete = "DELETE FROM $tabela_idioma WHERE id_{$tipo_usuario} = ?";
-    $stmt_delete = $conn->prepare($sql_delete);
-    $stmt_delete->execute([$id_usuario]);
-
-    // Insere os novos idiomas
-    foreach ($idiomas as $idioma) {
-        if (!empty($idioma)) {
-            $sql_insert = "INSERT INTO $tabela_idioma (id_{$tipo_usuario}, idioma) VALUES (?, ?)";
-            $stmt_insert = $conn->prepare($sql_insert);
-            $stmt_insert->execute([$id_usuario, $idioma]);
-        }
+    // Verifica se uma nova foto foi enviada
+    if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === UPLOAD_ERR_OK) {
+        $foto_perfil = 'uploads/' . basename($_FILES['foto_perfil']['name']);
+        move_uploaded_file($_FILES['foto_perfil']['tmp_name'], $foto_perfil);
+    } else {
+        $foto_perfil = null; // Manter a foto anterior
     }
 
-    // Redireciona para o perfil
-    header("Location: perfil.php");
-    exit();
+    // Atualiza o usuário no banco de dados
+    try {
+        $sql = "UPDATE " . ($tipo_usuario === 'aluno' ? 'Alunos' : 'Tutores') . " SET nome = :nome, email = :email, cidade = :cidade, estado = :estado, data_nascimento = :data_nascimento, biografia = :biografia";
+        
+        if ($foto_perfil) {
+            $sql .= ", foto_perfil = :foto_perfil";
+        }
+        
+        $sql .= " WHERE id = :id";
+        
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':nome', $nome);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':cidade', $cidade);
+        $stmt->bindParam(':estado', $estado);
+        $stmt->bindParam(':data_nascimento', $data_nascimento);
+        $stmt->bindParam(':biografia', $biografia);
+        $stmt->bindParam(':id', $id_usuario);
+
+        if ($foto_perfil) {
+            $stmt->bindParam(':foto_perfil', $foto_perfil);
+        }
+
+        $stmt->execute();
+
+        // Atualiza os idiomas
+        $idiomas = $_POST['idiomas'] ? explode(',', $_POST['idiomas']) : [];
+        
+        // Limpa idiomas antigos
+        $stmt = $conn->prepare("DELETE FROM " . ($tipo_usuario === 'aluno' ? 'IdiomaAluno' : 'IdiomaTutor') . " WHERE " . ($tipo_usuario === 'aluno' ? 'aluno_id' : 'id_tutor') . " = :id");
+        $stmt->bindParam(':id', $id_usuario);
+        $stmt->execute();
+
+        // Insere novos idiomas
+        $stmt = $conn->prepare("INSERT INTO " . ($tipo_usuario === 'aluno' ? 'IdiomaAluno' : 'IdiomaTutor') . " (idioma, " . ($tipo_usuario === 'aluno' ? 'aluno_id' : 'id_tutor') . ") VALUES (:idioma, :id)");
+        foreach ($idiomas as $idioma) {
+            $idioma = trim($idioma);
+            if ($idioma) {
+                $stmt->bindParam(':idioma', $idioma);
+                $stmt->bindParam(':id', $id_usuario);
+                $stmt->execute();
+            }
+        }
+
+        // Redireciona de volta ao perfil
+        header("Location: perfil.php");
+        exit();
+    } catch (PDOException $e) {
+        error_log("Erro ao atualizar perfil: " . $e->getMessage()); // Debug: captura erros
+        header("Location: perfil.php?erro=1");
+        exit();
+    }
 }
 ?>

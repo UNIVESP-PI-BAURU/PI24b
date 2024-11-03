@@ -69,6 +69,8 @@ error_log("Resultados recebidos: " . print_r($resultados, true));
                             <th style="border: 1px solid #ddd; padding: 4px;">Cidade</th>
                             <th style="border: 1px solid #ddd; padding: 4px;">Estado</th>
                             <th style="border: 1px solid #ddd; padding: 4px;">Idioma</th>
+                            <th style="border: 1px solid #ddd; padding: 4px;">Tipo Usuário</th>
+                            <th style="border: 1px solid #ddd; padding: 4px;">Tipo Conversor</th>
                             <th style="border: 1px solid #ddd; padding: 4px;">Ações</th>
                         </tr>
                     </thead>
@@ -80,6 +82,8 @@ error_log("Resultados recebidos: " . print_r($resultados, true));
                                 <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($aluno['cidade']); ?></td>
                                 <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($aluno['estado']); ?></td>
                                 <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($aluno['idiomas']); ?></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($aluno['tipo_usuario']); ?></td>
+                                <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($aluno['tipo_conversor']); ?></td>
                                 <td style="border: 1px solid #ddd; padding: 4px;">
                                     <a href="about_aluno.php?id=<?php echo isset($aluno['id_aluno']) ? htmlspecialchars($aluno['id_aluno']) : ''; ?>">Ver mais</a>
                                     <!-- Campo oculto para a ID do aluno -->
@@ -88,7 +92,7 @@ error_log("Resultados recebidos: " . print_r($resultados, true));
                                     <input type="hidden" name="id_tutor" value="<?php echo htmlspecialchars($id_tutor); ?>" />
                                 </td>
                             </tr>
-                            <tr><td colspan="6" style="height: 4px;"></td></tr> <!-- Espaço entre resultados -->
+                            <tr><td colspan="8" style="height: 4px;"></td></tr> <!-- Espaço entre resultados -->
                         <?php endforeach; ?>
                     </tbody>
                 </table>

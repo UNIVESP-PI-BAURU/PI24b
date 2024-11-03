@@ -9,6 +9,10 @@ if (!isset($_SESSION['id_tutor'])) {
 
 // Inclui o processamento dos dados para preencher o formulário
 require_once 'proc_editar_perfil.php';
+
+// Adiciona tipo_usuario e tipo_conversor
+$tipo_usuario = 'tutor'; // ou o valor que você desejar para o tipo de usuário
+$tipo_conversor = 'tutor'; // ou o valor que você desejar para o tipo de conversor
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">

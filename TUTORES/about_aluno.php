@@ -7,16 +7,16 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
     exit();
 }
 
-// Obtém o ID do aluno e a ID do tutor que está logado
-$id_aluno = intval($_GET['id']);
-$id_tutor = $_SESSION['id_tutor'] ?? null;
+// Obtém o ID do aluno e a ID do aluno que está logado
+$id_aluno_exibido = intval($_GET['id']);
+$id_aluno_logado = $_SESSION['id_aluno'] ?? null;
 
 require_once '../conexao.php'; // Certifique-se de que o caminho para o arquivo de conexão está correto
 
 try {
     // Recupera as informações do aluno
     $stmt = $conn->prepare("SELECT * FROM Alunos WHERE id = :id");
-    $stmt->execute(['id' => $id_aluno]);
+    $stmt->execute(['id' => $id_aluno_exibido]);
     $aluno = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // Verifica se o aluno foi encontrado
@@ -25,9 +25,9 @@ try {
         exit();
     }
 
-    // Recupera os idiomas do aluno
+    // Recupera os idiomas do aluno (ajuste o nome da tabela conforme necessário)
     $stmt_idiomas = $conn->prepare("SELECT idioma FROM IdiomaAluno WHERE id_aluno = :id");
-    $stmt_idiomas->execute(['id' => $id_aluno]);
+    $stmt_idiomas->execute(['id' => $id_aluno_exibido]);
     $idiomas = $stmt_idiomas->fetchAll(PDO::FETCH_COLUMN);
 
     // Debug: Registrar informações do aluno e dos idiomas
@@ -84,21 +84,29 @@ try {
             <p><strong>Idiomas:</strong> <?php echo implode(', ', array_map('htmlspecialchars', $idiomas)); ?></p>
             <p><strong>Biografia:</strong> <?php echo htmlspecialchars($aluno['biografia']); ?></p>
         </div>
+        <br><br>
 
         <!-- Funcionalidades de interação -->
         <div class="interactions">
             <h3>Interação</h3>
-            <button>Enviar Mensagem</button>
-            <button>Adicionar aos Favoritos</button>
+            <div class="chat">
+                <!-- Botão Chat -->
+                <input type="hidden" id="id_usuario" value="<?php echo $id_aluno_exibido; ?>" />
+                <button type="button" class="chat-button" onclick="redirectToChat()">Chat</button>
+                <script>
+                function redirectToChat() {
+                    var idUsuario = document.getElementById('id_usuario').value;
+                    window.location.href = 'chat.php?id=' + idUsuario;
+                }
+                </script>
+            </div>
         </div>
-
-
-        <!-- Campos ocultos para armazenar IDs do aluno e do tutor -->
-        <input type="hidden" id="id_aluno" value="<?php echo htmlspecialchars($id_aluno); ?>">
-        <input type="hidden" id="id_tutor" value="<?php echo htmlspecialchars($id_tutor); ?>">
+        
+        <br><br>
+        <!-- Campos ocultos para armazenar IDs do aluno e do aluno logado -->
+        <input type="hidden" id="id_aluno_exibido" value="<?php echo htmlspecialchars($id_aluno_exibido); ?>">
+        <input type="hidden" id="id_aluno_logado" value="<?php echo htmlspecialchars($id_aluno_logado); ?>">
     </div>
-
-
 
     <!-- Rodapé -->
     <div class="footer">

@@ -12,7 +12,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
     $estado = htmlspecialchars(trim($_POST["estado"]));
     $data_nascimento = !empty($_POST["data_nascimento"]) ? htmlspecialchars(trim($_POST["data_nascimento"])) : null;
     $biografia = htmlspecialchars(trim($_POST["biografia"]));
-    $tipo_usuario = isset($_POST["tipo_usuario"]) ? $_POST["tipo_usuario"] : null; // Altere para capturar apenas um tipo
+    $tipo_usuario = isset($_POST["tipo_usuario"]) ? $_POST["tipo_usuario"] : null; // Tipo de usuário (aluno ou tutor)
+    $tipo_conversor = ($tipo_usuario == "aluno") ? "tutor" : "aluno"; // Definindo tipo_conversor
 
     // Verifica se uma imagem foi enviada e define o caminho
     $foto_perfil = null;
@@ -61,18 +62,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
     try {
         if ($tipo_usuario === 'aluno') {
             $stmt = $conn->prepare(
-                "INSERT INTO Alunos (nome, email, senha, cidade, estado, data_nascimento, biografia, foto_perfil) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+                "INSERT INTO Alunos (nome, email, senha, cidade, estado, data_nascimento, biografia, foto_perfil, tipo_usuario, tipo_conversor) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
             );
+            $stmt->bind_param("ssssssssss", $nome, $email, $senha, $cidade, $estado, $data_nascimento, $biografia, $foto_perfil, $tipo_usuario, $tipo_conversor);
         } elseif ($tipo_usuario === 'tutor') {
             $stmt = $conn->prepare(
-                "INSERT INTO Tutores (nome, email, senha, cidade, estado, data_nascimento, biografia, foto_perfil) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+                "INSERT INTO Tutores (nome, email, senha, cidade, estado, data_nascimento, biografia, foto_perfil, tipo_usuario, tipo_conversor) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
             );
+            $stmt->bind_param("ssssssssss", $nome, $email, $senha, $cidade, $estado, $data_nascimento, $biografia, $foto_perfil, $tipo_usuario, $tipo_conversor);
         }
 
         if (isset($stmt)) {
-            $stmt->bind_param("ssssssss", $nome, $email, $senha, $cidade, $estado, $data_nascimento, $biografia, $foto_perfil);
             $stmt->execute();
         }
 
@@ -86,7 +88,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
     }
 }
 
-// Se a requisição não for POST, redireciona para a página de cadastro
+// Se a requisição não for POST, redireciona
 header("Location: cadastro.php");
 exit;
-?>

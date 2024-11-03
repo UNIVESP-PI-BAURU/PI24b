@@ -16,8 +16,8 @@ if (!isset($_SESSION['id_tutor'])) {
     <title>Pesquisa de Tutores</title>
     <link rel="stylesheet" href="ASSETS/CSS/style.css">
     <script src="https://code.jquery.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
 
 <body>
@@ -41,6 +41,8 @@ if (!isset($_SESSION['id_tutor'])) {
             <h2>Pesquisar Tutores</h2>
             <form class="signup-form" method="POST" action="proc_pesquisa_tutores.php">
                 <input type="hidden" name="id_tutor" value="<?php echo htmlspecialchars($_SESSION['id_tutor']); ?>" /> <!-- Campo oculto para ID do tutor -->
+                <input type="hidden" name="tipo_usuario" value="tutor" /> <!-- Tipo de usuário -->
+                <input type="hidden" name="tipo_conversor" value="tutor" /> <!-- Tipo de conversor -->
                 <input type="text" id="cidade" name="cidade" placeholder="Cidade..." />
                 <br>
                 <input type="text" id="estado" name="estado" placeholder="Estado..." />

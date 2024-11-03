@@ -5,10 +5,12 @@ require_once '../conexao.php';
 if (isset($_SESSION['id_aluno'])) {
     $id_usuario = $_SESSION['id_aluno'];
     $tipo_usuario = 'aluno';
+    $tipo_conversor = 'tutor'; // Define o tipo_conversor conforme necessário
     error_log("Usuário logado como aluno: ID = $id_usuario"); // Debug: ID do aluno
 } elseif (isset($_SESSION['id_tutor'])) {
     $id_usuario = $_SESSION['id_tutor'];
     $tipo_usuario = 'tutor';
+    $tipo_conversor = 'aluno'; // Define o tipo_conversor conforme necessário
     error_log("Usuário logado como tutor: ID = $id_usuario"); // Debug: ID do tutor
 } else {
     error_log("Usuário não logado, redirecionando para login."); // Debug: não logado
@@ -44,7 +46,6 @@ try {
         $query_idiomas = $conn->prepare("SELECT idioma FROM IdiomaAluno WHERE aluno_id = :id");
         error_log("Query para recuperar idiomas do aluno: " . $query_idiomas->queryString); // Debug: Query de idiomas do aluno
     } else {
-        // Verifique se 'tutor_id' é o nome correto da coluna - o certo e id_aluno ou id_tutor
         $query_idiomas = $conn->prepare("SELECT idioma FROM IdiomaTutor WHERE id_tutor = :id");
         error_log("Query para recuperar idiomas do tutor: " . $query_idiomas->queryString); // Debug: Query de idiomas do tutor
     }

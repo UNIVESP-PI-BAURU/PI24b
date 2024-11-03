@@ -37,6 +37,8 @@ require_once 'proc_perfil.php';
     <div class="signup-section">
         <h2>Perfil: <?php echo isset($usuario['nome']) ? htmlspecialchars($usuario['nome']) : 'Usuário não encontrado'; ?></h2>
         <p><strong>ID:</strong> <?php echo isset($usuario['id']) ? htmlspecialchars($usuario['id']) : 'N/A'; ?></p>
+        <p><strong>Tipo de Usuário:</strong> <?php echo isset($tipo_usuario) ? htmlspecialchars($tipo_usuario) : 'N/A'; ?></p>
+        <p><strong>Tipo de Conversor:</strong> <?php echo isset($tipo_conversor) ? htmlspecialchars($tipo_conversor) : 'N/A'; ?></p>
 
         <div class="foto-perfil">
             <div class="foto-moldura-perfil">

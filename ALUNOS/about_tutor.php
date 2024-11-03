@@ -84,14 +84,25 @@ try {
             <p><strong>Idiomas:</strong> <?php echo implode(', ', array_map('htmlspecialchars', $idiomas)); ?></p>
             <p><strong>Biografia:</strong> <?php echo htmlspecialchars($tutor['biografia']); ?></p>
         </div>
+        <br><br>
 
         <!-- Funcionalidades de interação -->
         <div class="interactions">
             <h3>Interação</h3>
-            <button>Enviar Mensagem</button>
-            <button>Adicionar aos Favoritos</button>
+            <div class="chat">
+                <!-- Botão Chat -->
+                <input type="hidden" id="id_usuario" value="<?php echo $id_tutor_exibido; ?>" />
+                <button type="button" class="chat-button" onclick="redirectToChat()">Chat</button>
+                <script>
+                function redirectToChat() {
+                    var idUsuario = document.getElementById('id_usuario').value;
+                    window.location.href = 'chat.php?id=' + idUsuario;
+                }
+                </script>
+            </div>
         </div>
-
+        
+        <br><br>
         <!-- Campos ocultos para armazenar IDs do tutor e do tutor logado -->
         <input type="hidden" id="id_tutor_exibido" value="<?php echo htmlspecialchars($id_tutor_exibido); ?>">
         <input type="hidden" id="id_tutor_logado" value="<?php echo htmlspecialchars($id_tutor_logado); ?>">
