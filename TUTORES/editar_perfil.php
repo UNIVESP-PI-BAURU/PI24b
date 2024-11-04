@@ -1,13 +1,17 @@
 <?php
-// Inclui o controle de sessão
-require_once '../session_control.php'; // Inclua o session_control.php para gerenciar a sessão
+// Início da sessão e verificação de autenticação
+session_start();
+if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
+    header("Location: ../login.php");
+    exit();
+}
+
+$id_usuario = isset($_SESSION['id_aluno']) ? $_SESSION['id_aluno'] : $_SESSION['id_tutor'];
+$tipo_usuario = isset($_SESSION['id_aluno']) ? 'aluno' : 'tutor';
+$tipo_conversor = $tipo_usuario;
 
 // Inclui o processamento dos dados para preencher o formulário
 require_once 'proc_editar_perfil.php';
-
-// Adiciona tipo_usuario e tipo_conversor
-$tipo_usuario = 'tutor'; // ou o valor que você desejar para o tipo de usuário
-$tipo_conversor = 'tutor'; // ou o valor que você desejar para o tipo de conversor
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">

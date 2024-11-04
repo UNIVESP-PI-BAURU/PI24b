@@ -1,5 +1,12 @@
 <?php 
-require_once '../session_control.php'; // Inclui o controle de sessão
+session_start(); // Inicia a sessão
+
+// Verifica se o tutor está logado
+if (!isset($_SESSION['id_tutor'])) {
+    error_log("Tutor não logado, redirecionando para login.");
+    header("Location: ../login.php");
+    exit();
+}
 
 // Verifica se há erros na sessão
 $erro = $_SESSION['erro_consulta'] ?? null;

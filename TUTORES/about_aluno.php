@@ -1,5 +1,11 @@
 <?php 
-require_once '../session_control.php'; // Certifique-se de que o caminho para o arquivo de controle de sessão está correto
+session_start();
+
+// Verifica se o usuário está logado
+if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
+    header("Location: ../index.php");
+    exit();
+}
 
 // Verifica se o ID do aluno foi passado na URL
 if (!isset($_GET['id']) || empty($_GET['id'])) {

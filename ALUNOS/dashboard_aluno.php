@@ -62,12 +62,6 @@ require_once './proc_dashboard_aluno.php'; // Processa os dados do aluno
                 </div>
             </div>
 
-            <!-- Pesquisa -->
-            <div class="signup-section" style="margin-top: 20px;">
-                <h3>Encontre seus tutores aqui!</h3>
-                <button onclick="window.location.href='./pesquisa_tutores.php'">Pesquisar Tutores</button>
-            </div>
-
             <!-- Aulas -->
             <div class="signup-section" style="margin-top: 30px;">
                 <h3>Aulas atribuídas:</h3>

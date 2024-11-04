@@ -1,6 +1,12 @@
 <?php
-require_once '../session_control.php'; // Inclui o controle de sessão
-require_once '../conexao.php'; // Inclui a conexão com o banco
+// Inclui a conexão com o banco de dados
+require_once '../conexao.php'; 
+
+// Verifica se o usuário está logado (aluno)
+if (!isset($_SESSION['id_aluno'])) {
+    header("Location: ../login.php"); // Redireciona para a página de login se não estiver logado
+    exit();
+}
 
 $id_usuario = $_SESSION['id_aluno'];
 $tabela_usuario = 'Alunos';

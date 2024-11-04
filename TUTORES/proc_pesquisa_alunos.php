@@ -1,9 +1,9 @@
-<?php 
-require_once '../session_control.php'; // Inclui o controle de sessão
+<?php
+session_start(); // Inicia a sessão
 require_once '../conexao.php';
 
-// Verifica se o aluno está logado
-if (!isset($_SESSION['id_aluno'])) {
+// Verifica se o tutor está logado
+if (!isset($_SESSION['id_tutor'])) {
     error_log("Tentativa de acesso não autorizada à pesquisa de alunos.");
     header("Location: ../login.php");
     exit();
@@ -13,12 +13,10 @@ if (!isset($_SESSION['id_aluno'])) {
 $cidade = isset($_POST['cidade']) ? trim($_POST['cidade']) : '';
 $estado = isset($_POST['estado']) ? trim($_POST['estado']) : '';
 $idioma = isset($_POST['idioma']) ? trim($_POST['idioma']) : '';
-$id_aluno = $_SESSION['id_aluno']; // Captura a ID do aluno diretamente da sessão
-$tipo_usuario = 'aluno'; // Definindo tipo de usuário
-$tipo_conversor = 'aluno'; // Definindo tipo de conversor
+$id_tutor = $_SESSION['id_tutor']; // Captura a ID do tutor diretamente da sessão
 
 // Debug: Exibir filtros recebidos
-error_log("Filtros recebidos: cidade = $cidade, estado = $estado, idioma = $idioma, id_aluno = $id_aluno");
+error_log("Filtros recebidos: cidade = $cidade, estado = $estado, idioma = $idioma, id_tutor = $id_tutor");
 
 // Verifica se pelo menos um dos filtros foi preenchido
 if (empty($cidade) && empty($estado) && empty($idioma)) {

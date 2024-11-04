@@ -1,9 +1,9 @@
 <?php
-require_once '../session_control.php'; // Inclui o controle de sessão
+session_start(); // Inicia a sessão
 
-// Verifica se o aluno está logado
-if (!isset($_SESSION['id_aluno'])) {
-    error_log("Aluno não logado, redirecionando para login.");
+// Verifica se o tutor está logado
+if (!isset($_SESSION['id_tutor'])) {
+    error_log("Tutor não logado, redirecionando para login.");
     header("Location: ../login.php");
     exit();
 }
@@ -11,17 +11,15 @@ if (!isset($_SESSION['id_aluno'])) {
 
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pesquisa de Alunos</title>
     <link rel="stylesheet" href="ASSETS/CSS/style.css">
-    <script src="https://code.jquery.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="https://code.jquery.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
-
 <body>
 
     <!-- Cabeçalho -->
@@ -42,9 +40,7 @@ if (!isset($_SESSION['id_aluno'])) {
         <div class="signup-section">
             <h2>Pesquisar Alunos</h2>
             <form class="signup-form" method="POST" action="proc_pesquisa_alunos.php">
-                <input type="hidden" name="id_aluno" value="<?php echo htmlspecialchars($_SESSION['id_aluno']); ?>" /> <!-- Campo oculto para ID do aluno -->
-                <input type="hidden" name="tipo_usuario" value="aluno" /> <!-- Tipo de usuário -->
-                <input type="hidden" name="tipo_conversor" value="aluno" /> <!-- Tipo de conversor -->
+                <input type="hidden" name="id_tutor" value="<?php echo htmlspecialchars($_SESSION['id_tutor']); ?>" /> <!-- Campo oculto para ID do tutor -->
                 <input type="text" id="cidade" name="cidade" placeholder="Cidade..." />
                 <br>
                 <input type="text" id="estado" name="estado" placeholder="Estado..." />

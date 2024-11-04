@@ -1,10 +1,16 @@
 <?php
 require_once '../conexao.php';
 
-// Inclui o controle de sessão
-require_once '../session_control.php'; // Inclua o session_control.php para gerenciar a sessão
+// Início da sessão e verificação de autenticação
+session_start();
+if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
+    header("Location: ../login.php");
+    exit();
+}
 
-// Processa o formulário
+$id_usuario = isset($_SESSION['id_aluno']) ? $_SESSION['id_aluno'] : $_SESSION['id_tutor'];
+$tipo_usuario = isset($_SESSION['id_aluno']) ? 'aluno' : 'tutor';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = $_POST['nome'];
     $email = $_POST['email'];
@@ -13,15 +19,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data_nascimento = $_POST['data_nascimento'];
     $biografia = $_POST['biografia'];
 
-    // Verifica se uma nova foto foi enviada
     if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === UPLOAD_ERR_OK) {
         $foto_perfil = 'uploads/' . basename($_FILES['foto_perfil']['name']);
         move_uploaded_file($_FILES['foto_perfil']['tmp_name'], $foto_perfil);
     } else {
-        $foto_perfil = null; // Manter a foto anterior
+        $foto_perfil = null;
     }
 
-    // Atualiza o usuário no banco de dados
     try {
         $sql = "UPDATE " . ($tipo_usuario === 'aluno' ? 'Alunos' : 'Tutores') . " SET nome = :nome, email = :email, cidade = :cidade, estado = :estado, data_nascimento = :data_nascimento, biografia = :biografia";
         
@@ -46,15 +50,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $stmt->execute();
 
-        // Atualiza os idiomas
-        $idiomas = $_POST['idiomas'] ? explode(',', $_POST['idiomas']) : [];
-        
-        // Limpa idiomas antigos
+        $idiomas = $_POST['idiomas'] ?? [];
+
         $stmt = $conn->prepare("DELETE FROM " . ($tipo_usuario === 'aluno' ? 'IdiomaAluno' : 'IdiomaTutor') . " WHERE " . ($tipo_usuario === 'aluno' ? 'aluno_id' : 'id_tutor') . " = :id");
         $stmt->bindParam(':id', $id_usuario);
         $stmt->execute();
 
-        // Insere novos idiomas
         $stmt = $conn->prepare("INSERT INTO " . ($tipo_usuario === 'aluno' ? 'IdiomaAluno' : 'IdiomaTutor') . " (idioma, " . ($tipo_usuario === 'aluno' ? 'aluno_id' : 'id_tutor') . ") VALUES (:idioma, :id)");
         foreach ($idiomas as $idioma) {
             $idioma = trim($idioma);
@@ -65,11 +66,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Redireciona de volta ao perfil
         header("Location: perfil.php");
         exit();
     } catch (PDOException $e) {
-        error_log("Erro ao atualizar perfil: " . $e->getMessage()); // Debug: captura erros
+        error_log("Erro ao atualizar perfil: " . $e->getMessage());
         header("Location: perfil.php?erro=1");
         exit();
     }

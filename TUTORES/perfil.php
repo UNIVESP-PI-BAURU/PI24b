@@ -1,5 +1,5 @@
 <?php
-require_once '../session_control.php'; // Inclui o controle de sessão
+require_once '../conexao.php'; // Inclui a conexão com o banco
 require_once 'proc_perfil.php'; // Inclui o processamento da página
 ?>
 <!DOCTYPE html>

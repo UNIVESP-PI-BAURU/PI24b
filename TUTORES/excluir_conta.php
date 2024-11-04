@@ -1,26 +1,21 @@
 <?php
 require_once '../conexao.php';
-require_once '../session_control.php'; // Inclui o controle de sessão
 
-// Verifica se o usuário está logado e define a tabela
-if (isset($_SESSION['id_aluno'])) {
-    $id_usuario = $_SESSION['id_aluno'];
-    $tabela_usuario = 'Alunos';
-} elseif (isset($_SESSION['id_tutor'])) {
-    $id_usuario = $_SESSION['id_tutor'];
-    $tabela_usuario = 'Tutores';
-} else {
+// Início da sessão e verificação de autenticação
+session_start();
+if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
     header("Location: ../login.php");
     exit();
 }
 
-// Deleta o usuário do banco de dados
+$id_usuario = isset($_SESSION['id_aluno']) ? $_SESSION['id_aluno'] : $_SESSION['id_tutor'];
+$tabela_usuario = isset($_SESSION['id_aluno']) ? 'Alunos' : 'Tutores';
+
 $sql = "DELETE FROM $tabela_usuario WHERE id = :id";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':id', $id_usuario);
 $stmt->execute();
 
-// Encerra a sessão e redireciona para a página de login
 session_destroy();
 header("Location: ../login.php");
 exit();
