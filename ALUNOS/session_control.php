@@ -2,7 +2,7 @@
 session_start(); // Inicia a sessão
 
 // Verifica se o usuário está logado (tutor ou aluno)
-if (!isset($_SESSION['id_usuario'])) {
+if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
     header("Location: ./login.php"); // Redireciona para a página de login se não estiver logado
     exit();
 }
@@ -11,11 +11,15 @@ if (!isset($_SESSION['id_usuario'])) {
 require_once './conexao.php'; 
 
 // Armazena a ID do usuário e o tipo de usuário na variável
-$id_usuario = $_SESSION['id_usuario']; // ID do usuário logado
-$tipo_usuario = $_SESSION['tipo_usuario']; // Tipo de usuário (aluno ou tutor)
-
-// Define a tabela correspondente ao tipo de usuário
-$tabela_usuario = ($tipo_usuario == 'tutor') ? 'Tutores' : 'Alunos';
+if (isset($_SESSION['id_aluno'])) {
+    $id_usuario = $_SESSION['id_aluno']; // ID do aluno logado
+    $tipo_usuario = 'aluno';
+    $tabela_usuario = 'Alunos';
+} else {
+    $id_usuario = $_SESSION['id_tutor']; // ID do tutor logado
+    $tipo_usuario = 'tutor';
+    $tabela_usuario = 'Tutores';
+}
 
 // Consulta os dados do usuário
 $sql = "SELECT nome, foto_perfil, cidade, estado, email, data_nascimento, biografia 
@@ -39,9 +43,8 @@ if ($tipo_usuario == 'aluno') {
     $idioma_sql = "SELECT idioma FROM IdiomaTutor WHERE id_tutor = :id";
 }
 
-$id_usuario_param = $usuario['id']; // ID do usuário para consulta de idiomas
 $stmt_idioma = $conn->prepare($idioma_sql);
-$stmt_idioma->bindParam(':id', $id_usuario_param);
+$stmt_idioma->bindParam(':id', $id_usuario);
 $stmt_idioma->execute();
 $idiomas = $stmt_idioma->fetchAll(PDO::FETCH_COLUMN);
 

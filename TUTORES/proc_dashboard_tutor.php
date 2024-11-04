@@ -1,11 +1,6 @@
 <?php
+require_once '../session_control.php'; // Inclui o controle de sessão
 require_once '../conexao.php'; // Inclui a conexão com o banco
-
-// Verifica se o tutor está logado e redireciona para login se não estiver
-if (!isset($_SESSION['id_tutor'])) {
-    header("Location: ../login.php");
-    exit();
-}
 
 $id_usuario = $_SESSION['id_tutor'];
 $tabela_usuario = 'Tutores';
@@ -13,7 +8,7 @@ $tabela_usuario = 'Tutores';
 // Consulta os dados do tutor
 $sql = "SELECT nome, foto_perfil, cidade, estado FROM $tabela_usuario WHERE id = :id";
 $stmt = $conn->prepare($sql);
-$stmt->bindParam(':id', $id_usuario);
+$stmt->bindParam(':id', $id_usuario, PDO::PARAM_INT);
 $stmt->execute();
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 

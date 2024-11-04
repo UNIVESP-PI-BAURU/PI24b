@@ -1,6 +1,7 @@
 <?php
 // Inclui o arquivo de conexão com o banco de dados
 require_once 'conexao.php';
+session_start(); // Inicia a sessão
 
 // Verifica se foi enviado um formulário de login
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
@@ -11,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
 
     // Define a tabela do banco de dados com base no tipo de usuário
     $tabela_usuario = ($tipo_usuario == "aluno") ? "Alunos" : "Tutores";
-    //teste
+
     // Verifica se o usuário existe no banco de dados
     $sql = "SELECT * FROM $tabela_usuario WHERE email = :email";
     $stmt = $conn->prepare($sql);
@@ -19,12 +20,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
     $stmt->execute();
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Debug: Verificando se o usuário foi encontrado
+    // Verifica se o usuário foi encontrado
     if ($usuario) {
         // Verifica a senha usando password_verify
         if (password_verify($senha, $usuario['senha'])) {
-            // Armazena o ID do usuário e o nome na sessão
-            $_SESSION['id_usuario'] = $usuario['id']; // Armazena o ID do usuário
+            // Armazena o ID e tipo de usuário corretamente na sessão
+            if ($tipo_usuario == "aluno") {
+                $_SESSION['id_aluno'] = $usuario['id']; // Armazena o ID do aluno
+            } else {
+                $_SESSION['id_tutor'] = $usuario['id']; // Armazena o ID do tutor
+            }
+
             $_SESSION['nome'] = $usuario['nome']; // Armazena o nome do usuário
             $_SESSION['tipo_usuario'] = $tipo_usuario; // Armazena o tipo de usuário
 
@@ -41,17 +47,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
         } else {
             // Senha incorreta
             $_SESSION['error'] = "Senha incorreta. Por favor, tente novamente.";
-            header("Location: login.php"); // Redireciona de volta para o login
+            header("Location: login.php");
             exit();
         }
     } else {
         // Usuário não encontrado
         $_SESSION['error'] = "Usuário não encontrado. Por favor, verifique o email e o tipo de usuário.";
-        header("Location: login.php"); // Redireciona de volta para o login
+        header("Location: login.php");
         exit();
     }
 } else {
-    // Se não for uma requisição POST
+    // Se não for uma requisição POST válida
     $_SESSION['error'] = "Método de requisição inválido.";
     header("Location: login.php");
     exit();
