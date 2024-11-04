@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login teste</title>
+    <title>Login</title>
     <link rel="stylesheet" href="ASSETS/CSS/style.css">
 </head>
 
@@ -18,13 +18,13 @@
     <nav class="navbar">
         <a href="./index.php">Home</a>
         <a href="./sobre_nos.php">Sobre nós</a>
-        <a href="./cadastro.php">Cadastro</a>
+        <a href="./cadastro.html">Cadastro</a>
     </nav>
 
     <!-- Mensagens de erro ou sucesso -->
     <div class="message-area">
         <?php
-        session_start(); // Inicia a sessão
+        session_start();
         if (isset($_SESSION['success'])) {
             echo "<div class='success'>{$_SESSION['success']}</div>";
             unset($_SESSION['success']);
@@ -56,6 +56,7 @@
                     </div>
                 </div>
 
+
                 <!-- Campos de Login -->
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>
@@ -73,6 +74,10 @@
     <div class="footer">
         UNIVESP PI 2024
     </div>
+
+    <script>
+        // Scripts adicionais, se necessário
+    </script>
 
 </body>
 </html>

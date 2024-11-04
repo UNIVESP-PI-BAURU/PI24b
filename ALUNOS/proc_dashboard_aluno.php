@@ -1,28 +1,31 @@
 <?php
-// Inclui a conexão com o banco de dados
-require_once '../conexao.php'; 
+session_start();
 
-// Verifica se o usuário está logado (aluno)
-if (!isset($_SESSION['id_aluno'])) {
-    header("Location: ../login.php"); // Redireciona para a página de login se não estiver logado
+// Verifica se o usuário está logado e redireciona para login se não estiver
+if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
+    header("Location: ../login.php");
     exit();
 }
 
-$id_usuario = $_SESSION['id_aluno'];
-$tabela_usuario = 'Alunos';
+require_once '../conexao.php'; // Inclui a conexão com o banco
 
-// Consulta os dados do aluno
+// Define o tipo de usuário e busca os dados
+$tipo_usuario = isset($_SESSION['id_aluno']) ? 'aluno' : 'tutor';
+$id_usuario = $_SESSION['id_' . $tipo_usuario];
+$tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
+
+// Consulta os dados do usuário
 $sql = "SELECT nome, foto_perfil, cidade, estado FROM $tabela_usuario WHERE id = :id";
 $stmt = $conn->prepare($sql);
-$stmt->bindParam(':id', $id_usuario, PDO::PARAM_INT);
+$stmt->bindParam(':id', $id_usuario);
 $stmt->execute();
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Finaliza a execução se o aluno não for encontrado
+// Finaliza a execução se o usuário não for encontrado
 if (!$usuario) {
     header("Location: ../login.php");
     exit();
 }
 
-// O array $usuario agora está disponível para uso na dashboard de aluno
+// O array $usuario agora está disponível para uso na dashboard
 ?>
