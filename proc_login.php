@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
 
     // Define a tabela do banco de dados com base no tipo de usuário
     $tabela_usuario = ($tipo_usuario == "aluno") ? "Alunos" : "Tutores";
-
+    //teste
     // Verifica se o usuário existe no banco de dados
     $sql = "SELECT * FROM $tabela_usuario WHERE email = :email";
     $stmt = $conn->prepare($sql);
@@ -33,9 +33,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
 
             // Redireciona para a dashboard correspondente
             if ($tipo_usuario == "aluno") {
-                header("Location: ALUNOS/dashboard_aluno.php");
+                header("Location: ./ALUNOS/dashboard_aluno.php");
             } else {
-                header("Location: TUTORES/dashboard_tutor.php");
+                header("Location: ./TUTORES/dashboard_tutor.php");
             }
             exit();
         } else {
