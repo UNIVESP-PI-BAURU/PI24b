@@ -56,7 +56,6 @@
                     </div>
                 </div>
 
-
                 <!-- Campos de Login -->
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>
@@ -74,10 +73,6 @@
     <div class="footer">
         UNIVESP PI 2024
     </div>
-
-    <script>
-        // Scripts adicionais, se necessário
-    </script>
 
 </body>
 </html>
