@@ -1,59 +1,51 @@
 <?php
-// Ativar exibição de erros
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 session_start();
+require_once 'conexao.php'; // Inclui a conexão com o banco
 
-// Conectar ao banco de dados
-include 'conexao.php';
-
+// Verifica se o formulário foi enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Coletando os dados do formulário
-    $nome = $_POST['nome'];
     $email = $_POST['email'];
-    $senha = password_hash($_POST['senha'], PASSWORD_BCRYPT); // Criptografando a senha
-    $tipo_usuario = $_POST['tipo_usuario'];
-    $idioma = $_POST['idioma'];
+    $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT); // Hash da senha
+    $tipo_usuario = $_POST['tipo_usuario']; // Obter o tipo de usuário selecionado
+    $nome = $_POST['nome']; // Obter o nome do usuário
 
-    // Inserir os dados na tabela Usuarios
-    $stmt = $conn->prepare("INSERT INTO Usuarios (nome, email, senha, tipo_usuario) VALUES (:nome, :email, :senha, :tipo_usuario)");
-    $stmt->bindValue(':nome', $nome);
-    $stmt->bindValue(':email', $email);
-    $stmt->bindValue(':senha', $senha);
-    $stmt->bindValue(':tipo_usuario', $tipo_usuario);
-    
-    if ($stmt->execute()) {
-        // Pegando o id do usuário inserido
+    try {
+        // Insere o usuário na tabela Usuarios
+        $sql = "INSERT INTO Usuarios (email, senha, tipo_usuario, data_cadastro) VALUES (:email, :senha, :tipo_usuario, NOW())";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':senha', $senha);
+        $stmt->bindParam(':tipo_usuario', $tipo_usuario);
+        $stmt->execute();
+
+        // Obtém o ID do usuário recém-criado
         $id_usuario = $conn->lastInsertId();
 
-        // Inserir o idioma na tabela correspondente
+        // Insere na tabela Alunos ou Tutores, dependendo do tipo de usuário
         if ($tipo_usuario === 'aluno') {
-            $stmt_idioma = $conn->prepare("INSERT INTO IdiomaAluno (idioma, id_aluno) VALUES (:idioma, :id_aluno)");
-            $stmt_idioma->bindValue(':idioma', $idioma);
-            $stmt_idioma->bindValue(':id_aluno', $id_usuario);
+            $sql_aluno = "INSERT INTO Alunos (id_usuario, nome, data_cadastro) VALUES (:id_usuario, :nome, NOW())";
+            $stmt_aluno = $conn->prepare($sql_aluno);
+            $stmt_aluno->bindParam(':id_usuario', $id_usuario);
+            $stmt_aluno->bindParam(':nome', $nome);
+            $stmt_aluno->execute();
         } else {
-            $stmt_idioma = $conn->prepare("INSERT INTO IdiomaTutor (idioma, id_tutor) VALUES (:idioma, :id_tutor)");
-            $stmt_idioma->bindValue(':idioma', $idioma);
-            $stmt_idioma->bindValue(':id_tutor', $id_usuario);
+            $sql_tutor = "INSERT INTO Tutores (id_usuario, nome, data_cadastro) VALUES (:id_usuario, :nome, NOW())";
+            $stmt_tutor = $conn->prepare($sql_tutor);
+            $stmt_tutor->bindParam(':id_usuario', $id_usuario);
+            $stmt_tutor->bindParam(':nome', $nome);
+            $stmt_tutor->execute();
         }
 
-        // Executa a inserção do idioma
-        if ($stmt_idioma->execute()) {
-            $_SESSION['success'] = "Cadastro realizado com sucesso!";
-            header("Location: login.php");
-            exit();
-        } else {
-            $_SESSION['error'] = "Erro ao cadastrar idioma.";
-            header("Location: cadastro.php");
-            exit();
-        }
-    } else {
-        $_SESSION['error'] = "Erro ao cadastrar usuário.";
+        // Redireciona para a página de login ou dashboard
+        header("Location: login.php?success=Cadastro realizado com sucesso!");
+        exit();
+
+    } catch (PDOException $e) {
+        // Se houver um erro, armazena na sessão e redireciona
+        $_SESSION['error'] = "Erro ao cadastrar: " . $e->getMessage();
         header("Location: cadastro.php");
         exit();
     }
-
 } else {
     $_SESSION['error'] = "Método de requisição inválido.";
     header("Location: cadastro.php");

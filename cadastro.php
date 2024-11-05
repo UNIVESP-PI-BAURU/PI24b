@@ -1,7 +1,3 @@
-<?php
-session_start();
-?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -28,38 +24,30 @@ session_start();
     <!-- Conteúdo Principal -->
     <main class="main-content">
         <section class="signup-section">
-
             <h2>Cadastro</h2>
 
-            <!-- Formulário de Cadastro -->
-            <form method="POST" action="proc_cadastro.php">
-                
-                <label for="nome">Nome:</label>
-                <input type="text" id="nome" name="nome" required>
+            <?php
+            // Mensagem de erro ou sucesso
+            if (isset($_SESSION['error'])) {
+                echo '<p style="color: red;">' . htmlspecialchars($_SESSION['error']) . '</p>';
+                unset($_SESSION['error']);
+            }
 
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+            if (isset($_GET['success'])) {
+                echo '<p style="color: green;">' . htmlspecialchars($_GET['success']) . '</p>';
+            }
+            ?>
 
-                <label for="senha">Senha:</label>
-                <input type="password" id="senha" name="senha" required>
-
-                <label for="tipo_usuario">Tipo de Usuário:</label>
-                <div>
-                    <input type="radio" id="aluno" name="tipo_usuario" value="aluno" checked>
-                    <label for="aluno">Aluno</label>
-                </div>
-                <div>
-                    <input type="radio" id="tutor" name="tipo_usuario" value="tutor">
-                    <label for="tutor">Tutor</label>
-                </div>
-
-                <!-- Idiomas -->
-                <label for="idioma">Idioma:</label>
-                <input type="text" id="idioma" name="idioma" required placeholder="Digite o idioma">
-
-                <button type="submit" name="cadastrar">Cadastrar</button>
+            <form action="proc_cadastro.php" method="POST">
+                <input type="text" name="nome" placeholder="Seu nome" required>
+                <input type="email" name="email" placeholder="Seu email" required>
+                <input type="password" name="senha" placeholder="Sua senha" required>
+                <select name="tipo_usuario" required>
+                    <option value="aluno">Aluno</option>
+                    <option value="tutor">Tutor</option>
+                </select>
+                <button type="submit">Cadastrar</button>
             </form>
-
         </section>
     </main>
 
