@@ -29,7 +29,7 @@
         <?php else: ?>
             <!-- Usuário não logado -->
             <a href="./login.php">Login</a>
-            <a href="./cadastro.html">Cadastro</a>
+            <a href="./cadastro.php">Cadastro</a>
         <?php endif; ?>
     </nav>
     <!-- fim Navegação -->

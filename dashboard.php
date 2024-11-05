@@ -2,7 +2,7 @@
 session_start();
 
 // Verifica se o usuário está logado e redireciona para login se não estiver
-if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
+if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
     header("Location: login.php");
     exit();
 }
@@ -10,8 +10,8 @@ if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
 require_once 'conexao.php'; // Inclui a conexão com o banco
 
 // Define o tipo de usuário e busca os dados
-$tipo_usuario = isset($_SESSION['id_aluno']) ? 'aluno' : 'tutor';
-$id_usuario = $_SESSION['id_' . $tipo_usuario];
+$tipo_usuario = $_SESSION['tipo_usuario']; // Pode ser 'aluno' ou 'tutor'
+$id_usuario = $_SESSION['id_usuario']; // ID comum para todos os tipos
 $tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
 
 // Consulta os dados do usuário
@@ -85,19 +85,29 @@ if (!$usuario) {
                 </div>
             </div>
 
-            <!-- Pesquisa -->
+            <!-- Pesquisa (visível apenas para Alunos) -->
+            <?php if ($tipo_usuario === 'aluno'): ?>
             <div class="signup-section" style="margin-top: 20px;">
                 <h3>Encontre seu tutor aqui!</h3>
                 <br>
                 <input type="text" placeholder="Pesquise por tutores..." />
                 <button>Pesquisar</button>
             </div>
+            <?php endif; ?>
 
-            <!-- Aulas -->
+            <!-- Aulas (visível apenas para Alunos e Tutores) -->
             <div class="signup-section" style="margin-top: 30px;">
                 <h3>Aulas em andamento:</h3>
                 <!-- Conteúdo das aulas será inserido aqui -->
             </div>
+
+            <!-- Conteúdo específico para o Tutor -->
+            <?php if ($tipo_usuario === 'tutor'): ?>
+                <div class="signup-section" style="margin-top: 30px;">
+                    <h3>Informações do Tutor</h3>
+                    <!-- Adicione detalhes específicos do tutor aqui -->
+                </div>
+            <?php endif; ?>
 
         </section>
     </main>
