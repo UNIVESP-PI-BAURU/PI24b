@@ -1,5 +1,33 @@
 <?php
-require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
+session_start();
+
+// Verifica se o usuário está logado e redireciona para login se não estiver
+if (!isset($_SESSION['id_aluno']) && !isset($_SESSION['id_tutor'])) {
+    header("Location: login.php");
+    exit();
+}
+
+require_once 'conexao.php'; // Inclui a conexão com o banco
+
+// Define o tipo de usuário e busca os dados
+$tipo_usuario = isset($_SESSION['id_aluno']) ? 'aluno' : 'tutor';
+$id_usuario = $_SESSION['id_' . $tipo_usuario];
+$tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
+
+// Consulta os dados do usuário
+$sql = "SELECT nome, foto_perfil, cidade, estado FROM $tabela_usuario WHERE id = :id";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':id', $id_usuario);
+$stmt->execute();
+$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Finaliza a execução se o usuário não for encontrado
+if (!$usuario) {
+    header("Location: login.php");
+    exit();
+}
+
+// O array $usuario agora está disponível para uso na dashboard
 ?>
 
 <!DOCTYPE html>
@@ -8,24 +36,20 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Conectando Interesses</title>
-    <link rel="stylesheet" href="../ASSETS/CSS/style.css">
+    <link rel="stylesheet" href="ASSETS/CSS/style.css">
 </head>
 <body>
 
     <!-- Cabeçalho -->
     <header class="header">
-        <img src="../ASSETS/IMG/capa.png" alt="Capa do Site">
+        <img src="ASSETS/IMG/capa.png" alt="Capa do Site">
     </header>
 
     <!-- Navegação -->
     <nav class="navbar">
-        <a href="../index.php">Home</a>
-        <a href="../sobre_nos.php">Sobre nós</a>
-        <?php if (isset($_SESSION['id_aluno']) || isset($_SESSION['id_tutor'])): ?>
-            <a href="../logout.php">Logout</a>
-        <?php else: ?>
-            <a href="../login.php">Login</a>
-        <?php endif; ?>
+        <a href="index.php">Home</a>
+        <a href="sobre_nos.php">Sobre nós</a>
+        <a href="logout.php">Logout</a>
     </nav>
     <!-- Fim da Navegação -->
 
@@ -60,8 +84,6 @@ require_once 'proc_dashboard_aluno.php'; // Importa a lógica da dashboard
                     <button onclick="window.location.href='./perfil.php'">Ver meu perfil</button>
                 </div>
             </div>
-
-
 
             <!-- Pesquisa -->
             <div class="signup-section" style="margin-top: 20px;">

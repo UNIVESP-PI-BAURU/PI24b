@@ -1,0 +1,83 @@
+CREATE TABLE TiposUsuario (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    descricao VARCHAR(50) NOT NULL UNIQUE
+);
+
+
+
+Exemplo de Dados na Tabela TiposUsuario:
+1, "Tutor"
+2, "Aluno"
+
+
+
+
+CREATE TABLE Idiomas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    idioma VARCHAR(50) NOT NULL UNIQUE
+);
+
+
+
+
+CREATE TABLE Usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+CREATE TABLE Alunos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT,
+    nome VARCHAR(100) NOT NULL,
+    cidade VARCHAR(100),
+    estado VARCHAR(100),
+    data_nascimento DATE,
+    biografia TEXT,
+    foto_perfil VARCHAR(255),
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    tipo_usuario INT DEFAULT 2, -- 2 para Aluno
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id),
+    FOREIGN KEY (tipo_usuario) REFERENCES TiposUsuario(id)
+);
+
+
+
+CREATE TABLE Tutores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT,
+    nome VARCHAR(100) NOT NULL,
+    cidade VARCHAR(100),
+    estado VARCHAR(100),
+    data_nascimento DATE,
+    biografia TEXT,
+    foto_perfil VARCHAR(255),
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    tipo_usuario INT DEFAULT 1, -- 1 para Tutor
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id),
+    FOREIGN KEY (tipo_usuario) REFERENCES TiposUsuario(id)
+);
+
+
+
+CREATE TABLE IdiomaAluno (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_aluno INT,
+    id_idioma INT,
+    FOREIGN KEY (id_aluno) REFERENCES Alunos(id),
+    FOREIGN KEY (id_idioma) REFERENCES Idiomas(id)
+);
+
+
+
+
+CREATE TABLE IdiomaTutor (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_tutor INT,
+    id_idioma INT,
+    FOREIGN KEY (id_tutor) REFERENCES Tutores(id),
+    FOREIGN KEY (id_idioma) REFERENCES Idiomas(id)
+);

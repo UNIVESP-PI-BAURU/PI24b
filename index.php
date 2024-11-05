@@ -10,12 +10,9 @@
 
 <body>
 
-    <!-- Inicia a sessão -->
-    <?php session_start(); ?>
-
     <!-- Cabeçalho -->
     <header class="header">
-        <img src="ASSETS/IMG/capa.png">
+        <img src="ASSETS/IMG/capa.png" alt="Capa do site">
     </header>
 
     <!-- Navegação -->
@@ -23,7 +20,10 @@
         <a href="./index.php">Home</a>
         <a href="./sobre_nos.php">Sobre nós</a>
 
-        <?php if (isset($_SESSION['id_aluno']) || isset($_SESSION['id_tutor'])): ?>
+        <?php
+        session_start(); // Inicia a sessão para verificar o login
+
+        if (isset($_SESSION['id_aluno']) || isset($_SESSION['id_tutor'])): ?>
             <!-- Usuário logado -->
             <a href="./logout.php">Logout</a>
         <?php else: ?>
@@ -45,13 +45,13 @@
         <section class="carousel">
             <div class="slides">
                 <div class="slide">
-                    <img src="ASSETS/IMG/BANNER/1.png">
+                    <img src="ASSETS/IMG/BANNER/1.png" alt="Banner 1">
                 </div>
                 <div class="slide">
-                    <img src="ASSETS/IMG/BANNER/2.png">
+                    <img src="ASSETS/IMG/BANNER/2.png" alt="Banner 2">
                 </div>
                 <div class="slide">
-                    <img src="ASSETS/IMG/BANNER/3.png">
+                    <img src="ASSETS/IMG/BANNER/3.png" alt="Banner 3">
                 </div>
             </div>
         </section>

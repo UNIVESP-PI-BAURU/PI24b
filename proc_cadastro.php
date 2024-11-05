@@ -61,26 +61,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["registrar"])) {
         }
     }
 
-    // Inserindo dados na tabela correta (Alunos ou Tutores)
+    // Inserindo dados na tabela Usuarios
     try {
+        $stmt = $conn->prepare("INSERT INTO Usuarios (email, senha, tipo_usuario) VALUES (?, ?, ?)");
+        $stmt->execute([$email, $senha, $tipo_usuario]);
+
+        // Obtém o ID do usuário recém-criado
+        $id_usuario = $conn->lastInsertId();
+
+        // Agora insere na tabela correspondente (Alunos ou Tutores)
         if ($tipo_usuario === 'aluno') {
-            $stmt = $conn->prepare("INSERT INTO Alunos (nome, email, senha, cidade, estado, data_nascimento, biografia, foto_perfil) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $conn->prepare("INSERT INTO Alunos (id_usuario, nome, cidade, estado, data_nascimento, biografia, foto_perfil) VALUES (?, ?, ?, ?, ?, ?, ?)");
         } else {
-            $stmt = $conn->prepare("INSERT INTO Tutores (nome, email, senha, cidade, estado, data_nascimento, biografia, foto_perfil) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $conn->prepare("INSERT INTO Tutores (id_usuario, nome, cidade, estado, data_nascimento, biografia, foto_perfil) VALUES (?, ?, ?, ?, ?, ?, ?)");
         }
 
-        // Executa a inserção dos dados
-        $stmt->execute([$nome, $email, $senha, $cidade, $estado, $data_nascimento, $biografia, $foto_perfil]);
+        // Executa a inserção dos dados na tabela Alunos ou Tutores
+        $stmt->execute([$id_usuario, $nome, $cidade, $estado, $data_nascimento, $biografia, $foto_perfil]);
 
         // Insere os idiomas
-        $id_usuario = $conn->lastInsertId();
         foreach ($idiomas as $idioma) {
             if ($tipo_usuario === 'aluno') {
                 $stmt = $conn->prepare("INSERT INTO IdiomaAluno (id_aluno, idioma) VALUES (?, ?)");
             } else {
                 $stmt = $conn->prepare("INSERT INTO IdiomaTutor (id_tutor, idioma) VALUES (?, ?)");
             }
-            $stmt->execute([$id_usuario, $idioma]);
+            $stmt->execute([$id_usuario, $idioma]); // Aqui usamos $id_usuario, pois ele agora é o mesmo
         }
 
         // Mensagem de sucesso na sessão

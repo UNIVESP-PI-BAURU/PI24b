@@ -6,6 +6,8 @@ function loadEnv($filePath) {
         foreach ($lines as $line) {
             putenv(trim($line));
         }
+    } else {
+        die("Erro: Arquivo .env não encontrado em $filePath");
     }
 }
 
@@ -17,6 +19,11 @@ $host = getenv('DB_HOST');
 $dbname = getenv('DB_NAME');
 $user = getenv('DB_USER');
 $password = getenv('DB_PASSWORD');
+
+// Verifique se todas as variáveis de ambiente foram carregadas
+if (!$host || !$dbname || !$user || !$password) {
+    die("Erro: Variáveis de ambiente para conexão com o banco de dados não foram corretamente carregadas.");
+}
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $password);
