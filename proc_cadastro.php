@@ -1,11 +1,14 @@
 <?php
+// Ativar exibição de erros
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 session_start();
 
 // Conectar ao banco de dados
 include 'conexao.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
     // Coletando os dados do formulário
     $nome = $_POST['nome'];
     $email = $_POST['email'];
@@ -14,48 +17,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idioma = $_POST['idioma'];
 
     // Inserir os dados na tabela Usuarios
-    $stmt = $conn->prepare("INSERT INTO Usuarios (nome, email, senha, tipo_usuario) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $nome, $email, $senha, $tipo_usuario);
+    $stmt = $conn->prepare("INSERT INTO Usuarios (nome, email, senha, tipo_usuario) VALUES (:nome, :email, :senha, :tipo_usuario)");
+    $stmt->bindValue(':nome', $nome);
+    $stmt->bindValue(':email', $email);
+    $stmt->bindValue(':senha', $senha);
+    $stmt->bindValue(':tipo_usuario', $tipo_usuario);
     
     if ($stmt->execute()) {
         // Pegando o id do usuário inserido
-        $id_usuario = $stmt->insert_id;
+        $id_usuario = $conn->lastInsertId();
 
-        // Inserir o idioma na tabela correspondente (IdiomaAluno ou IdiomaTutor)
+        // Inserir o idioma na tabela correspondente
         if ($tipo_usuario === 'aluno') {
-            $stmt_idioma = $conn->prepare("INSERT INTO IdiomaAluno (idioma, id_aluno) VALUES (?, ?)");
-            $stmt_idioma->bind_param("si", $idioma, $id_usuario);
+            $stmt_idioma = $conn->prepare("INSERT INTO IdiomaAluno (idioma, id_aluno) VALUES (:idioma, :id_aluno)");
+            $stmt_idioma->bindValue(':idioma', $idioma);
+            $stmt_idioma->bindValue(':id_aluno', $id_usuario);
         } else {
-            $stmt_idioma = $conn->prepare("INSERT INTO IdiomaTutor (idioma, id_tutor) VALUES (?, ?)");
-            $stmt_idioma->bind_param("si", $idioma, $id_usuario);
+            $stmt_idioma = $conn->prepare("INSERT INTO IdiomaTutor (idioma, id_tutor) VALUES (:idioma, :id_tutor)");
+            $stmt_idioma->bindValue(':idioma', $idioma);
+            $stmt_idioma->bindValue(':id_tutor', $id_usuario);
         }
 
         // Executa a inserção do idioma
         if ($stmt_idioma->execute()) {
-            // Cadastro bem-sucedido
             $_SESSION['success'] = "Cadastro realizado com sucesso!";
-            header("Location: login.php"); // Redireciona para login
+            header("Location: login.php");
             exit();
         } else {
-            // Erro ao cadastrar idioma
             $_SESSION['error'] = "Erro ao cadastrar idioma.";
             header("Location: cadastro.php");
             exit();
         }
     } else {
-        // Erro ao cadastrar usuário
         $_SESSION['error'] = "Erro ao cadastrar usuário.";
         header("Location: cadastro.php");
         exit();
     }
 
 } else {
-    // Se o método de requisição não for POST
     $_SESSION['error'] = "Método de requisição inválido.";
     header("Location: cadastro.php");
     exit();
 }
 
 // Fechar a conexão
-$conn->close();
+$conn = null;
 ?>
