@@ -98,14 +98,19 @@ if (!$usuario) {
             <!-- Aulas (visível apenas para Alunos e Tutores) -->
             <div class="signup-section" style="margin-top: 30px;">
                 <h3>Aulas em andamento:</h3>
-                <!-- Conteúdo das aulas será inserido aqui -->
+                <!-- Aqui será inserido conteúdo dinâmico de aulas em andamento -->
+                <div id="aulas-em-andamento">
+                    <!-- Exemplo de exibição de uma aula -->
+                    <p><strong>Matemática:</strong> Aula com João Silva</p>
+                    <p><strong>Inglês:</strong> Aula com Maria Souza</p>
+                </div>
             </div>
 
             <!-- Conteúdo específico para o Tutor -->
             <?php if ($tipo_usuario === 'tutor'): ?>
                 <div class="signup-section" style="margin-top: 30px;">
                     <h3>Informações do Tutor</h3>
-                    <!-- Adicione detalhes específicos do tutor aqui -->
+                    <p>Adicione detalhes específicos aqui (ex.: horários disponíveis, especialidades, etc.)</p>
                 </div>
             <?php endif; ?>
 

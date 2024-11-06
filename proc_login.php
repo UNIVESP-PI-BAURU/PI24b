@@ -1,58 +1,53 @@
 <?php
-// Inicie a sessão
 session_start();
 
-// Conecte-se ao banco de dados
-include 'conexao.php';
+// Inclua a conexão com o banco
+require_once 'conexao.php';
 
-// Verifique se o formulário foi enviado
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'];
-    $senha = $_POST['senha'];
-    $tipo_usuario = $_POST['tipo_usuario']; // Obter o tipo de usuário selecionado
+// Obtenha os dados do formulário
+$email = $_POST['email'];
+$senha = $_POST['senha'];
 
-    // Prepare e execute a consulta dependendo do tipo de usuário
-    if ($tipo_usuario === 'aluno') {
-        $stmt = $conn->prepare("SELECT * FROM Alunos WHERE email = ? LIMIT 1");
-    } else {
-        $stmt = $conn->prepare("SELECT * FROM Tutores WHERE email = ? LIMIT 1");
-    }
-    
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
+// Verifica se o tipo de usuário é aluno ou tutor
+$tipo_usuario = $_POST['tipo_usuario'];
 
-    if ($result->num_rows > 0) {
-        $usuario = $result->fetch_assoc();
-        if (password_verify($senha, $usuario['senha'])) {
-            // Autenticação bem-sucedida
-            $_SESSION['id_usuario'] = $usuario['id']; // O id na tabela correspondente (Alunos ou Tutores)
-            $_SESSION['nome'] = $usuario['nome'];
-            $_SESSION['tipo_usuario'] = $tipo_usuario; // Salvar tipo de usuário na sessão
+// Consulta SQL para verificar o usuário
+if ($tipo_usuario === 'aluno') {
+    $query = "SELECT id, senha FROM Alunos WHERE email = :email";
+} else {
+    $query = "SELECT id, senha FROM Tutores WHERE email = :email";
+}
 
-            // Redireciona para a página correta com base no tipo de usuário
-            if ($tipo_usuario == 'tutor') {
-                header("Location: ./TUTORES/dashboard_tutor.php");
-            } else {
-                header("Location: ./ALUNOS/dashboard_aluno.php");
-            }
-            exit();
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':email', $email);
+$stmt->execute();
+
+// Verifique se encontrou o usuário na tabela
+if ($stmt->rowCount() > 0) {
+    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Verifica se a senha é válida
+    if (password_verify($senha, $usuario['senha'])) {
+        $_SESSION['id'] = $usuario['id'];
+        $_SESSION['tipo'] = $tipo_usuario;
+
+        // Redireciona para a página de dashboard do tipo de usuário
+        if ($tipo_usuario === 'aluno') {
+            header("Location: dashboard.php"); // Para alunos
         } else {
-            $_SESSION['error'] = "Senha incorreta.";
-            header("Location: login.php");
-            exit();
+            header("Location: dashboard.php"); // Para tutores
         }
+        exit();
     } else {
-        $_SESSION['error'] = "Usuário não encontrado.";
+        // Senha incorreta
+        $_SESSION['login_error'] = 'Senha incorreta.';
         header("Location: login.php");
         exit();
     }
 } else {
-    $_SESSION['error'] = "Método de requisição inválido.";
+    // Usuário não encontrado
+    $_SESSION['login_error'] = 'Email ou senha incorretos.';
     header("Location: login.php");
     exit();
 }
-
-// Feche a conexão
-$conn->close();
 ?>

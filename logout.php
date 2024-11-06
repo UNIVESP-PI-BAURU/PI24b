@@ -1,23 +1,9 @@
 <?php
-// Inicia a sessão
 session_start();
 
-// Remove todas as variáveis de sessão
-$_SESSION = [];
-
-// Destroi a sessão
-session_destroy();
-
-// Opcional: Limpa o cookie de sessão no navegador
-if (ini_get("session.use_cookies")) {
-    $params = session_get_cookie_params();
-    setcookie(session_name(), '', time() - 42000,
-        $params["path"], $params["domain"],
-        $params["secure"], $params["httponly"]
-    );
+// Exibe a mensagem de sucesso de logout, se houver
+if (isset($_GET['logout']) && $_GET['logout'] == 'success') {
+    echo '<p style="color: green;">Você foi desconectado com sucesso.</p>';
 }
 
-// Redireciona para a página de login
-header("Location: login.php");
-exit();
 ?>

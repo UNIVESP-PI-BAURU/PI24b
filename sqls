@@ -81,3 +81,40 @@ CREATE TABLE IdiomaTutor (
     FOREIGN KEY (id_tutor) REFERENCES Tutores(id),
     FOREIGN KEY (id_idioma) REFERENCES Idiomas(id)
 );
+
+
+
+----------------------------
+
+
+-- Tabela Alunos
+CREATE TABLE Alunos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    cidade VARCHAR(100),
+    estado VARCHAR(100),
+    data_nascimento DATE,
+    biografia TEXT,
+    foto_perfil VARCHAR(255),
+    idiomas VARCHAR(255),  -- Armazena os idiomas em formato de string (ex: "Inglês, Espanhol")
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    tipo ENUM('aluno') DEFAULT 'aluno'  -- Tipo fixo para Alunos
+);
+
+-- Tabela Tutores
+CREATE TABLE Tutores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    cidade VARCHAR(100),
+    estado VARCHAR(100),
+    data_nascimento DATE,
+    biografia TEXT,
+    foto_perfil VARCHAR(255),
+    idiomas VARCHAR(255),  -- Armazena os idiomas em formato de string (ex: "Inglês, Francês")
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    tipo ENUM('tutor') DEFAULT 'tutor'  -- Tipo fixo para Tutores
+);

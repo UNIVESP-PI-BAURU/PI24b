@@ -1,79 +1,82 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="ASSETS/CSS/style.css">
 </head>
-
 <body>
 
-    <!-- Cabeçalho -->    
-    <div class="header">
-        <img src="ASSETS/IMG/capa.png" alt="Imagem de Capa">
-    </div>
+    <!-- Cabeçalho -->
+    <header class="header">
+        <img src="ASSETS/IMG/capa.png" alt="Capa do site">
+    </header>
 
     <!-- Navegação -->
     <nav class="navbar">
         <a href="./index.php">Home</a>
         <a href="./sobre_nos.php">Sobre nós</a>
-        <a href="./cadastro.php">Cadastro</a>
-    </nav>
 
-    <!-- Mensagens de erro ou sucesso -->
-    <div class="message-area">
         <?php
-        session_start();
-        if (isset($_SESSION['success'])) {
-            echo "<div class='success'>{$_SESSION['success']}</div>";
-            unset($_SESSION['success']);
-        }
-        if (isset($_SESSION['error'])) {
-            echo "<div class='error'>{$_SESSION['error']}</div>";
-            unset($_SESSION['error']);
-        }
-        ?>
-    </div>
+        session_start(); // Inicia a sessão para verificar o login
 
-    <!-- Main (conteúdo) -->
-    <div class="main-content">
-        <div class="signup-section">
-            <h2>Entrar</h2>
+        if (isset($_SESSION['id'])): // Verifica se o usuário já está logado
+            // Usuário logado
+            header("Location: dashboard.php");
+            exit();
+        else: ?>
+            <!-- Usuário não logado -->
+            <a href="./login.php">Login</a>
+            <a href="./cadastro.php">Cadastro</a>
+        <?php endif; ?>
+    </nav>
+    <!-- fim Navegação -->
+
+    <!-- Conteúdo Principal -->
+    <main class="main-content">
+        <section class="signup-section">
+            <h1>Login</h1>
+
+            <!-- Exibe mensagem de erro, se houver -->
+            <?php if (isset($_SESSION['login_error'])): ?>
+                <p style="color: red;"><?php echo $_SESSION['login_error']; unset($_SESSION['login_error']); ?></p>
+            <?php endif; ?>
 
             <!-- Formulário de Login -->
-            <form method="POST" action="proc_login.php">
-                
-                <!-- Tipo de Usuário -->
+            <form action="proc_login.php" method="POST">
+                <!-- Campo Tipo de Usuário -->
                 <label for="tipo_usuario">Tipo de Usuário:</label>
-                <div class="user-type">
-                    <div>
-                        <input type="radio" id="aluno" name="tipo_usuario" value="aluno" required>
-                        <label for="aluno">Aluno</label>
-                    </div>
-                    <div>
-                        <input type="radio" id="tutor" name="tipo_usuario" value="tutor" required>
-                        <label for="tutor">Tutor</label>
-                    </div>
-                </div>
+                <select id="tipo_usuario" name="tipo_usuario" required>
+                    <option value="aluno">Aluno</option>
+                    <option value="tutor">Tutor</option>
+                </select>
+                <br><br>
 
-                <!-- Campos de Login -->
+                <!-- Campo Email -->
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>
+                <br><br>
 
+                <!-- Campo Senha -->
                 <label for="senha">Senha:</label>
                 <input type="password" id="senha" name="senha" required>
+                <br><br>
 
                 <!-- Botão de Login -->
-                <button type="submit" name="login" class="login-button">Login</button>
+                <button type="submit">Entrar</button>
             </form>
-        </div>
-    </div>
+
+            <p>Não possui uma conta? <a href="cadastro.php">Cadastre-se aqui</a></p>
+
+         </section>
+    </main>
 
     <!-- Rodapé -->
-    <div class="footer">
+    <footer class="footer">
         UNIVESP PI 2024
-    </div>
+    </footer>
+
 
 </body>
 </html>
