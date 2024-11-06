@@ -52,6 +52,7 @@ if (!$usuario) {
     <nav class="navbar">
         <a href="index.php">Home</a>
         <a href="sobre_nos.php">Sobre nós</a>
+        <a href="dashboard.php">Dashboard</a> <!-- Alterado para uma única dashboard -->
         <a href="logout.php">Logout</a>
     </nav>
 
