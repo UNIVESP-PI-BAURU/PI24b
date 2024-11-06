@@ -1,4 +1,11 @@
 <?php
+// Inicia a sessão e verifica login
+session_start();
+if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
+    header("Location: login.php");
+    exit();
+}
+
 // Inclui o processamento do perfil
 require_once 'proc_perfil.php';
 ?>
@@ -37,7 +44,7 @@ require_once 'proc_perfil.php';
         <div class="foto-perfil">
             <div class="foto-moldura-perfil">
                 <?php if (!empty($usuario['foto_perfil'])): ?>
-                    <img src="<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Avatar" class="avatar-perfil">
+                    <img src="../uploads/fotos_perfil/<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Avatar" class="avatar-perfil">
                 <?php else: ?>
                     <p>Sem foto</p>
                 <?php endif; ?>

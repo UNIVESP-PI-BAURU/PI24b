@@ -1,6 +1,35 @@
 <?php
-// Inclui o processamento dos dados para preencher o formulário
-require_once 'proc_editar_perfil.php';
+// Inicia a sessão e verifica login
+session_start();
+if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Inclui a conexão com o banco
+require_once 'conexao.php';
+
+// Determina o tipo de usuário e busca os dados
+$tipo_usuario = $_SESSION['tipo']; // 'aluno' ou 'tutor'
+$id_usuario = $_SESSION['id']; // ID comum para todos os tipos
+$tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
+
+// Consulta SQL para buscar dados do usuário
+$sql = "SELECT nome, email, foto_perfil, cidade, estado, data_nascimento, biografia, idiomas
+        FROM $tabela_usuario WHERE id = :id";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':id', $id_usuario, PDO::PARAM_INT);
+$stmt->execute();
+
+$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Verifica se encontrou o usuário
+if (!$usuario) {
+    die("Usuário não encontrado.");
+}
+
+// Extrai os idiomas
+$idiomas = !empty($usuario['idiomas']) ? explode(',', $usuario['idiomas']) : [];
 ?>
 
 <!DOCTYPE html>
@@ -9,109 +38,78 @@ require_once 'proc_editar_perfil.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Perfil</title>
-    <link rel="stylesheet" href="../ASSETS/CSS/style.css">
+    <link rel="stylesheet" href="ASSETS/CSS/style.css">
 </head>
 <body>
 
 <!-- Cabeçalho -->
 <header class="header">
-    <img src="../ASSETS/IMG/capa.png" alt="Capa do Site">
+    <img src="ASSETS/IMG/capa.png" alt="Capa do Site">
 </header>
 
 <!-- Navegação -->
 <nav class="navbar">
-    <a href="../index.php">Home</a>
-    <a href="../sobre_nos.php">Sobre nós</a>
-    <?php if (isset($_SESSION['id'])): ?>
-        <a href="../logout.php">Logout</a>
-    <?php else: ?>
-        <a href="../login.php">Login</a>
-    <?php endif; ?>
+    <a href="index.php">Home</a>
+    <a href="sobre_nos.php">Sobre nós</a>
+    <a href="logout.php">Logout</a>
 </nav>
 
 <!-- Conteúdo Principal -->
-<div class="main-content">
-
+<main class="main-content">
     <div class="signup-section">
-        <h2>Editar Perfil</h2>
+        <h2>Editar Perfil de <?php echo ($tipo_usuario === 'tutor' ? "Tutor(a)" : "Aluno(a)"); ?>: <?php echo htmlspecialchars($usuario['nome']); ?></h2>
 
-        <!-- Formulário de Edição de Perfil -->
-        <form class="signup-form" action="editar_perfil.php" method="post" enctype="multipart/form-data">
-
-            <!-- Campo para nome -->
-            <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($nome); ?>" required>
-            <br>
-
-            <!-- Campo para email -->
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
-            <br>
-
-            <!-- Campo para cidade -->
-            <label for="cidade">Cidade:</label>
-            <input type="text" id="cidade" name="cidade" value="<?php echo htmlspecialchars($cidade); ?>">
-            <br>
-
-            <!-- Campo para estado -->
-            <label for="estado">Estado:</label>
-            <input type="text" id="estado" name="estado" value="<?php echo htmlspecialchars($estado); ?>">
-            <br>
-
-            <!-- Campo para data de nascimento -->
-            <label for="data_nascimento">Data de Nascimento:</label>
-            <input type="date" id="data_nascimento" name="data_nascimento" value="<?php echo htmlspecialchars($data_nascimento); ?>">
-            <br>
-
-            <!-- Campo para biografia -->
-            <label for="biografia">Biografia:</label>
-            <textarea id="biografia" name="biografia"><?php echo htmlspecialchars($biografia); ?></textarea>
-            <br>
-
-            <!-- Campo para foto de perfil -->
-            <label for="foto_perfil">Foto de Perfil:</label>
-            <input type="file" id="foto_perfil" name="foto_perfil" accept="image/*">
-            <br>
-
-            <!-- Idiomas -->
-            <div id="idiomas">
-                <label for="idioma">Idioma:</label>
-                <input type="text" id="idioma" name="idiomas[]" value="<?php echo htmlspecialchars($idiomas[0]); ?>">
-                <button type="button" onclick="addCampoIdioma()">Adicionar mais um</button>
+        <form action="proc_editar_perfil.php" method="POST" enctype="multipart/form-data">
+            <div class="input-field">
+                <label for="nome">Nome</label>
+                <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($usuario['nome']); ?>" required>
             </div>
-            <br>
 
-            <!-- Botão submeter -->
-            <button type="submit" name="atualizar">Atualizar</button>
+            <div class="input-field">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" required>
+            </div>
+
+            <div class="input-field">
+                <label for="cidade">Cidade</label>
+                <input type="text" id="cidade" name="cidade" value="<?php echo htmlspecialchars($usuario['cidade']); ?>">
+            </div>
+
+            <div class="input-field">
+                <label for="estado">Estado</label>
+                <input type="text" id="estado" name="estado" value="<?php echo htmlspecialchars($usuario['estado']); ?>">
+            </div>
+
+            <div class="input-field">
+                <label for="data_nascimento">Data de Nascimento</label>
+                <input type="date" id="data_nascimento" name="data_nascimento" value="<?php echo htmlspecialchars($usuario['data_nascimento']); ?>">
+            </div>
+
+            <div class="input-field">
+                <label for="biografia">Biografia</label>
+                <textarea id="biografia" name="biografia"><?php echo htmlspecialchars($usuario['biografia']); ?></textarea>
+            </div>
+
+            <div class="input-field">
+                <label for="idiomas">Idiomas (separados por vírgula)</label>
+                <input type="text" id="idiomas" name="idiomas" value="<?php echo htmlspecialchars(implode(', ', $idiomas)); ?>">
+            </div>
+
+            <div class="input-field">
+                <label for="foto_perfil">Foto de Perfil</label>
+                <input type="file" id="foto_perfil" name="foto_perfil">
+                <p>Foto atual: <?php echo !empty($usuario['foto_perfil']) ? $usuario['foto_perfil'] : 'Nenhuma foto'; ?></p>
+            </div>
+
+            <button type="submit">Salvar Alterações</button>
         </form>
-        <br>
-
-        <!-- Botão para retornar ao perfil -->
-        <button type="button" onclick="retornarPerfil()">Retornar ao Perfil</button>
-
     </div>
-
-</div>
+</main>
 
 <!-- Rodapé -->
-<div class="footer">
-    UNIVESP PI 2024
-</div>
-
-<!-- Scripts -->
-<script>
-    function addCampoIdioma() {
-        var divIdiomas = document.getElementById('idiomas');
-        var novoCampo = document.createElement('div');
-        novoCampo.innerHTML = '<label for="idioma">Idioma:</label>' +
-                              '<input type="text" name="idiomas[]" required>';
-        divIdiomas.appendChild(novoCampo);
-    }
-
-    function retornarPerfil() {
-        window.location.href = 'perfil.php'; // Substitua pelo caminho correto do perfil
-    }
-</script>
+<footer class="footer">
+    <p>UNIVESP PI 2024</p>
+</footer>
 
 </body>
 </html>
