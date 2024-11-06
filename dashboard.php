@@ -9,6 +9,11 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
 
 require_once 'conexao.php'; // Inclui a conexão com o banco
 
+// Verifica a conexão com o banco de dados
+if (!$conn) {
+    die("Falha na conexão com o banco de dados.");
+}
+
 // Define o tipo de usuário e busca os dados
 $tipo_usuario = $_SESSION['tipo']; // Pode ser 'aluno' ou 'tutor'
 $id_usuario = $_SESSION['id']; // ID comum para todos os tipos
@@ -67,7 +72,7 @@ if (!$usuario) {
                     <?php if (!empty($usuario['foto_perfil'])): ?>
                         <img src="<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Avatar" class="avatar-dashboard">
                     <?php else: ?>
-                        <p>Sem foto</p>
+                        <p>Não há foto</p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -88,7 +93,6 @@ if (!$usuario) {
             </div>
         </div>
         <!-- fim Perfil -->
-
 
         </section>
     </main>

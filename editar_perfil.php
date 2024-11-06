@@ -2,6 +2,7 @@
 // Inclui o processamento dos dados para preencher o formulário
 require_once 'proc_editar_perfil.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
