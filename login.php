@@ -37,7 +37,6 @@ if (isset($_SESSION['id']) && isset($_SESSION['tipo'])) {
             <a href="./cadastro.php">Cadastro</a>
         <?php endif; ?>
     </nav>
-    <!-- fim Navegação -->
 
     <!-- Conteúdo Principal -->
     <main class="main-content">
@@ -51,7 +50,6 @@ if (isset($_SESSION['id']) && isset($_SESSION['tipo'])) {
 
             <!-- Formulário de Login -->
             <form action="proc_login.php" method="POST">
-                <!-- Campo Tipo de Usuário -->
                 <label for="tipo_usuario">Tipo de Usuário:</label>
                 <select id="tipo_usuario" name="tipo_usuario" required>
                     <option value="aluno">Aluno</option>
@@ -59,17 +57,14 @@ if (isset($_SESSION['id']) && isset($_SESSION['tipo'])) {
                 </select>
                 <br><br>
 
-                <!-- Campo Email -->
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>
                 <br><br>
 
-                <!-- Campo Senha -->
                 <label for="senha">Senha:</label>
                 <input type="password" id="senha" name="senha" required>
                 <br><br>
 
-                <!-- Botão de Login -->
                 <button type="submit">Entrar</button>
             </form>
 

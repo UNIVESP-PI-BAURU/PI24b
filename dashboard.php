@@ -1,17 +1,17 @@
 <?php
-session_start();
+session_start(); // Inicia a sessão
 
 // Verifica se o usuário está logado e redireciona para login se não estiver
-if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
-    header("Location: login.php");
-    exit();
+if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
+    header("Location: login.php"); // Redireciona para login
+    exit(); // Evita que o código continue
 }
 
 require_once 'conexao.php'; // Inclui a conexão com o banco
 
 // Define o tipo de usuário e busca os dados
-$tipo_usuario = $_SESSION['tipo_usuario']; // Pode ser 'aluno' ou 'tutor'
-$id_usuario = $_SESSION['id_usuario']; // ID comum para todos os tipos
+$tipo_usuario = $_SESSION['tipo']; // Pode ser 'aluno' ou 'tutor'
+$id_usuario = $_SESSION['id']; // ID comum para todos os tipos
 $tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
 
 // Consulta os dados do usuário
@@ -21,13 +21,11 @@ $stmt->bindParam(':id', $id_usuario);
 $stmt->execute();
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Finaliza a execução se o usuário não for encontrado
+// Se o usuário não for encontrado, redireciona para o login
 if (!$usuario) {
     header("Location: login.php");
     exit();
 }
-
-// O array $usuario agora está disponível para uso na dashboard
 ?>
 
 <!DOCTYPE html>
@@ -35,14 +33,14 @@ if (!$usuario) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Conectando Interesses</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" href="ASSETS/CSS/style.css">
 </head>
 <body>
 
     <!-- Cabeçalho -->
     <header class="header">
-        <img src="ASSETS/IMG/capa.png" alt="Capa do Site">
+        <img src="ASSETS/IMG/capa.png" alt="Capa do site">
     </header>
 
     <!-- Navegação -->
@@ -51,7 +49,6 @@ if (!$usuario) {
         <a href="sobre_nos.php">Sobre nós</a>
         <a href="logout.php">Logout</a>
     </nav>
-    <!-- Fim da Navegação -->
 
     <!-- Conteúdo Principal -->
     <main class="main-content">
@@ -75,51 +72,17 @@ if (!$usuario) {
                 </div>
                 <div style="flex: 2; padding-left: 10px;">
                     <p><?php echo ($tipo_usuario === "tutor" ? "Tutor(a): " : "Aluno(a): ") . htmlspecialchars($usuario['nome']); ?></p>
-                    <?php if (!empty($usuario['cidade']) || !empty($usuario['estado'])): ?>
-                        <p>
-                            <?php echo htmlspecialchars($usuario['cidade']) ? htmlspecialchars($usuario['cidade']) . ', ' : ''; ?>
-                            <?php echo htmlspecialchars($usuario['estado']) ? htmlspecialchars($usuario['estado']) : ''; ?>
-                        </p>
-                    <?php endif; ?>
+                    <p><?php echo htmlspecialchars($usuario['cidade']) . ', ' . htmlspecialchars($usuario['estado']); ?></p>
                     <button onclick="window.location.href='./perfil.php'">Ver meu perfil</button>
                 </div>
             </div>
-
-            <!-- Pesquisa (visível apenas para Alunos) -->
-            <?php if ($tipo_usuario === 'aluno'): ?>
-            <div class="signup-section" style="margin-top: 20px;">
-                <h3>Encontre seu tutor aqui!</h3>
-                <br>
-                <input type="text" placeholder="Pesquise por tutores..." />
-                <button>Pesquisar</button>
-            </div>
-            <?php endif; ?>
-
-            <!-- Aulas (visível apenas para Alunos e Tutores) -->
-            <div class="signup-section" style="margin-top: 30px;">
-                <h3>Aulas em andamento:</h3>
-                <!-- Aqui será inserido conteúdo dinâmico de aulas em andamento -->
-                <div id="aulas-em-andamento">
-                    <!-- Exemplo de exibição de uma aula -->
-                    <p><strong>Matemática:</strong> Aula com João Silva</p>
-                    <p><strong>Inglês:</strong> Aula com Maria Souza</p>
-                </div>
-            </div>
-
-            <!-- Conteúdo específico para o Tutor -->
-            <?php if ($tipo_usuario === 'tutor'): ?>
-                <div class="signup-section" style="margin-top: 30px;">
-                    <h3>Informações do Tutor</h3>
-                    <p>Adicione detalhes específicos aqui (ex.: horários disponíveis, especialidades, etc.)</p>
-                </div>
-            <?php endif; ?>
 
         </section>
     </main>
 
     <!-- Rodapé -->
     <footer class="footer">
-        <p>UNIVESP PI 2024</p>
+        UNIVESP PI 2024
     </footer>
 
 </body>
