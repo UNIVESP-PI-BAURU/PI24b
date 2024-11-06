@@ -54,31 +54,45 @@ if (!$usuario) {
     <main class="main-content">
         <section class="dashboard-section">
 
-            <!-- Saudação -->
-            <div class="signup-section">
-                <h3>Bem-vindo, <?php echo htmlspecialchars($usuario['nome']); ?>!</h3>
-            </div>
+        <!-- Saudação -->
+        <div class="signup-section">
+            <h3>Bem-vindo(a) <?php echo ($tipo_usuario === 'aluno' ? 'Aluno(a), ' : 'Tutor(a), '); ?><?php echo htmlspecialchars($usuario['nome']); ?>!</h3>
+        </div>
+        <!-- fim Saudação -->
 
-            <!-- Perfil -->
-            <div class="signup-section" style="display: flex; align-items: center; margin-bottom: 20px;">
-                <div style="flex: 1;">
-                    <div class="foto-moldura-dashboard">
-                        <?php if (!empty($usuario['foto_perfil'])): ?>
-                            <img src="<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Avatar" class="avatar-dashboard">
-                        <?php else: ?>
-                            <p>Sem foto</p>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                <div style="flex: 2; padding-left: 10px;">
-                    <p><?php echo ($tipo_usuario === "tutor" ? "Tutor(a): " : "Aluno(a): ") . htmlspecialchars($usuario['nome']); ?></p>
-                    <p><?php echo htmlspecialchars($usuario['cidade']) . ', ' . htmlspecialchars($usuario['estado']); ?></p>
-                    <button onclick="window.location.href='./perfil.php'">Ver meu perfil</button>
+        <!-- Perfil -->
+        <div class="signup-section" style="display: flex; align-items: center; margin-bottom: 20px;">
+            <div style="flex: 1;">
+                <div class="foto-moldura-dashboard">
+                    <?php if (!empty($usuario['foto_perfil'])): ?>
+                        <img src="<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Avatar" class="avatar-dashboard">
+                    <?php else: ?>
+                        <p>Sem foto</p>
+                    <?php endif; ?>
                 </div>
             </div>
+            <div style="flex: 2; padding-left: 10px;">
+                <p><?php echo ($tipo_usuario === "tutor" ? "Tutor(a): " : "Aluno(a): ") . htmlspecialchars($usuario['nome']); ?></p>
+                
+                <!-- Exibe cidade e estado, caso existam -->
+                <?php if (!empty($usuario['cidade']) || !empty($usuario['estado'])): ?>
+                    <p>
+                        <?php 
+                            echo htmlspecialchars($usuario['cidade']) ? htmlspecialchars($usuario['cidade']) . ', ' : ''; 
+                            echo htmlspecialchars($usuario['estado']) ? htmlspecialchars($usuario['estado']) : ''; 
+                        ?>
+                    </p>
+                <?php endif; ?>
+                
+                <button onclick="window.location.href='./perfil.php'">Ver meu perfil</button>
+            </div>
+        </div>
+        <!-- fim Perfil -->
+
 
         </section>
     </main>
+    <!-- fim Conteúdo Principal -->
 
     <!-- Rodapé -->
     <footer class="footer">
