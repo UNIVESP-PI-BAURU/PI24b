@@ -1,3 +1,13 @@
+<?php
+session_start(); // Inicia a sessão
+
+// Verifica se o usuário já está logado e redireciona para dashboard
+if (isset($_SESSION['id']) && isset($_SESSION['tipo'])) {
+    header("Location: dashboard.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -18,14 +28,10 @@
         <a href="./index.php">Home</a>
         <a href="./sobre_nos.php">Sobre nós</a>
 
-        <?php
-        session_start(); // Inicia a sessão para verificar o login
-
-        if (isset($_SESSION['id'])): // Verifica se o usuário já está logado
-            // Usuário logado
-            header("Location: dashboard.php");
-            exit();
-        else: ?>
+        <?php if (isset($_SESSION['id'])): ?>
+            <!-- Usuário logado -->
+            <a href="./logout.php">Logout</a>
+        <?php else: ?>
             <!-- Usuário não logado -->
             <a href="./login.php">Login</a>
             <a href="./cadastro.php">Cadastro</a>
@@ -76,7 +82,6 @@
     <footer class="footer">
         UNIVESP PI 2024
     </footer>
-
 
 </body>
 </html>

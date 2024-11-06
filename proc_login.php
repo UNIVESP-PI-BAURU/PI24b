@@ -1,5 +1,5 @@
 <?php
-session_start();
+session_start(); // Inicia a sessão
 
 // Inclua a conexão com o banco
 require_once 'conexao.php';
@@ -31,12 +31,8 @@ if ($stmt->rowCount() > 0) {
         $_SESSION['id'] = $usuario['id'];
         $_SESSION['tipo'] = $tipo_usuario;
 
-        // Redireciona para a página de dashboard do tipo de usuário
-        if ($tipo_usuario === 'aluno') {
-            header("Location: dashboard.php"); // Para alunos
-        } else {
-            header("Location: dashboard.php"); // Para tutores
-        }
+        // Redireciona para a página de dashboard
+        header("Location: dashboard.php");
         exit();
     } else {
         // Senha incorreta
