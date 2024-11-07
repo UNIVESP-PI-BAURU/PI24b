@@ -3,6 +3,14 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
+// Verifica se o usuário está logado antes de prosseguir
+if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
+    // Log para monitorar sessão
+    error_log("Erro: Usuário não logado.");
+    header("Location: login.php");
+    exit();
+}
+
 session_start(); // Inicia a sessão
 require_once 'conexao.php'; // Inclui o arquivo de conexão com o banco de dados
 

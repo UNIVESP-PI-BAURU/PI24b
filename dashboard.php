@@ -8,31 +8,39 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
     exit(); // Evita que o código continue
 }
 
-require_once 'conexao.php'; // Inclui a conexão com o banco
+// Inclui a conexão com o banco
+require_once 'conexao.php';
 
-// Define o tipo de usuário e busca os dados
-$tipo_usuario = $_SESSION['tipo']; // Pode ser 'aluno' ou 'tutor'
-$id_usuario = $_SESSION['id']; // ID comum para todos os tipos
-$tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
+try {
+    // Define o tipo de usuário e busca os dados
+    $tipo_usuario = $_SESSION['tipo']; // Pode ser 'aluno' ou 'tutor'
+    $id_usuario = $_SESSION['id']; // ID comum para todos os tipos
+    $tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
 
-// Consulta os dados do usuário
-$sql = "SELECT nome, foto_perfil, cidade, estado FROM $tabela_usuario WHERE id = :id";
-$stmt = $conn->prepare($sql);
+    // Conexão com o banco de dados
+    $conn = new PDO($dsn, $username, $password, $options);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-if (!$stmt) {
-    die("Erro ao preparar a consulta: " . implode(":", $conn->errorInfo()));
-}
+    // Consulta os dados do usuário
+    $sql = "SELECT nome, foto_perfil, cidade, estado FROM $tabela_usuario WHERE id = :id";
+    $stmt = $conn->prepare($sql);
 
-$stmt->bindParam(':id', $id_usuario, PDO::PARAM_INT);
-$stmt->execute();
+    if (!$stmt) {
+        die("Erro ao preparar a consulta: " . implode(":", $conn->errorInfo()));
+    }
 
-$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt->bindParam(':id', $id_usuario, PDO::PARAM_INT);
+    $stmt->execute();
+    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Se o usuário não for encontrado, redireciona para o login
-if (!$usuario) {
-    $_SESSION['login_error'] = 'Usuário não encontrado ou não autorizado.'; // Mensagem de erro de usuário não encontrado
-    header("Location: login.php");
-    exit();
+    // Se o usuário não for encontrado, redireciona para o login
+    if (!$usuario) {
+        $_SESSION['login_error'] = 'Usuário não encontrado ou não autorizado.';
+        header("Location: login.php");
+        exit();
+    }
+} catch (PDOException $e) {
+    die("Erro de conexão: " . $e->getMessage());
 }
 ?>
 
