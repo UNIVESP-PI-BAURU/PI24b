@@ -10,15 +10,6 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
 
 require_once 'conexao.php'; // Inclui a conexão com o banco
 
-// Verifica a conexão com o banco de dados
-try {
-    // Conexão PDO, caso necessário, adapte os parâmetros abaixo
-    $conn = new PDO($dsn, $username, $password, $options);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Erro de conexão: " . $e->getMessage()); // Exibe erro de conexão
-}
-
 // Define o tipo de usuário e busca os dados
 $tipo_usuario = $_SESSION['tipo']; // Pode ser 'aluno' ou 'tutor'
 $id_usuario = $_SESSION['id']; // ID comum para todos os tipos
@@ -28,12 +19,11 @@ $tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
 $sql = "SELECT nome, foto_perfil, cidade, estado FROM $tabela_usuario WHERE id = :id";
 $stmt = $conn->prepare($sql);
 
-// Verifica se a consulta foi preparada corretamente
 if (!$stmt) {
     die("Erro ao preparar a consulta: " . implode(":", $conn->errorInfo()));
 }
 
-$stmt->bindParam(':id', $id_usuario);
+$stmt->bindParam(':id', $id_usuario, PDO::PARAM_INT);
 $stmt->execute();
 
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -65,7 +55,7 @@ if (!$usuario) {
     <nav class="navbar">
         <a href="index.php">Home</a>
         <a href="sobre_nos.php">Sobre nós</a>
-        <a href="dashboard.php">Dashboard</a> <!-- Alterado para uma única dashboard -->
+        <a href="dashboard.php">Dashboard</a>
         <a href="logout.php">Logout</a>
     </nav>
 
@@ -73,54 +63,50 @@ if (!$usuario) {
     <main class="main-content">
         <section class="dashboard-section">
 
-        <!-- Saudação -->
-        <div class="signup-section">
-            <h3>Bem-vindo(a) <?php echo ($tipo_usuario === 'aluno' ? 'Aluno(a), ' : 'Tutor(a), '); ?><?php echo htmlspecialchars($usuario['nome']); ?>!</h3>
-        </div>
-        <!-- fim Saudação -->
+            <!-- Saudação -->
+            <div class="signup-section">
+                <h3>Bem-vindo(a) <?php echo ($tipo_usuario === 'aluno' ? 'Aluno(a), ' : 'Tutor(a), '); ?><?php echo htmlspecialchars($usuario['nome']); ?>!</h3>
+            </div>
 
-        <!-- Perfil -->
-        <div class="signup-section" style="display: flex; align-items: center; margin-bottom: 20px;">
-            <div style="flex: 1;">
-                <div class="foto-moldura-dashboard">
-                    <?php if (!empty($usuario['foto_perfil'])): ?>
-                        <img src="<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Avatar" class="avatar-dashboard">
-                    <?php else: ?>
-                        <img src="ASSETS/IMG/avatar_default.png" alt="Avatar Padrão" class="avatar-dashboard">
+            <!-- Perfil -->
+            <div class="signup-section" style="display: flex; align-items: center; margin-bottom: 20px;">
+                <div style="flex: 1;">
+                    <div class="foto-moldura-dashboard">
+                        <?php if (!empty($usuario['foto_perfil'])): ?>
+                            <img src="<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Avatar" class="avatar-dashboard">
+                        <?php else: ?>
+                            <img src="ASSETS/IMG/avatar_default.png" alt="Avatar Padrão" class="avatar-dashboard">
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <div style="flex: 2; padding-left: 10px;">
+                    <p><?php echo ($tipo_usuario === "tutor" ? "Tutor(a): " : "Aluno(a): ") . htmlspecialchars($usuario['nome']); ?></p>
+
+                    <!-- Exibe cidade e estado, caso existam -->
+                    <?php if (!empty($usuario['cidade']) || !empty($usuario['estado'])): ?>
+                        <p>
+                            <?php 
+                                echo !empty($usuario['cidade']) ? htmlspecialchars($usuario['cidade']) . ', ' : '';
+                                echo !empty($usuario['estado']) ? htmlspecialchars($usuario['estado']) : 'Localização não informada';
+                            ?>
+                        </p>
                     <?php endif; ?>
+                    
+                    <button onclick="window.location.href='./perfil.php'">Ver meu perfil</button>
                 </div>
             </div>
-            <div style="flex: 2; padding-left: 10px;">
-                <p><?php echo ($tipo_usuario === "tutor" ? "Tutor(a): " : "Aluno(a): ") . htmlspecialchars($usuario['nome']); ?></p>
-                
-                <!-- Exibe cidade e estado, caso existam -->
-                <?php if (!empty($usuario['cidade']) || !empty($usuario['estado'])): ?>
-                    <p>
-                        <?php 
-                            echo htmlspecialchars($usuario['cidade']) ? htmlspecialchars($usuario['cidade']) . ', ' : 'Localização não informada, ';
-                            echo htmlspecialchars($usuario['estado']) ? htmlspecialchars($usuario['estado']) : '';
-                        ?>
-                    </p>
-                <?php endif; ?>
-                
-                <button onclick="window.location.href='./perfil.php'">Ver meu perfil</button>
-            </div>
-        </div>
-        <!-- fim Perfil -->
 
-        <!-- Pesquisa -->
-        <div class="signup-section" style="margin-top: 20px;">
-            <?php if ($tipo_usuario === 'aluno'): ?>
-                <a href="pesquisa.php" class="custom-button">Pesquisar Tutores</a>
-            <?php elseif ($tipo_usuario === 'tutor'): ?>
-                <a href="pesquisa.php" class="custom-button">Pesquisar Alunos</a>
-            <?php endif; ?>
-        </div>
-        <!-- Fim Pesquisa -->
+            <!-- Pesquisa -->
+            <div class="signup-section" style="margin-top: 20px;">
+                <?php if ($tipo_usuario === 'aluno'): ?>
+                    <a href="pesquisa.php" class="custom-button">Pesquisar Tutores</a>
+                <?php elseif ($tipo_usuario === 'tutor'): ?>
+                    <a href="pesquisa.php" class="custom-button">Pesquisar Alunos</a>
+                <?php endif; ?>
+            </div>
 
         </section>
     </main>
-    <!-- fim Conteúdo Principal -->
 
     <!-- Rodapé -->
     <footer class="footer">

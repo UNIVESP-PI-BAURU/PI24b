@@ -1,58 +1,42 @@
 <?php
-session_start(); // Inicia a sessão
-
-// Inclua a conexão com o banco
+session_start();
 require_once 'conexao.php';
 
-// Obtenha os dados do formulário
-$email = $_POST['email'];
-$senha = $_POST['senha'];
-$tipo_usuario = $_POST['tipo_usuario']; // Pode ser 'aluno' ou 'tutor'
+// Verifica se os campos foram enviados
+$email = isset($_POST['email']) ? $_POST['email'] : '';
+$senha = isset($_POST['senha']) ? $_POST['senha'] : '';
+$tipo_usuario = isset($_POST['tipo_usuario']) ? $_POST['tipo_usuario'] : '';
 
-// Verifica qual tabela consultar, dependendo do tipo de usuário
-if ($tipo_usuario === 'aluno') {
-    $query = "SELECT id, senha FROM Alunos WHERE email = :email";
-} else {
-    $query = "SELECT id, senha FROM Tutores WHERE email = :email";
-}
-
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':email', $email);
-
-// Verifica se a execução da consulta foi bem-sucedida
-if ($stmt->execute()) {
-    // Verifique se encontrou o usuário
-    if ($stmt->rowCount() > 0) {
-        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // Verifica se a senha é válida
-        if (password_verify($senha, $usuario['senha'])) {
-            // Configura as variáveis de sessão
-            $_SESSION['id'] = $usuario['id']; // ID do usuário
-            $_SESSION['tipo'] = $tipo_usuario; // Tipo de usuário (aluno ou tutor)
-
-            // Redireciona para a página de dashboard
-            header("Location: dashboard.php");
-            exit(); // Evita que o código após isso seja executado
-        } else {
-            // Senha incorreta
-            $_SESSION['login_error'] = 'Senha incorreta.';
-            header("Location: login.php");
-            exit();
-        }
-    } else {
-        // Usuário não encontrado
-        $_SESSION['login_error'] = 'Email ou senha incorretos.';
-        header("Location: login.php");
-        exit();
-    }
-} else {
-    // Erro na execução da consulta
-    error_log("Erro ao executar consulta de login: " . $stmt->errorInfo()[2]);
-    $_SESSION['login_error'] = 'Erro ao processar a solicitação. Tente novamente.';
+if (empty($email) || empty($senha) || empty($tipo_usuario)) {
+    $_SESSION['erro_login'] = 'Por favor, preencha todos os campos.';
     header("Location: login.php");
     exit();
 }
 
-$conn = null;
+try {
+    // Consulta SQL com base no tipo de usuário
+    $tabela = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
+    $sql = "SELECT id, senha FROM $tabela WHERE email = :email";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':email', $email);
+    $stmt->execute();
+    
+    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($usuario && password_verify($senha, $usuario['senha'])) {
+        $_SESSION['id'] = $usuario['id'];
+        $_SESSION['tipo'] = $tipo_usuario;
+        header("Location: dashboard.php");
+        exit();
+    } else {
+        $_SESSION['erro_login'] = 'Email ou senha incorretos.';
+        header("Location: login.php");
+        exit();
+    }
+} catch (PDOException $e) {
+    error_log("Erro de login: " . $e->getMessage());
+    $_SESSION['erro_login'] = 'Erro ao tentar fazer login.';
+    header("Location: login.php");
+    exit();
+}
 ?>

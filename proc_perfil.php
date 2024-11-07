@@ -28,13 +28,22 @@ try {
     $sql = "SELECT nome, email, foto_perfil, cidade, estado, data_nascimento, biografia, idioma
             FROM $tabela_usuario WHERE id = :id";
     $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':id', $id_usuario, PDO::PARAM_INT);
     
-    // Debug: Verificando a consulta SQL antes de executar
+    // Debug: Verificando os parâmetros antes de bind
     echo "Consulta SQL: $sql<br>";  // Debug
     echo "ID do usuário para consulta: $id_usuario<br>";  // Debug
     
+    // Vincula o parâmetro de ID
+    $stmt->bindParam(':id', $id_usuario, PDO::PARAM_INT);
+
+    // Executa a consulta
     $stmt->execute();
+    
+    // Verifica se há erros na execução
+    if ($stmt->errorCode() != '00000') {
+        // Log de erro se houver problemas na execução
+        error_log("Erro ao executar consulta: " . implode(", ", $stmt->errorInfo()));
+    }
 
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -53,6 +62,7 @@ try {
     echo "Idioma do usuário: $idioma<br>";  // Debug
 
 } catch (PDOException $e) {
+    error_log("Erro ao carregar perfil: " . $e->getMessage());
     echo "Erro ao carregar perfil: " . $e->getMessage();
     exit();
 }
