@@ -58,7 +58,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['tipo'])) {
                 <br><br>
 
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required value="<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>">
+                <input type="email" id="email" name="email" required>
                 <br><br>
 
                 <label for="senha">Senha:</label>

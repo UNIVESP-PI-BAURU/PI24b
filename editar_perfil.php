@@ -1,4 +1,11 @@
 <?php
+// Inicia a sessão e verifica login
+session_start();
+if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
+    header("Location: login.php");
+    exit();
+}
+
 // Inclui a conexão com o banco
 require_once 'conexao.php';
 
@@ -7,26 +14,14 @@ $tipo_usuario = $_SESSION['tipo']; // 'aluno' ou 'tutor'
 $id_usuario = $_SESSION['id']; // ID comum para todos os tipos
 $tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
 
-// Debug: Exibindo informações sobre o tipo de usuário e a tabela
-echo "Tipo de usuário: $tipo_usuario<br>";  // Debug
-echo "Tabela associada ao usuário: $tabela_usuario<br>";  // Debug
-
 // Consulta SQL para buscar dados do usuário
 $sql = "SELECT nome, email, foto_perfil, cidade, estado, data_nascimento, biografia, idioma
         FROM $tabela_usuario WHERE id = :id";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':id', $id_usuario, PDO::PARAM_INT);
-
-// Debug: Exibindo a consulta SQL antes de executar
-echo "Consulta SQL: $sql<br>";  // Debug
-echo "ID do usuário para consulta: $id_usuario<br>";  // Debug
-
 $stmt->execute();
 
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Debug: Exibindo os dados retornados da consulta
-echo "Dados do usuário: <pre>" . print_r($usuario, true) . "</pre>";  // Debug
 
 // Verifica se encontrou o usuário
 if (!$usuario) {
@@ -35,9 +30,6 @@ if (!$usuario) {
 
 // Exibe o idioma
 $idioma = !empty($usuario['idioma']) ? $usuario['idioma'] : '';
-
-// Debug: Exibindo o idioma
-echo "Idioma do usuário: $idioma<br>";  // Debug
 ?>
 
 <!DOCTYPE html>

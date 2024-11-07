@@ -10,34 +10,14 @@
 
 <body>
 
-    <!-- Cabeçalho -->
+    <!-- Cabeçalho -->    
     <header class="header">
-        <!-- Debug: Verificar se a imagem está carregando -->
-        <?php 
-            if (file_exists('ASSETS/IMG/capa.png')) {
-                echo '<img src="ASSETS/IMG/capa.png" alt="Imagem de Capa">';
-            } else {
-                error_log("Erro: Imagem 'capa.png' não encontrada.");
-            }
-        ?>
+        <img src="ASSETS/IMG/capa.png" alt="Imagem de Capa">
     </header>
 
     <!-- Navegação -->
     <nav class="navbar">
         <a href="./index.php">Home</a>
-        <!-- Debug: Verificar Sessão -->
-        <?php
-        session_start(); // Inicia a sessão para verificar o login
-        error_log("Sessão: " . print_r($_SESSION, true)); // Exibe conteúdo da sessão para debug
-
-        if (isset($_SESSION['id_aluno']) || isset($_SESSION['id_tutor'])): ?>
-            <!-- Usuário logado -->
-            <a href="./logout.php">Logout</a>
-        <?php else: ?>
-            <!-- Usuário não logado -->
-            <a href="./login.php">Login</a>
-            <a href="./cadastro.php">Cadastro</a>
-        <?php endif; ?>
     </nav>
     <!-- Fim Navegação -->
 

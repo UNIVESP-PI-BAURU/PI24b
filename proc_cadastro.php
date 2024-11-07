@@ -22,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception("Tipo de usuário inválido.");
         }
 
-        // Verificar se o e-mail já existe no banco de dados
         $check_email = "SELECT * FROM $table WHERE email = :email";
         $stmt_check = $conn->prepare($check_email);
         $stmt_check->bindParam(':email', $email);
@@ -34,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
 
-        // Inserir os dados na tabela
+        // Corrigindo o nome da coluna para 'idioma' (não mais 'idiomas')
         $sql = "INSERT INTO $table (nome, email, senha, tipo, data_cadastro, idioma) 
                 VALUES (:nome, :email, :senha, :tipo, NOW(), :idioma)";
         $stmt = $conn->prepare($sql);
@@ -47,14 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $conn->commit();
 
-        // Redirecionar após o cadastro bem-sucedido
         header("Location: login.php?success=Cadastro realizado com sucesso!");
         exit();
 
     } catch (PDOException $e) {
         $conn->rollBack();
         $_SESSION['error'] = "Erro ao cadastrar: " . $e->getMessage();
-        error_log("Erro no cadastro: " . $e->getMessage());  // Log de erro
         header("Location: cadastro.php");
         exit();
     }

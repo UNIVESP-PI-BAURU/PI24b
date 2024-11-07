@@ -1,4 +1,5 @@
 <?php
+
 // Verifica se o usuário está logado e determina o tipo
 if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
     header("Location: login.php");
@@ -9,15 +10,8 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
 $id_usuario = $_SESSION['id'];
 $tipo_usuario = $_SESSION['tipo']; // 'aluno' ou 'tutor'
 
-// Debug: Exibindo informações do usuário
-echo "ID do usuário: $id_usuario<br>";  // Debug
-echo "Tipo de usuário: $tipo_usuario<br>";  // Debug
-
 // Define a tabela correta de pesquisa, dependendo do tipo de usuário
 $tabela_usuario = ($tipo_usuario === 'aluno') ? 'Tutores' : 'Alunos'; // Aluno procura tutor e tutor procura aluno
-
-// Debug: Exibindo a tabela de pesquisa
-echo "Tabela de pesquisa: $tabela_usuario<br>";  // Debug
 ?>
 
 <!DOCTYPE html>
@@ -48,14 +42,12 @@ echo "Tabela de pesquisa: $tabela_usuario<br>";  // Debug
             <h2>Pesquisar <?php echo $tipo_usuario === 'aluno' ? 'Tutores' : 'Alunos'; ?></h2>
             <form class="signup-form" method="POST" action="proc_pesquisa.php">
                 <input type="hidden" name="tipo_usuario" value="<?php echo $tipo_usuario; ?>" />
-                
-                <!-- Debug: Exibindo os campos do formulário -->
-                <?php
-                echo "Campo Cidade: <input type='text' id='cidade' name='cidade' placeholder='Cidade...'><br>";  // Debug
-                echo "Campo Estado: <input type='text' id='estado' name='estado' placeholder='Estado...'><br>";  // Debug
-                echo "Campo Idioma: <input type='text' id='idioma' name='idioma' placeholder='Idioma...'><br>";  // Debug
-                ?>
-
+                <input type="text" id="cidade" name="cidade" placeholder="Cidade..." />
+                <br>
+                <input type="text" id="estado" name="estado" placeholder="Estado..." />
+                <br>
+                <input type="text" id="idioma" name="idioma" placeholder="Idioma..." />
+                <br>
                 <button type="submit" name="pesquisar" class="custom-button">Pesquisar</button>
             </form>
         </div>

@@ -3,16 +3,8 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// Verifica se o usuário está logado antes de prosseguir
-if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
-    // Log para monitorar sessão
-    error_log("Erro: Usuário não logado.");
-    header("Location: login.php");
-    exit();
-}
-
 session_start(); // Inicia a sessão
-require_once 'conexao.php'; // Inclui o arquivo de conexão com o banco de dados
+require_once 'conexao.php'; // Inclua o arquivo de conexão com o banco de dados
 
 // Verifica se o usuário está logado
 if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
@@ -26,19 +18,9 @@ $estado = isset($_POST['estado']) ? trim($_POST['estado']) : '';
 $idioma = isset($_POST['idioma']) ? trim($_POST['idioma']) : '';
 $tipo_usuario = $_POST['tipo_usuario']; // 'aluno' ou 'tutor'
 
-// Debug: Exibir filtros recebidos
-echo "Filtro Cidade: $cidade<br>";  // Debug
-echo "Filtro Estado: $estado<br>";  // Debug
-echo "Filtro Idioma: $idioma<br>";  // Debug
-echo "Tipo de Usuário: $tipo_usuario<br>";  // Debug
-
 // Define a tabela correta de pesquisa, dependendo do tipo de usuário
-$tabela_usuario = ($tipo_usuario === 'aluno') ? 'Tutores' : 'Alunos'; // Aluno pesquisa tutores e tutor pesquisa alunos
-$campo_oposto = ($tipo_usuario === 'aluno') ? 'idioma' : 'idiomas'; // Ajusta o campo para o idioma de acordo com o tipo de usuário
-
-// Debug: Exibir tabela e campo oposto
-echo "Tabela de Pesquisa: $tabela_usuario<br>";  // Debug
-echo "Campo de Idioma: $campo_oposto<br>";  // Debug
+$tabela_usuario = ($tipo_usuario === 'aluno') ? 'Tutores' : 'Alunos';
+$campo_oposto = ($tipo_usuario === 'aluno') ? 'idioma' : 'idiomas';
 
 // Verifica se pelo menos um filtro foi preenchido
 if (empty($cidade) && empty($estado) && empty($idioma)) {
@@ -51,12 +33,8 @@ try {
     // Inicializa a consulta de acordo com os filtros
     $sql = "SELECT id, nome, cidade, estado, idioma
             FROM $tabela_usuario 
-            WHERE 1=1"; // A condição WHERE 1=1 facilita a adição dos filtros dinamicamente
+            WHERE 1=1"; // A condição WHERE 1=1 é para facilitar a adição dos filtros dinamicamente
 
-    // Debug: Exibir SQL antes de adicionar filtros
-    echo "SQL antes de adicionar filtros: $sql<br>";  // Debug
-
-    // Adiciona os filtros à consulta
     if (!empty($idioma)) {
         $sql .= " AND LOWER($campo_oposto) LIKE LOWER(:idioma)";
     }
@@ -67,44 +45,34 @@ try {
         $sql .= " AND LOWER(estado) LIKE LOWER(:estado)";
     }
 
-    // Debug: Exibir SQL com filtros
-    echo "SQL com filtros: $sql<br>";  // Debug
-
+    // Prepara a consulta
     $stmt = $conn->prepare($sql);
 
-    // Vincula os parâmetros dinamicamente
+    // Bind dos valores
     if (!empty($idioma)) {
-        $stmt->bindParam(':idioma', $idioma);
+        $stmt->bindValue(':idioma', "%$idioma%", PDO::PARAM_STR);
     }
     if (!empty($cidade)) {
-        $stmt->bindParam(':cidade', $cidade);
+        $stmt->bindValue(':cidade', "%$cidade%", PDO::PARAM_STR);
     }
     if (!empty($estado)) {
-        $stmt->bindParam(':estado', $estado);
+        $stmt->bindValue(':estado', "%$estado%", PDO::PARAM_STR);
     }
 
     // Executa a consulta
     $stmt->execute();
     $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Debug: Exibir resultados da consulta
-    echo "Resultados da consulta:<br>";
-    print_r($resultados);  // Debug
-
-    // Armazena os resultados na sessão
-    $_SESSION['resultados_pesquisa'] = $resultados;
-
-    if (empty($resultados)) {
-        $_SESSION['erro_consulta'] = "Nenhum resultado encontrado com os critérios fornecidos.";
-    }
-
-    // Redireciona para a página de resultados
-    header("Location: resultado_pesquisa.php");
-    exit();
-} catch (PDOException $e) {
-    // Caso ocorra algum erro com a consulta
-    $_SESSION['erro_consulta'] = "Erro ao executar a pesquisa: " . $e->getMessage();
+} catch (Exception $e) {
+    $_SESSION['erro_consulta'] = "Erro ao realizar a consulta: " . $e->getMessage();
     header("Location: resultado_pesquisa.php");
     exit();
 }
+
+// Armazena os resultados na sessão para exibição na página de resultados
+$_SESSION['resultados_pesquisa'] = $resultados;
+
+// Redireciona para a página de resultados
+header("Location: resultado_pesquisa.php");
+exit();
 ?>
