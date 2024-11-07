@@ -5,22 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Usuário</title>
     <link rel="stylesheet" href="ASSETS/CSS/style.css">
-    <script>
-        // Função para adicionar um novo campo de idioma
-        function adicionarIdioma() {
-            var container = document.getElementById('idiomas-container');
-            var novoCampo = document.createElement('div');
-            novoCampo.classList.add('idioma-container');
-
-            // Adiciona o campo de entrada para o idioma
-            novoCampo.innerHTML = `
-                <label for="idioma[]">Idioma:</label>
-                <input type="text" name="idioma[]" required>
-                <br><br>
-            `;
-            container.appendChild(novoCampo);
-        }
-    </script>
 </head>
 <body>
 
@@ -84,15 +68,16 @@
                 <input type="password" id="senha" name="senha" required>
                 <br><br>
 
-                <!-- Container de Idiomas -->
-                <div id="idiomas-container">
-                    <label for="idioma[]">Idioma:</label>
-                    <input type="text" name="idioma[]" required>
-                    <br><br>
-                </div>
+                <!-- Campo Idioma -->
+                <label for="idiomas">Idioma:</label>
+                <input type="text" id="idiomas" name="idiomas" required>
+                <br><br>
 
-                <!-- Botão para adicionar mais idiomas -->
-                <button type="button" onclick="adicionarIdioma()">Adicionar Outro Idioma</button>
+                <!-- Botão para adicionar outro idioma -->
+                <button type="button" onclick="adicionarIdioma()">Adicionar Idioma</button>
+
+                <!-- Campos ocultos para armazenar os idiomas adicionados -->
+                <input type="hidden" id="idiomas_list" name="idiomas_list">
                 <br><br>
 
                 <!-- Botão de Enviar -->
@@ -102,12 +87,30 @@
             <p>Já possui uma conta? <a href="login.php">Faça login aqui</a></p>
 
         </section>
+    
     </main>
 
     <!-- Rodapé -->
     <footer class="footer">
         UNIVESP PI 2024
     </footer>
+
+    <script>
+        // Função para adicionar idiomas ao campo oculto
+        function adicionarIdioma() {
+            var idioma = document.getElementById("idiomas").value;
+            if (idioma) {
+                var idiomasList = document.getElementById("idiomas_list").value;
+                if (idiomasList) {
+                    idiomasList += ", " + idioma; // Se já existir algum idioma, concatena o novo
+                } else {
+                    idiomasList = idioma; // Se for o primeiro idioma, apenas atribui
+                }
+                document.getElementById("idiomas_list").value = idiomasList;
+                document.getElementById("idiomas").value = ""; // Limpa o campo de idioma para o próximo
+            }
+        }
+    </script>
 
 </body>
 </html>
