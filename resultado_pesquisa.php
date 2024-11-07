@@ -13,17 +13,17 @@ $erro = $_SESSION['erro_consulta'] ?? null;
 unset($_SESSION['erro_consulta']); // Limpa o erro após exibição
 
 // Verifica se há resultados armazenados na sessão
-if (!isset($_SESSION['resultados'])) {
+if (!isset($_SESSION['resultados_pesquisa'])) {
     // Redireciona para a pesquisa se não houver resultados
     header("Location: pesquisa.php");  // Atualizado para a pesquisa única
     exit();
 }
 
 // Obtém os resultados da sessão
-$resultados = $_SESSION['resultados'];
+$resultados = $_SESSION['resultados_pesquisa'];
 
 // Limpa os resultados da sessão após a exibição
-unset($_SESSION['resultados']);
+unset($_SESSION['resultados_pesquisa']);
 
 // Debug: Exibir resultados recebidos
 error_log("Resultados recebidos: " . print_r($resultados, true));
@@ -61,47 +61,35 @@ error_log("Resultados recebidos: " . print_r($resultados, true));
 
     <!-- Resultados da Pesquisa -->
     <div class="main-content">
-        <div class="signup-section">
-            <h2>Resultados da Pesquisa</h2>
-        
-            <?php if (!empty($resultados)): ?>
-                <table style="width: 100%; border-collapse: collapse;">
-                    <thead>
+        <h2>Resultados da Pesquisa</h2>
+        <?php if (count($resultados) > 0): ?>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Cidade</th>
+                        <th>Estado</th>
+                        <th>Idioma(s)</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($resultados as $usuario): ?>
                         <tr>
-                            <th style="border: 1px solid #ddd; padding: 4px;">ID</th>
-                            <th style="border: 1px solid #ddd; padding: 4px;">Nome</th>
-                            <th style="border: 1px solid #ddd; padding: 4px;">Cidade</th>
-                            <th style="border: 1px solid #ddd; padding: 4px;">Estado</th>
-                            <th style="border: 1px solid #ddd; padding: 4px;">Idioma(s)</th>
-                            <th style="border: 1px solid #ddd; padding: 4px;">Tipo Usuário</th>
-                            <th style="border: 1px solid #ddd; padding: 4px;">Ações</th>
+                            <td><?php echo $usuario['id']; ?></td>
+                            <td><?php echo htmlspecialchars($usuario['nome']); ?></td>
+                            <td><?php echo htmlspecialchars($usuario['cidade']); ?></td>
+                            <td><?php echo htmlspecialchars($usuario['estado']); ?></td>
+                            <td><?php echo htmlspecialchars($usuario['idioma']); ?></td>
+                            <td><a href="about_usuario.php?id=<?php echo $usuario['id']; ?>">Ver mais</a></td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($resultados as $usuario): ?>
-                            <tr>
-                                <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($usuario['id']); ?></td>
-                                <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($usuario['nome']); ?></td>
-                                <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($usuario['cidade']); ?></td>
-                                <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($usuario['estado']); ?></td>
-                                <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($usuario['idiomas']); ?></td>
-                                <td style="border: 1px solid #ddd; padding: 4px;"><?php echo htmlspecialchars($usuario['tipo_usuario']); ?></td>
-                                <td style="border: 1px solid #ddd; padding: 4px;">
-                                    <a href="about_usuario.php?id=<?php echo isset($usuario['id']) ? htmlspecialchars($usuario['id']) : ''; ?>">Ver mais</a>
-                                </td>
-                            </tr>
-                            <tr><td colspan="7" style="height: 4px;"></td></tr> <!-- Espaço entre resultados -->
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            <?php else: ?>
-                <p>Nenhum resultado encontrado com os critérios informados.</p>
-            <?php endif; ?>
-            <br>
-            <div class="actions" style="text-align: center; margin: 20px 0;">
-                <button onclick="window.location.href='pesquisa.php'" class="custom-button">Voltar para Pesquisa</button>
-            </div>
-        </div>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <p>Nenhum resultado encontrado.</p>
+        <?php endif; ?>
     </div>
 
     <!-- Rodapé -->

@@ -15,7 +15,7 @@ $id_usuario = $_SESSION['id']; // ID comum para todos os tipos
 $tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
 
 // Consulta SQL para buscar dados do usuário
-$sql = "SELECT nome, email, foto_perfil, cidade, estado, data_nascimento, biografia, idiomas
+$sql = "SELECT nome, email, foto_perfil, cidade, estado, data_nascimento, biografia, idioma
         FROM $tabela_usuario WHERE id = :id";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':id', $id_usuario, PDO::PARAM_INT);
@@ -28,8 +28,8 @@ if (!$usuario) {
     die("Usuário não encontrado.");
 }
 
-// Extrai os idiomas
-$idiomas = !empty($usuario['idiomas']) ? explode(',', $usuario['idiomas']) : [];
+// Exibe o idioma
+$idioma = !empty($usuario['idioma']) ? $usuario['idioma'] : '';
 ?>
 
 <!DOCTYPE html>
@@ -91,8 +91,8 @@ $idiomas = !empty($usuario['idiomas']) ? explode(',', $usuario['idiomas']) : [];
             </div>
 
             <div class="input-field">
-                <label for="idiomas">Idiomas (separados por vírgula)</label>
-                <input type="text" id="idiomas" name="idiomas" value="<?php echo htmlspecialchars(implode(', ', $idiomas)); ?>">
+                <label for="idioma">Idioma</label>
+                <input type="text" id="idioma" name="idioma" value="<?php echo htmlspecialchars($idioma); ?>">
             </div>
 
             <div class="input-field">

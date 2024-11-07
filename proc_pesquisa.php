@@ -26,7 +26,7 @@ if (empty($cidade) && empty($estado) && empty($idioma)) {
 
 try {
     // Inicializa a consulta de acordo com os filtros
-    $sql = "SELECT id, nome, cidade, estado, idiomas
+    $sql = "SELECT id, nome, cidade, estado, idioma
             FROM $tabela_usuario 
             WHERE 1=1"; // A condição WHERE 1=1 é para facilitar a adição dos filtros dinamicamente
 

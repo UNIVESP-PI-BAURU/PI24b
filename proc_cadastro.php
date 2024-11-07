@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT);
     $tipo_usuario = $_POST['tipo_usuario'];
-    $idiomas = $_POST['idiomas'];
+    $idioma = $_POST['idioma']; // Corrigido de 'idiomas' para 'idioma'
 
     try {
         $conn->beginTransaction();
@@ -33,14 +33,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
 
-        $sql = "INSERT INTO $table (nome, email, senha, tipo, data_cadastro, idiomas) 
-                VALUES (:nome, :email, :senha, :tipo, NOW(), :idiomas)";
+        // Corrigindo o nome da coluna para 'idioma' (não mais 'idiomas')
+        $sql = "INSERT INTO $table (nome, email, senha, tipo, data_cadastro, idioma) 
+                VALUES (:nome, :email, :senha, :tipo, NOW(), :idioma)";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':nome', $nome);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':senha', $senha);
         $stmt->bindParam(':tipo', $tipo_valor);
-        $stmt->bindParam(':idiomas', $idiomas);
+        $stmt->bindParam(':idioma', $idioma); // Corrigido aqui também
         $stmt->execute();
 
         $conn->commit();

@@ -40,7 +40,6 @@ $tabela_usuario = ($tipo_usuario === 'aluno') ? 'Tutores' : 'Alunos'; // Aluno p
         <a href="logout.php">Logout</a>
     </nav>
 
-
     <!-- Pesquisa -->
     <div class="main-content">
         <div class="signup-section">

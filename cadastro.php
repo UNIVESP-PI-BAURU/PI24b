@@ -60,8 +60,8 @@
                 <input type="password" id="senha" name="senha" required>
                 <br><br>
 
-                <label for="idiomas">Idioma:</label>
-                <input type="text" id="idiomas" name="idiomas" required>
+                <label for="idioma">Idioma:</label>
+                <input type="text" id="idioma" name="idioma" required>
                 <br><br>
 
                 <button type="submit">Cadastrar</button>

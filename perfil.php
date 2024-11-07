@@ -1,6 +1,5 @@
 <?php
-// Inicia a sessão e verifica login
-session_start(); // Manter apenas aqui, já que o proc_perfil.php já está com session_start()
+
 // Verifica se o usuário está logado
 if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
     header("Location: login.php");

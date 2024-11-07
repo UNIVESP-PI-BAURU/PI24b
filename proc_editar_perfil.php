@@ -21,7 +21,7 @@ $cidade = $_POST['cidade'];
 $estado = $_POST['estado'];
 $data_nascimento = $_POST['data_nascimento'];
 $biografia = $_POST['biografia'];
-$idiomas = $_POST['idiomas'];
+$idioma = $_POST['idioma']; // Alterado de 'idiomas' para 'idioma'
 
 // Manipulação da foto de perfil
 // Buscando foto atual do banco de dados
@@ -48,7 +48,7 @@ if (!empty($_FILES['foto_perfil']['name'])) {
 
 // Consulta SQL para atualizar os dados do usuário
 $sql = "UPDATE $tabela_usuario SET nome = :nome, email = :email, cidade = :cidade, estado = :estado, 
-        data_nascimento = :data_nascimento, biografia = :biografia, idiomas = :idiomas, foto_perfil = :foto_perfil 
+        data_nascimento = :data_nascimento, biografia = :biografia, idioma = :idioma, foto_perfil = :foto_perfil 
         WHERE id = :id";
 
 $stmt = $conn->prepare($sql);
@@ -58,7 +58,7 @@ $stmt->bindParam(':cidade', $cidade);
 $stmt->bindParam(':estado', $estado);
 $stmt->bindParam(':data_nascimento', $data_nascimento);
 $stmt->bindParam(':biografia', $biografia);
-$stmt->bindParam(':idiomas', $idiomas);
+$stmt->bindParam(':idioma', $idioma); // Alterado para 'idioma'
 $stmt->bindParam(':foto_perfil', $foto_perfil);
 $stmt->bindParam(':id', $id_usuario);
 
