@@ -44,7 +44,7 @@
             <?php endif; ?>
 
             <!-- Formulário de Cadastro -->
-            <form action="proc_cadastro.php" method="POST">
+            <form action="proc_cadastro.php" method="POST" onsubmit="prepareIdiomas()">
                 <!-- Seleção do Tipo de Usuário -->
                 <label for="tipo_usuario">Tipo de Usuário:</label>
                 <select id="tipo_usuario" name="tipo_usuario" required>
@@ -70,14 +70,15 @@
 
                 <!-- Campo Idioma -->
                 <label for="idiomas">Idioma:</label>
-                <input type="text" id="idiomas" name="idiomas" required>
+                <input type="text" id="idiomas">
+                <button type="button" onclick="adicionarIdioma()">Adicionar Idioma</button>
                 <br><br>
 
-                <!-- Botão para adicionar outro idioma -->
-                <button type="button" onclick="adicionarIdioma()">Adicionar Idioma</button>
-
-                <!-- Campos ocultos para armazenar os idiomas adicionados -->
+                <!-- Campo oculto para armazenar a lista de idiomas -->
                 <input type="hidden" id="idiomas_list" name="idiomas_list">
+                
+                <!-- Área para exibir idiomas adicionados -->
+                <div id="idiomas_adicionados"></div>
                 <br><br>
 
                 <!-- Botão de Enviar -->
@@ -85,9 +86,7 @@
             </form>
 
             <p>Já possui uma conta? <a href="login.php">Faça login aqui</a></p>
-
         </section>
-    
     </main>
 
     <!-- Rodapé -->
@@ -96,19 +95,39 @@
     </footer>
 
     <script>
-        // Função para adicionar idiomas ao campo oculto
+        // Array para armazenar os idiomas
+        let idiomasArray = [];
+
         function adicionarIdioma() {
-            var idioma = document.getElementById("idiomas").value;
+            let idiomaInput = document.getElementById("idiomas");
+            let idioma = idiomaInput.value.trim();
+
             if (idioma) {
-                var idiomasList = document.getElementById("idiomas_list").value;
-                if (idiomasList) {
-                    idiomasList += ", " + idioma; // Se já existir algum idioma, concatena o novo
-                } else {
-                    idiomasList = idioma; // Se for o primeiro idioma, apenas atribui
-                }
-                document.getElementById("idiomas_list").value = idiomasList;
-                document.getElementById("idiomas").value = ""; // Limpa o campo de idioma para o próximo
+                idiomasArray.push(idioma);
+                idiomaInput.value = ""; // Limpa o campo de idioma
+
+                // Atualiza o campo oculto com a lista de idiomas
+                document.getElementById("idiomas_list").value = idiomasArray.join(", ");
+                
+                // Atualiza a exibição dos idiomas adicionados
+                atualizarIdiomasAdicionados();
             }
+        }
+
+        function atualizarIdiomasAdicionados() {
+            let idiomasDiv = document.getElementById("idiomas_adicionados");
+            idiomasDiv.innerHTML = ""; // Limpa a lista atual
+            
+            idiomasArray.forEach(function(idioma, index) {
+                let idiomaElement = document.createElement("p");
+                idiomaElement.textContent = idioma;
+                idiomasDiv.appendChild(idiomaElement);
+            });
+        }
+
+        function prepareIdiomas() {
+            // Confirma que o campo oculto está atualizado antes do envio
+            document.getElementById("idiomas_list").value = idiomasArray.join(", ");
         }
     </script>
 

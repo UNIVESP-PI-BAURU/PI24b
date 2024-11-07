@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT); // Hash da senha
     $tipo_usuario = $_POST['tipo_usuario']; // Tipo de usuário selecionado: aluno ou tutor
-    $idiomas = $_POST['idiomas_list']; // Idiomas listados
+    $idiomas = $_POST['idiomas_list'] ?? ''; // Idiomas listados, se disponível
 
     try {
         // Inicia a transação para garantir integridade dos dados
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':senha', $senha);
         $stmt->bindParam(':tipo', $tipo_valor);
-        $stmt->bindParam(':idiomas', $idiomas); // Insere os idiomas
+        $stmt->bindParam(':idiomas', $idiomas); // Insere os idiomas como string
         $stmt->execute();
 
         // Confirma a transação
