@@ -106,8 +106,6 @@ if (!$usuario) {
         </div>
         <!-- Fim Pesquisa -->
 
-
-
         </section>
     </main>
     <!-- fim Conteúdo Principal -->

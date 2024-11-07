@@ -1,9 +1,8 @@
 <?php
-// Removido o session_start() do arquivo HTML
 
 // Verifica se o usuário está logado e determina o tipo
 if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
-    header("Location: ../login.php");
+    header("Location: login.php");
     exit();
 }
 

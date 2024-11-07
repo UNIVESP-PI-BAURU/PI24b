@@ -25,8 +25,8 @@ $resultados = $_SESSION['resultados_pesquisa'];
 // Limpa os resultados da sessão após a exibição
 unset($_SESSION['resultados_pesquisa']);
 
-// Debug: Exibir resultados recebidos
-error_log("Resultados recebidos: " . print_r($resultados, true));
+// Debug (remover em produção): Exibir resultados recebidos
+// error_log("Resultados recebidos: " . print_r($resultados, true));
 ?>
 
 <!DOCTYPE html>
@@ -77,7 +77,7 @@ error_log("Resultados recebidos: " . print_r($resultados, true));
                 <tbody>
                     <?php foreach ($resultados as $usuario): ?>
                         <tr>
-                            <td><?php echo $usuario['id']; ?></td>
+                            <td><?php echo htmlspecialchars($usuario['id']); ?></td>
                             <td><?php echo htmlspecialchars($usuario['nome']); ?></td>
                             <td><?php echo htmlspecialchars($usuario['cidade']); ?></td>
                             <td><?php echo htmlspecialchars($usuario['estado']); ?></td>

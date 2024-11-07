@@ -7,7 +7,7 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
 }
 
 // Inclui a conexão com o banco
-require_once './conexao.php';
+require_once 'conexao.php';
 
 // Determina o tipo de usuário e busca os dados
 $tipo_usuario = $_SESSION['tipo']; // 'aluno' ou 'tutor'

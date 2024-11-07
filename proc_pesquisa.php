@@ -4,11 +4,11 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 session_start(); // Inicia a sessão
-require_once '../conexao.php'; // Inclua o arquivo de conexão com o banco de dados
+require_once 'conexao.php'; // Inclua o arquivo de conexão com o banco de dados
 
 // Verifica se o usuário está logado
 if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
-    header("Location: ../login.php");
+    header("Location: login.php");
     exit();
 }
 
@@ -45,34 +45,35 @@ try {
         $sql .= " AND LOWER(estado) LIKE LOWER(:estado)";
     }
 
-    // Prepara a consulta
     $stmt = $conn->prepare($sql);
 
-    // Bind dos valores
+    // Vincula os parâmetros dinamicamente
     if (!empty($idioma)) {
-        $stmt->bindValue(':idioma', "%$idioma%", PDO::PARAM_STR);
+        $stmt->bindParam(':idioma', $idioma);
     }
     if (!empty($cidade)) {
-        $stmt->bindValue(':cidade', "%$cidade%", PDO::PARAM_STR);
+        $stmt->bindParam(':cidade', $cidade);
     }
     if (!empty($estado)) {
-        $stmt->bindValue(':estado', "%$estado%", PDO::PARAM_STR);
+        $stmt->bindParam(':estado', $estado);
     }
 
-    // Executa a consulta
     $stmt->execute();
     $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-} catch (Exception $e) {
-    $_SESSION['erro_consulta'] = "Erro ao realizar a consulta: " . $e->getMessage();
+    // Armazena os resultados na sessão
+    $_SESSION['resultados_pesquisa'] = $resultados;
+
+    if (empty($resultados)) {
+        $_SESSION['erro_consulta'] = "Nenhum resultado encontrado com os critérios fornecidos.";
+    }
+
+    // Redireciona para a página de resultados
+    header("Location: resultado_pesquisa.php");
+    exit();
+} catch (PDOException $e) {
+    // Caso ocorra algum erro com a consulta
+    $_SESSION['erro_consulta'] = "Erro ao executar a pesquisa: " . $e->getMessage();
     header("Location: resultado_pesquisa.php");
     exit();
 }
-
-// Armazena os resultados na sessão para exibição na página de resultados
-$_SESSION['resultados_pesquisa'] = $resultados;
-
-// Redireciona para a página de resultados
-header("Location: resultado_pesquisa.php");
-exit();
-?>
