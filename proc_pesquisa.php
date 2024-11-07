@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 session_start(); // Inicia a sessão
-require_once 'conexao.php'; // Inclua o arquivo de conexão com o banco de dados
+require_once 'conexao.php'; // Inclui o arquivo de conexão com o banco de dados
 
 // Verifica se o usuário está logado
 if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
@@ -19,8 +19,8 @@ $idioma = isset($_POST['idioma']) ? trim($_POST['idioma']) : '';
 $tipo_usuario = $_POST['tipo_usuario']; // 'aluno' ou 'tutor'
 
 // Define a tabela correta de pesquisa, dependendo do tipo de usuário
-$tabela_usuario = ($tipo_usuario === 'aluno') ? 'Tutores' : 'Alunos';
-$campo_oposto = ($tipo_usuario === 'aluno') ? 'idioma' : 'idiomas';
+$tabela_usuario = ($tipo_usuario === 'aluno') ? 'Tutores' : 'Alunos'; // Aluno pesquisa tutores e tutor pesquisa alunos
+$campo_oposto = ($tipo_usuario === 'aluno') ? 'idioma' : 'idiomas'; // Ajusta o campo para o idioma de acordo com o tipo de usuário
 
 // Verifica se pelo menos um filtro foi preenchido
 if (empty($cidade) && empty($estado) && empty($idioma)) {
@@ -33,8 +33,9 @@ try {
     // Inicializa a consulta de acordo com os filtros
     $sql = "SELECT id, nome, cidade, estado, idioma
             FROM $tabela_usuario 
-            WHERE 1=1"; // A condição WHERE 1=1 é para facilitar a adição dos filtros dinamicamente
+            WHERE 1=1"; // A condição WHERE 1=1 facilita a adição dos filtros dinamicamente
 
+    // Adiciona os filtros à consulta
     if (!empty($idioma)) {
         $sql .= " AND LOWER($campo_oposto) LIKE LOWER(:idioma)";
     }
@@ -58,6 +59,7 @@ try {
         $stmt->bindParam(':estado', $estado);
     }
 
+    // Executa a consulta
     $stmt->execute();
     $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -77,3 +79,4 @@ try {
     header("Location: resultado_pesquisa.php");
     exit();
 }
+?>

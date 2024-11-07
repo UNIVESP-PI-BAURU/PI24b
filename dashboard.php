@@ -97,7 +97,6 @@ if (!$usuario) {
 
         <!-- Pesquisa -->
         <div class="signup-section" style="margin-top: 20px;">
-            <!-- Condicional para mostrar o texto correto -->
             <?php if ($tipo_usuario === 'aluno'): ?>
                 <a href="pesquisa.php" class="custom-button">Pesquisar Tutores</a>
             <?php elseif ($tipo_usuario === 'tutor'): ?>
