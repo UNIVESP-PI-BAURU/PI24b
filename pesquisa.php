@@ -1,5 +1,5 @@
 <?php
-session_start(); // Inicia a sessão
+// Removido o session_start() do arquivo HTML
 
 // Verifica se o usuário está logado e determina o tipo
 if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
@@ -22,9 +22,6 @@ $tabela_usuario = ($tipo_usuario === 'aluno') ? 'Tutores' : 'Alunos'; // Aluno p
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pesquisa</title>
     <link rel="stylesheet" href="ASSETS/CSS/style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
 <body>
     <!-- Cabeçalho -->
@@ -56,62 +53,6 @@ $tabela_usuario = ($tipo_usuario === 'aluno') ? 'Tutores' : 'Alunos'; // Aluno p
             </form>
         </div>
     </div>
-
-    <!-- Script para Autocomplete -->
-    <script>
-        $(document).ready(function() {
-            $("#cidade").autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "autocomplete.php",
-                        type: "GET",
-                        dataType: "json",
-                        data: {
-                            term: request.term,
-                            tipo: 'cidade'
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                }
-            });
-
-            $("#estado").autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "autocomplete.php",
-                        type: "GET",
-                        dataType: "json",
-                        data: {
-                            term: request.term,
-                            tipo: 'estado'
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                }
-            });
-
-            $("#idioma").autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "autocomplete.php",
-                        type: "GET",
-                        dataType: "json",
-                        data: {
-                            term: request.term,
-                            tipo: 'idioma'
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                }
-            });
-        });
-    </script>
 
     <!-- Rodapé -->
     <div class="footer">
