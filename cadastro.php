@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Usuário</title>
     <link rel="stylesheet" href="ASSETS/CSS/style.css">
+    <script>
+        // Função para adicionar um novo campo de idioma
+        function adicionarIdioma() {
+            var container = document.getElementById('idiomas-container');
+            var novoCampo = document.createElement('div');
+            novoCampo.classList.add('idioma-container');
+
+            // Adiciona o campo de entrada para o idioma
+            novoCampo.innerHTML = `
+                <label for="idioma[]">Idioma:</label>
+                <input type="text" name="idioma[]" required>
+                <br><br>
+            `;
+            container.appendChild(novoCampo);
+        }
+    </script>
 </head>
 <body>
 
@@ -68,6 +84,17 @@
                 <input type="password" id="senha" name="senha" required>
                 <br><br>
 
+                <!-- Container de Idiomas -->
+                <div id="idiomas-container">
+                    <label for="idioma[]">Idioma:</label>
+                    <input type="text" name="idioma[]" required>
+                    <br><br>
+                </div>
+
+                <!-- Botão para adicionar mais idiomas -->
+                <button type="button" onclick="adicionarIdioma()">Adicionar Outro Idioma</button>
+                <br><br>
+
                 <!-- Botão de Enviar -->
                 <button type="submit">Cadastrar</button>
             </form>
@@ -75,7 +102,6 @@
             <p>Já possui uma conta? <a href="login.php">Faça login aqui</a></p>
 
         </section>
-    
     </main>
 
     <!-- Rodapé -->

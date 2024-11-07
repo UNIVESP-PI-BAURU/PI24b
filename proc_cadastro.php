@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT); // Hash da senha
     $tipo_usuario = $_POST['tipo_usuario']; // Tipo de usuário selecionado: aluno ou tutor
+    $idiomas = $_POST['idioma']; // Idiomas informados (array)
 
     try {
         // Inicia a transação para garantir integridade dos dados
@@ -45,6 +46,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':senha', $senha);
         $stmt->bindParam(':tipo', $tipo_valor);
         $stmt->execute();
+
+        // Obtém o ID do usuário recém-criado
+        $user_id = $conn->lastInsertId();
+
+        // Insere os idiomas (se houver) no banco de dados
+        foreach ($idiomas as $idioma) {
+            $sql_idioma = "INSERT INTO $table (usuario_id, idioma) VALUES (:usuario_id, :idioma)";
+            $stmt_idioma = $conn->prepare($sql_idioma);
+            $stmt_idioma->bindParam(':usuario_id', $user_id);
+            $stmt_idioma->bindParam(':idioma', $idioma);
+            $stmt_idioma->execute();
+        }
 
         // Confirma a transação
         $conn->commit();
