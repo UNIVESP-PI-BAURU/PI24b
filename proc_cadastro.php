@@ -7,18 +7,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT);
     $tipo_usuario = $_POST['tipo_usuario'];
-    $idiomas = explode(',', $_POST['idiomas_list']);
+    $idioma = $_POST['idioma'];
 
     try {
         $conn->beginTransaction();
 
         if ($tipo_usuario === 'aluno') {
             $table = 'Alunos';
-            $idiomaTable = 'IdiomaAluno';
             $tipo_valor = 'aluno';
         } elseif ($tipo_usuario === 'tutor') {
             $table = 'Tutores';
-            $idiomaTable = 'IdiomaTutor';
             $tipo_valor = 'tutor';
         } else {
             throw new Exception("Tipo de usuário inválido.");
@@ -35,28 +33,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
 
-        $sql = "INSERT INTO $table (nome, email, senha, tipo, data_cadastro) 
-                VALUES (:nome, :email, :senha, :tipo, NOW())";
+        $sql = "INSERT INTO $table (nome, email, senha, tipo, idioma, data_cadastro) 
+                VALUES (:nome, :email, :senha, :tipo, :idioma, NOW())";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':nome', $nome);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':senha', $senha);
         $stmt->bindParam(':tipo', $tipo_valor);
+        $stmt->bindParam(':idioma', $idioma);
         $stmt->execute();
 
-        $user_id = $conn->lastInsertId();
-
-        $sqlIdioma = "INSERT INTO $idiomaTable (id_user, idioma) VALUES (:id_user, :idioma)";
-        $stmtIdioma = $conn->prepare($sqlIdioma);
-
-        foreach ($idiomas as $idioma) {
-            $stmtIdioma->bindParam(':id_user', $user_id);
-            $stmtIdioma->bindParam(':idioma', trim($idioma));
-            $stmtIdioma->execute();
-        }
-
         $conn->commit();
-
         header("Location: login.php?success=Cadastro realizado com sucesso!");
         exit();
 

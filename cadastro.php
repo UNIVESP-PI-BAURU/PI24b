@@ -8,13 +8,16 @@
 </head>
 <body>
 
+    <!-- Cabeçalho -->
     <header class="header">
         <img src="ASSETS/IMG/capa.png" alt="Capa do site">
     </header>
 
+    <!-- Navegação -->
     <nav class="navbar">
         <a href="./index.php">Home</a>
         <a href="./sobre_nos.php">Sobre nós</a>
+
         <?php
         session_start();
         if (isset($_SESSION['id'])): 
@@ -26,13 +29,16 @@
         <?php endif; ?>
     </nav>
 
+    <!-- Conteúdo Principal -->
     <main class="main-content">
         <section class="signup-section">
             <h1>Cadastro de Usuário</h1>
+
             <?php if (isset($_SESSION['error'])): ?>
                 <p style="color: red;"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></p>
             <?php endif; ?>
 
+            <!-- Formulário de Cadastro -->
             <form action="proc_cadastro.php" method="POST">
                 <label for="tipo_usuario">Tipo de Usuário:</label>
                 <select id="tipo_usuario" name="tipo_usuario" required>
@@ -53,15 +59,9 @@
                 <input type="password" id="senha" name="senha" required>
                 <br><br>
 
-                <!-- Campo Idioma -->
                 <label for="idioma">Idioma:</label>
-                <input type="text" id="idioma" name="idioma">
-                <button type="button" onclick="adicionarIdioma()">Adicionar Idioma</button>
+                <input type="text" id="idioma" name="idioma" required>
                 <br><br>
-
-                <!-- Lista de idiomas adicionados -->
-                <ul id="lista_idiomas"></ul>
-                <input type="hidden" id="idiomas_list" name="idiomas_list">
 
                 <button type="submit">Cadastrar</button>
             </form>
@@ -73,23 +73,5 @@
     <footer class="footer">
         UNIVESP PI 2024
     </footer>
-
-    <script>
-        function adicionarIdioma() {
-            var idioma = document.getElementById("idioma").value;
-            if (idioma) {
-                var listaIdiomas = document.getElementById("lista_idiomas");
-                var itemIdioma = document.createElement("li");
-                itemIdioma.textContent = idioma;
-                listaIdiomas.appendChild(itemIdioma);
-
-                var idiomasList = document.getElementById("idiomas_list").value;
-                document.getElementById("idiomas_list").value = idiomasList ? idiomasList + ',' + idioma : idioma;
-                
-                document.getElementById("idioma").value = ""; // Limpa o campo
-            }
-        }
-    </script>
-
 </body>
 </html>
