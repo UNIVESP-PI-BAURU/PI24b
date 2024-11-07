@@ -23,6 +23,10 @@
         <?php
         session_start(); // Inicia a sessão para verificar o login
 
+        // Debug: Exibir conteúdo da sessão
+        error_log("Conteúdo da sessão: " . print_r($_SESSION, true));
+
+        // Verifica se o usuário está logado
         if (isset($_SESSION['id_aluno']) || isset($_SESSION['id_tutor'])): ?>
             <!-- Usuário logado -->
             <a href="./logout.php">Logout</a>
@@ -69,6 +73,7 @@
         const slideCount = document.querySelectorAll('.slide').length;
         let currentIndex = 0;
 
+        // Função para mostrar o próximo slide
         function showNextSlide() {
             currentIndex = (currentIndex + 1) % slideCount;
             const offset = -currentIndex * 100;

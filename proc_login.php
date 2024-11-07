@@ -18,31 +18,41 @@ if ($tipo_usuario === 'aluno') {
 
 $stmt = $conn->prepare($query);
 $stmt->bindParam(':email', $email);
-$stmt->execute();
 
-// Verifique se encontrou o usuário
-if ($stmt->rowCount() > 0) {
-    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+// Verifica se a execução da consulta foi bem-sucedida
+if ($stmt->execute()) {
+    // Verifique se encontrou o usuário
+    if ($stmt->rowCount() > 0) {
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Verifica se a senha é válida
-    if (password_verify($senha, $usuario['senha'])) {
-        // Configura as variáveis de sessão
-        $_SESSION['id'] = $usuario['id']; // ID do usuário
-        $_SESSION['tipo'] = $tipo_usuario; // Tipo de usuário (aluno ou tutor)
+        // Verifica se a senha é válida
+        if (password_verify($senha, $usuario['senha'])) {
+            // Configura as variáveis de sessão
+            $_SESSION['id'] = $usuario['id']; // ID do usuário
+            $_SESSION['tipo'] = $tipo_usuario; // Tipo de usuário (aluno ou tutor)
 
-        // Redireciona para a página de dashboard
-        header("Location: dashboard.php");
-        exit(); // Evita que o código após isso seja executado
+            // Redireciona para a página de dashboard
+            header("Location: dashboard.php");
+            exit(); // Evita que o código após isso seja executado
+        } else {
+            // Senha incorreta
+            $_SESSION['login_error'] = 'Senha incorreta.';
+            header("Location: login.php");
+            exit();
+        }
     } else {
-        // Senha incorreta
-        $_SESSION['login_error'] = 'Senha incorreta.';
+        // Usuário não encontrado
+        $_SESSION['login_error'] = 'Email ou senha incorretos.';
         header("Location: login.php");
         exit();
     }
 } else {
-    // Usuário não encontrado
-    $_SESSION['login_error'] = 'Email ou senha incorretos.';
+    // Erro na execução da consulta
+    error_log("Erro ao executar consulta de login: " . $stmt->errorInfo()[2]);
+    $_SESSION['login_error'] = 'Erro ao processar a solicitação. Tente novamente.';
     header("Location: login.php");
     exit();
 }
+
+$conn = null;
 ?>

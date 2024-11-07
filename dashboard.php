@@ -3,6 +3,7 @@ session_start(); // Inicia a sessão
 
 // Verifica se o usuário está logado e redireciona para login se não estiver
 if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
+    $_SESSION['login_error'] = 'Você precisa estar logado para acessar essa página.'; // Mensagem de erro
     header("Location: login.php"); // Redireciona para login
     exit(); // Evita que o código continue
 }
@@ -10,8 +11,12 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
 require_once 'conexao.php'; // Inclui a conexão com o banco
 
 // Verifica a conexão com o banco de dados
-if (!$conn) {
-    die("Falha na conexão com o banco de dados.");
+try {
+    // Conexão PDO, caso necessário, adapte os parâmetros abaixo
+    $conn = new PDO($dsn, $username, $password, $options);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Erro de conexão: " . $e->getMessage()); // Exibe erro de conexão
 }
 
 // Define o tipo de usuário e busca os dados
@@ -22,12 +27,20 @@ $tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
 // Consulta os dados do usuário
 $sql = "SELECT nome, foto_perfil, cidade, estado FROM $tabela_usuario WHERE id = :id";
 $stmt = $conn->prepare($sql);
+
+// Verifica se a consulta foi preparada corretamente
+if (!$stmt) {
+    die("Erro ao preparar a consulta: " . implode(":", $conn->errorInfo()));
+}
+
 $stmt->bindParam(':id', $id_usuario);
 $stmt->execute();
+
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Se o usuário não for encontrado, redireciona para o login
 if (!$usuario) {
+    $_SESSION['login_error'] = 'Usuário não encontrado ou não autorizado.'; // Mensagem de erro de usuário não encontrado
     header("Location: login.php");
     exit();
 }
@@ -73,7 +86,7 @@ if (!$usuario) {
                     <?php if (!empty($usuario['foto_perfil'])): ?>
                         <img src="<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Avatar" class="avatar-dashboard">
                     <?php else: ?>
-                        <p>Não há foto</p>
+                        <img src="ASSETS/IMG/avatar_default.png" alt="Avatar Padrão" class="avatar-dashboard">
                     <?php endif; ?>
                 </div>
             </div>
@@ -84,8 +97,8 @@ if (!$usuario) {
                 <?php if (!empty($usuario['cidade']) || !empty($usuario['estado'])): ?>
                     <p>
                         <?php 
-                            echo htmlspecialchars($usuario['cidade']) ? htmlspecialchars($usuario['cidade']) . ', ' : ''; 
-                            echo htmlspecialchars($usuario['estado']) ? htmlspecialchars($usuario['estado']) : ''; 
+                            echo htmlspecialchars($usuario['cidade']) ? htmlspecialchars($usuario['cidade']) . ', ' : 'Localização não informada, ';
+                            echo htmlspecialchars($usuario['estado']) ? htmlspecialchars($usuario['estado']) : '';
                         ?>
                     </p>
                 <?php endif; ?>

@@ -26,7 +26,7 @@ $resultados = $_SESSION['resultados_pesquisa'];
 unset($_SESSION['resultados_pesquisa']);
 
 // Debug (remover em produção): Exibir resultados recebidos
-// error_log("Resultados recebidos: " . print_r($resultados, true));
+error_log("Resultados recebidos: " . print_r($resultados, true)); // Log dos resultados recebidos
 ?>
 
 <!DOCTYPE html>

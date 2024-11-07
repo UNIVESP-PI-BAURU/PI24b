@@ -35,6 +35,7 @@
         <section class="signup-section">
             <h1>Cadastro de Usuário</h1>
 
+            <!-- Debug: Exibição de mensagens de erro -->
             <?php if (isset($_SESSION['error'])): ?>
                 <p style="color: red;"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></p>
             <?php endif; ?>

@@ -8,6 +8,11 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
 
 // Inclui o processamento do perfil
 require_once 'proc_perfil.php';
+
+// Debug: Verifica se as variáveis da sessão estão corretamente definidas
+echo "ID do usuário: " . (isset($_SESSION['id']) ? $_SESSION['id'] : 'Não definido') . "<br>";  // Debug
+echo "Tipo do usuário: " . (isset($_SESSION['tipo']) ? $_SESSION['tipo'] : 'Não definido') . "<br>";  // Debug
+
 ?>
 
 <!DOCTYPE html>
