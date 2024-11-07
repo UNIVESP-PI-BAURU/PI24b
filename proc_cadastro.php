@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT);
     $tipo_usuario = $_POST['tipo_usuario'];
-    $idioma = $_POST['idioma'];
+    $idiomas = $_POST['idiomas'];
 
     try {
         $conn->beginTransaction();
@@ -26,24 +26,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt_check = $conn->prepare($check_email);
         $stmt_check->bindParam(':email', $email);
         $stmt_check->execute();
-        
+
         if ($stmt_check->rowCount() > 0) {
             $_SESSION['error'] = "Este e-mail já está registrado.";
             header("Location: cadastro.php");
             exit();
         }
 
-        $sql = "INSERT INTO $table (nome, email, senha, tipo, idioma, data_cadastro) 
-                VALUES (:nome, :email, :senha, :tipo, :idioma, NOW())";
+        $sql = "INSERT INTO $table (nome, email, senha, tipo, data_cadastro, idiomas) 
+                VALUES (:nome, :email, :senha, :tipo, NOW(), :idiomas)";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':nome', $nome);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':senha', $senha);
         $stmt->bindParam(':tipo', $tipo_valor);
-        $stmt->bindParam(':idioma', $idioma);
+        $stmt->bindParam(':idiomas', $idiomas);
         $stmt->execute();
 
         $conn->commit();
+
         header("Location: login.php?success=Cadastro realizado com sucesso!");
         exit();
 

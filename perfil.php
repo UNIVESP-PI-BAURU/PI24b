@@ -1,6 +1,7 @@
 <?php
 // Inicia a sessão e verifica login
-session_start();
+session_start(); // Manter apenas aqui, já que o proc_perfil.php já está com session_start()
+// Verifica se o usuário está logado
 if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
     header("Location: login.php");
     exit();
@@ -55,7 +56,7 @@ require_once 'proc_perfil.php';
             <p><strong>Email:</strong> <?php echo htmlspecialchars($usuario['email']); ?></p>
             <p><strong>Cidade/Estado:</strong> <?php echo htmlspecialchars($usuario['cidade']) . ', ' . htmlspecialchars($usuario['estado']); ?></p>
             <p><strong>Data de Nascimento:</strong> <?php echo !empty($usuario['data_nascimento']) ? htmlspecialchars($usuario['data_nascimento']) : 'Não informado'; ?></p>
-            <p><strong>Idiomas:</strong> <?php echo !empty($idiomas) ? implode(', ', $idiomas) : 'Não informado'; ?></p>
+            <p><strong>Idioma:</strong> <?php echo htmlspecialchars($usuario['idioma']) ? htmlspecialchars($usuario['idioma']) : 'Não informado'; ?></p>
             <p><strong>Biografia:</strong> <?php echo htmlspecialchars($usuario['biografia']); ?></p>
         </div>
 

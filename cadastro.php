@@ -20,7 +20,8 @@
 
         <?php
         session_start();
-        if (isset($_SESSION['id'])): 
+
+        if (isset($_SESSION['id'])):
             header("Location: dashboard.php");
             exit();
         else: ?>
@@ -59,8 +60,8 @@
                 <input type="password" id="senha" name="senha" required>
                 <br><br>
 
-                <label for="idioma">Idioma:</label>
-                <input type="text" id="idioma" name="idioma" required>
+                <label for="idiomas">Idioma:</label>
+                <input type="text" id="idiomas" name="idiomas" required>
                 <br><br>
 
                 <button type="submit">Cadastrar</button>
@@ -73,5 +74,6 @@
     <footer class="footer">
         UNIVESP PI 2024
     </footer>
+
 </body>
 </html>
