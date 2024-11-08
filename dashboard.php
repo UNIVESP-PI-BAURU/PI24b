@@ -77,6 +77,67 @@ if ($tipo_usuario === 'tutor') {
     $total_curtidas = 0;
 }
 
+// Defina a variável para aulas agendadas como array vazio por padrão
+$aulas_agendadas = [];
+
+// Consulta as aulas agendadas para o usuário
+$sql_aulas = "
+    SELECT A.id, A.data_hora, 
+           U.nome AS aluno_nome, 
+           T.nome AS tutor_nome 
+    FROM Aulas A
+    LEFT JOIN Alunos U ON A.id_aluno = U.id
+    LEFT JOIN Tutores T ON A.id_tutor = T.id
+    WHERE A.id_aluno = :id_usuario OR A.id_tutor = :id_usuario
+    ORDER BY A.data_hora DESC
+";
+$stmt_aulas = $conn->prepare($sql_aulas);
+$stmt_aulas->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
+$stmt_aulas->execute();
+$aulas_agendadas = $stmt_aulas->fetchAll(PDO::FETCH_ASSOC);
+
+// Pesquisa de Alunos ou Tutores
+if (isset($_GET['buscar'])) {
+    $termo_busca = trim($_GET['termo']); // Obtém o termo de pesquisa
+    $cidade = isset($_GET['cidade']) ? $_GET['cidade'] : '';
+    $estado = isset($_GET['estado']) ? $_GET['estado'] : '';
+    
+    // Filtragem baseada nos campos preenchidos
+    if ($tipo_usuario === 'aluno') {
+        // Pesquisa tutores
+        $sql_pesquisa = "SELECT id, nome, foto_perfil, cidade, estado FROM Tutores WHERE nome LIKE :termo";
+        if ($cidade) {
+            $sql_pesquisa .= " AND cidade LIKE :cidade";
+        }
+        if ($estado) {
+            $sql_pesquisa .= " AND estado LIKE :estado";
+        }
+    } elseif ($tipo_usuario === 'tutor') {
+        // Pesquisa alunos
+        $sql_pesquisa = "SELECT id, nome, foto_perfil, cidade, estado FROM Alunos WHERE nome LIKE :termo";
+        if ($cidade) {
+            $sql_pesquisa .= " AND cidade LIKE :cidade";
+        }
+        if ($estado) {
+            $sql_pesquisa .= " AND estado LIKE :estado";
+        }
+    }
+
+    // Prepara e executa a consulta de pesquisa
+    $stmt_pesquisa = $conn->prepare($sql_pesquisa);
+    $stmt_pesquisa->bindValue(':termo', '%' . $termo_busca . '%', PDO::PARAM_STR);
+
+    if ($cidade) {
+        $stmt_pesquisa->bindValue(':cidade', '%' . $cidade . '%', PDO::PARAM_STR);
+    }
+    if ($estado) {
+        $stmt_pesquisa->bindValue(':estado', '%' . $estado . '%', PDO::PARAM_STR);
+    }
+    $stmt_pesquisa->execute();
+
+    // Obtém os resultados
+    $resultados_pesquisa = $stmt_pesquisa->fetchAll(PDO::FETCH_ASSOC);
+}
 ?>
 
 <!DOCTYPE html>
@@ -96,16 +157,15 @@ if ($tipo_usuario === 'tutor') {
 
     <!-- Navegação -->
     <nav class="navbar">
-        <button onclick="window.location.href='index.php';">Home</button>
-        <button onclick="window.location.href='sobre_nos.php';">Sobre nós</button>
-        <button onclick="window.location.href='dashboard.php';">Dashboard</button>
-        <button onclick="window.location.href='logout.php';">Logout</button>
+        <a href="index.php">Home</a>
+        <a href="sobre_nos.php">Sobre nós</a>
+        <a href="dashboard.php">Dashboard</a> <!-- Alterado para uma única dashboard -->
+        <a href="logout.php">Logout</a>
     </nav>
-    <!-- Fim Navegação -->
 
     <!-- Conteúdo Principal -->
     <main class="main-content">
-        <section class="dashboard-section">
+    <section class="dashboard-section">
 
         <!-- Saudação -->
         <div class="signup-section">
@@ -113,73 +173,64 @@ if ($tipo_usuario === 'tutor') {
         </div>
         <!-- fim Saudação -->
 
-        <!-- Perfil -->
-        <div class="signup-section" style="display: flex; align-items: center; margin-bottom: 20px;">
-            <div style="flex: 1;">
-                <div class="foto-moldura-dashboard">
-                    <?php if (!empty($usuario['foto_perfil'])): ?>
-                        <img src="<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Avatar" class="avatar-dashboard">
-                    <?php else: ?>
-                        <p>Não há foto</p>
-                    <?php endif; ?>
-                </div>
-            </div>
-            <div style="flex: 2; padding-left: 10px;">
-                <p><?php echo ($tipo_usuario === "tutor" ? "Tutor(a): " : "Aluno(a): ") . htmlspecialchars($usuario['nome']); ?></p>
-                
-                <!-- Exibe cidade e estado, caso existam -->
-                <?php if (!empty($usuario['cidade']) || !empty($usuario['estado'])): ?>
-                    <p>
-                        <?php 
-                            echo htmlspecialchars($usuario['cidade']) ? htmlspecialchars($usuario['cidade']) . ', ' : ''; 
-                            echo htmlspecialchars($usuario['estado']) ? htmlspecialchars($usuario['estado']) : ''; 
-                        ?>
-                    </p>
-                <?php endif; ?>
-                
-                <!-- Atualize o botão para redirecionar com o ID do usuário -->
-                <button onclick="window.location.href='perfil.php?id=<?php echo $id_usuario; ?>';">Ver meu perfil</button>
-
-            </div>
-        </div>
-        <!-- fim Perfil -->
-
-        <!-- Exibe a quantidade de curtidas (somente para tutores) -->
-        <?php if ($tipo_usuario === 'tutor'): ?>
-            <section class="signup-section curtidas">
-                <h3>Você tem <?php echo $total_curtidas; ?> curtidas!</h3>
-            </section>
-        <?php endif; ?>
-
-        <!-- Aulas Agendadas -->
-        <section class="signup-section aulas-agendadas">
-            <h3>Aulas Agendadas</h3>
-            <ul>
-                <?php foreach ($aulas_agendadas as $aula): ?>
-                    <li>
-                        <p><strong><?php echo ($tipo_usuario === 'aluno') ? 'Tutor' : 'Aluno'; ?>:</strong> <?php echo ($tipo_usuario === 'aluno') ? htmlspecialchars($aula['tutor_nome']) : htmlspecialchars($aula['aluno_nome']); ?></p>
-                        <p><strong>Data e Hora:</strong> <?php echo htmlspecialchars($aula['data_hora']); ?></p>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
+        <!-- Perfil do Usuário -->
+        <section class="profile">
+            <h1>Bem-vindo, <?php echo htmlspecialchars($usuario['nome']); ?>!</h1>
+            <img src="uploads/<?php echo $usuario['foto_perfil']; ?>" alt="Foto do Perfil" class="profile-photo">
+            <p><strong>Localização:</strong> <?php echo htmlspecialchars($usuario['cidade'] . ', ' . $usuario['estado']); ?></p>
+            <p><strong>Tipo:</strong> <?php echo ucfirst($tipo_usuario); ?></p>
+            <?php if ($tipo_usuario === 'tutor'): ?>
+                <p><strong>Total de Curtidas:</strong> <?php echo $total_curtidas; ?></p>
+            <?php endif; ?>
         </section>
-        <!-- Fim Aulas Agendadas -->
 
-        <!-- Chat (Últimas 5 mensagens) -->
-        <section class="signup-section chat-mensagens">
-            <h3>Últimas Mensagens</h3>
+        <!-- Mensagens Recentes -->
+        <section class="messages">
+            <h2>Mensagens Recentes</h2>
             <ul>
                 <?php foreach ($mensagens as $mensagem): ?>
                     <li>
                         <p><strong><?php echo htmlspecialchars($mensagem['remetente_nome']); ?>:</strong> <?php echo htmlspecialchars($mensagem['mensagem']); ?></p>
-                        <p><small><?php echo htmlspecialchars($mensagem['data_envio']); ?></small></p>
+                        <small><?php echo $mensagem['data_envio']; ?></small>
                     </li>
                 <?php endforeach; ?>
             </ul>
         </section>
-        <!-- Fim Chat -->
 
+        <!-- Aulas Agendadas -->
+        <section class="appointments">
+            <h2>Aulas Agendadas</h2>
+            <ul>
+                <?php foreach ($aulas_agendadas as $aula): ?>
+                    <li>
+                        <p><strong><?php echo htmlspecialchars($aula['aluno_nome'] ?: $aula['tutor_nome']); ?> - Data: <?php echo $aula['data_hora']; ?></strong></p>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
         </section>
+
+        <!-- Pesquisa de Alunos ou Tutores -->
+        <section class="search">
+            <h2>Pesquisa</h2>
+            <form method="get">
+                <input type="text" name="termo" placeholder="Nome do <?php echo ($tipo_usuario === 'aluno') ? 'Tutor' : 'Aluno'; ?>" required>
+                <input type="text" name="cidade" placeholder="Cidade">
+                <input type="text" name="estado" placeholder="Estado">
+                <button type="submit" name="buscar">Buscar</button>
+            </form>
+
+            <?php if (isset($resultados_pesquisa)): ?>
+                <h3>Resultados da Pesquisa</h3>
+                <ul>
+                    <?php foreach ($resultados_pesquisa as $resultado): ?>
+                        <li>
+                            <p><?php echo htmlspecialchars($resultado['nome']); ?> - <?php echo htmlspecialchars($resultado['cidade'] . ', ' . $resultado['estado']); ?></p>
+                            <a href="about.php?id=<?php echo $resultado['id']; ?>">Ver Perfil</a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+            </section>
     </main>
     <!-- fim Conteúdo Principal -->
 
