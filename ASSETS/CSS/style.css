@@ -65,7 +65,7 @@ body {
 /* Main Content */
 .main-content {
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* Modificado para alinha melhor no layout */
     justify-content: center;
     width: 100%;
     max-width: 1200px;
@@ -79,22 +79,14 @@ body {
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 90%;
+    width: 100%;
     max-width: 400px;
     box-sizing: border-box;
     margin-top: 2rem;
 }
-.signup-section h2 {
+.signup-section h3 {
     text-align: center;
     margin-bottom: 1rem;
-}
-.signup-section input {
-    width: 100%;
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 16px;
 }
 
 /* Botões */
@@ -122,68 +114,25 @@ button:hover, .signup-button:hover, .custom-button:hover {
     margin-bottom: 1rem;
 }
 
-/* Carrossel */
-.carousel {
-    margin-top: 30px;
-    position: relative;
-    width: 100%;
-    max-width: 580px;
-    overflow: hidden;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-}
-.carousel .slides {
+/* Foto de Perfil */
+.foto-moldura-dashboard {
+    width: 80px;
+    height: 110px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
     display: flex;
-    transition: transform 1s ease;
-}
-.carousel .slide {
-    min-width: 100%;
-}
-.carousel img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-/* Rodapé */
-.footer {
-    display: flex;
+    align-items: center;
     justify-content: center;
-    background-color: #333;
-    color: white;
-    padding: 1rem;
-    width: 100%;
-    margin-top: auto;
+    background-color: #f9f9f9;
 }
 
-/* Formulário de Login */
-.login-form {
-    display: flex;
-    flex-direction: column;
-}
-.login-form input {
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 16px;
+.avatar-dashboard {
+    width: 60px;
+    height: 80px;
+    border-radius: 50%;
 }
 
-/* Área de Mensagens */
-.message-area {
-    width: 90%;
-    max-width: 400px;
-    margin-top: 1rem;
-}
-
-/* No perfil, a foto do avatar */
-.foto-perfil {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1rem;
-}
-
+/* Perfil Detalhado */
 .foto-moldura-perfil {
     width: 190px;
     height: 220px;
@@ -201,22 +150,15 @@ button:hover, .signup-button:hover, .custom-button:hover {
     border-radius: 50%;
 }
 
-/* No dashboard, o resumo do perfil */
-.foto-moldura-dashboard {
-    width: 80px;
-    height: 110px;
-    border: 2px solid #ccc;
-    border-radius: 10px;
+/* Rodapé */
+.footer {
     display: flex;
-    align-items: center;
     justify-content: center;
-    background-color: #f9f9f9;
-}
-
-.avatar-dashboard {
-    width: 60px;
-    height: 80px;
-    border-radius: 50%;
+    background-color: #333;
+    color: white;
+    padding: 1rem;
+    width: 100%;
+    margin-top: auto;
 }
 
 /* Pesquisa */
@@ -240,21 +182,10 @@ button:hover, .signup-button:hover, .custom-button:hover {
     border-radius: 50%;
 }
 
-/* Botões adicionais */
-button, .signup-button, .custom-button {
-    padding: 0.5rem 1rem;
-    background-color: #333;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
+/* Área de Mensagens */
+.message-area {
+    width: 90%;
+    max-width: 400px;
     margin-top: 1rem;
 }
 
-.custom-button:hover {
-    background-color: #575757;
-}
