@@ -2,7 +2,7 @@
 session_start(); // Inicia a sessão
 
 // Verifica se o usuário está logado e redireciona para login se não estiver
-if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
+if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
     header("Location: login.php"); // Redireciona para login
     exit(); // Evita que o código continue
 }
@@ -15,12 +15,13 @@ if (!$conn) {
 }
 
 // Define o tipo de usuário e busca os dados
-$tipo_usuario = $_SESSION['tipo']; // Pode ser 'aluno' ou 'tutor'
-$id_usuario = $_SESSION['id']; // ID comum para todos os tipos
+$tipo_usuario = $_SESSION['tipo_usuario']; // 'aluno' ou 'tutor'
+$id_usuario = $_SESSION['id_usuario']; // ID do usuário, seja aluno ou tutor
+
 $tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
 
 // Consulta os dados do usuário
-$sql = "SELECT nome, foto_perfil, cidade, estado FROM $tabela_usuario WHERE id = :id";
+$sql = "SELECT nome, foto_perfil, cidade, estado FROM $tabela_usuario WHERE id_" . ($tipo_usuario === 'aluno' ? 'aluno' : 'tutor') . " = :id";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':id', $id_usuario);
 $stmt->execute();
@@ -50,11 +51,12 @@ if (!$usuario) {
 
     <!-- Navegação -->
     <nav class="navbar">
-        <a href="index.php">Home</a>
-        <a href="sobre_nos.php">Sobre nós</a>
-        <a href="dashboard.php">Dashboard</a> <!-- Alterado para uma única dashboard -->
-        <a href="logout.php">Logout</a>
+        <button onclick="window.location.href='index.php';">Home</button>
+        <button onclick="window.location.href='sobre_nos.php';">Sobre nós</button>
+        <button onclick="window.location.href='dashboard.php';">Dashboard</button>
+        <button onclick="window.location.href='logout.php';">Logout</button>
     </nav>
+    <!-- Fim Navegação -->
 
     <!-- Conteúdo Principal -->
     <main class="main-content">
@@ -90,7 +92,7 @@ if (!$usuario) {
                     </p>
                 <?php endif; ?>
                 
-                <button onclick="window.location.href='./perfil.php'">Ver meu perfil</button>
+                <button onclick="window.location.href='./perfil.php';">Ver meu perfil</button>
             </div>
         </div>
         <!-- fim Perfil -->
@@ -99,14 +101,12 @@ if (!$usuario) {
         <div class="signup-section" style="margin-top: 20px;">
             <!-- Condicional para mostrar o texto correto -->
             <?php if ($tipo_usuario === 'aluno'): ?>
-                <a href="pesquisa.php" class="custom-button">Pesquisar Tutores</a>
+                <button onclick="window.location.href='pesquisa.php';" class="custom-button">Pesquisar Tutores</button>
             <?php elseif ($tipo_usuario === 'tutor'): ?>
-                <a href="pesquisa.php" class="custom-button">Pesquisar Alunos</a>
+                <button onclick="window.location.href='pesquisa.php';" class="custom-button">Pesquisar Alunos</button>
             <?php endif; ?>
         </div>
         <!-- Fim Pesquisa -->
-
-
 
         </section>
     </main>

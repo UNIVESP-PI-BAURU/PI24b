@@ -1,13 +1,72 @@
 <?php
+session_start(); // Inicia a sessão
 
-// Verifica se o usuário está logado
+// Verifica se o usuário está logado e redireciona para login se não estiver
 if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
+    header("Location: login.php"); // Redireciona para login
+    exit(); // Evita que o código continue
+}
+
+require_once 'conexao.php'; // Inclui a conexão com o banco
+
+// Verifica a conexão com o banco de dados
+if (!$conn) {
+    die("Falha na conexão com o banco de dados.");
+}
+
+// Define o tipo de usuário e busca os dados
+$tipo_usuario = $_SESSION['tipo']; // Pode ser 'aluno' ou 'tutor'
+$id_usuario = $_SESSION['id']; // ID comum para todos os tipos
+$tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
+
+// Consulta os dados do usuário
+$sql = "SELECT nome, foto_perfil, cidade, estado, biografia, idiomas FROM $tabela_usuario WHERE id = :id";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':id', $id_usuario);
+$stmt->execute();
+$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Se o usuário não for encontrado, redireciona para o login
+if (!$usuario) {
     header("Location: login.php");
     exit();
 }
 
-// Inclui o processamento do perfil
-require_once 'proc_perfil.php';
+// Processa a atualização do perfil
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Coleta os dados do formulário
+    $nome = $_POST['nome'];
+    $biografia = $_POST['biografia'];
+    $idiomas = $_POST['idiomas'];
+    $cidade = $_POST['cidade'];
+    $estado = $_POST['estado'];
+
+    // Se houver uma nova foto, trata o upload
+    if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] == 0) {
+        $foto_perfil = 'uploads/' . basename($_FILES['foto_perfil']['name']);
+        move_uploaded_file($_FILES['foto_perfil']['tmp_name'], $foto_perfil);
+    } else {
+        $foto_perfil = $usuario['foto_perfil']; // Mantém a foto antiga, se não houver upload
+    }
+
+    // Atualiza os dados no banco
+    $sql_update = "UPDATE $tabela_usuario SET nome = :nome, biografia = :biografia, idiomas = :idiomas, cidade = :cidade, estado = :estado, foto_perfil = :foto_perfil WHERE id = :id";
+    $stmt_update = $conn->prepare($sql_update);
+    $stmt_update->bindParam(':nome', $nome);
+    $stmt_update->bindParam(':biografia', $biografia);
+    $stmt_update->bindParam(':idiomas', $idiomas);
+    $stmt_update->bindParam(':cidade', $cidade);
+    $stmt_update->bindParam(':estado', $estado);
+    $stmt_update->bindParam(':foto_perfil', $foto_perfil);
+    $stmt_update->bindParam(':id', $id_usuario);
+
+    if ($stmt_update->execute()) {
+        header("Location: perfil.php"); // Redireciona para a página de perfil após atualização
+        exit();
+    } else {
+        echo "Erro ao atualizar os dados.";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -15,63 +74,65 @@ require_once 'proc_perfil.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil</title>
-    <link rel="stylesheet" href="../ASSETS/CSS/style.css">
+    <title>Perfil Completo</title>
+    <link rel="stylesheet" href="ASSETS/CSS/style.css">
 </head>
 <body>
 
-<!-- Cabeçalho -->
-<header class="header">
-    <img src="../ASSETS/IMG/capa.png" alt="Capa do Site">
-</header>
+    <!-- Cabeçalho -->
+    <header class="header">
+        <img src="ASSETS/IMG/capa.png" alt="Capa do site">
+    </header>
 
-<!-- Navegação -->
-<nav class="navbar">
-    <a href="../index.php">Home</a>
-    <a href="../sobre_nos.php">Sobre nós</a>
-    <?php if (isset($_SESSION['id'])): ?>
-        <a href="../logout.php">Logout</a>
-    <?php else: ?>
-        <a href="../login.php">Login</a>
-    <?php endif; ?>
-</nav>
+    <!-- Navegação -->
+    <nav class="navbar">
+        <button onclick="window.location.href='index.php';">Home</button>
+        <button onclick="window.location.href='sobre_nos.php';">Sobre nós</button>
+        <button onclick="window.location.href='dashboard.php';">Dashboard</button>
+        <button onclick="window.location.href='logout.php';">Logout</button>
+    </nav>
 
-<!-- Conteúdo Principal -->
-<main class="main-content">
-    <div class="signup-section">
-        <h2>Perfil de <?php echo ($tipo_usuario === 'tutor' ? "Tutor(a)" : "Aluno(a)"); ?>: <?php echo htmlspecialchars($usuario['nome']); ?></h2>
+    <!-- Conteúdo Principal -->
+    <main class="main-content">
+        <section class="perfil-section">
+            <h2>Perfil Completo</h2>
 
-        <div class="foto-perfil">
-            <div class="foto-moldura-perfil">
-                <?php if (!empty($usuario['foto_perfil'])): ?>
-                    <img src="../uploads/fotos_perfil/<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Avatar" class="avatar-perfil">
-                <?php else: ?>
-                    <p>Sem foto</p>
-                <?php endif; ?>
+            <!-- Exibição dos dados -->
+            <div class="perfil-info">
+                <img src="<?php echo htmlspecialchars($usuario['foto_perfil']) ?>" alt="Foto de perfil" class="foto-perfil">
+                <p><strong>Nome:</strong> <?php echo htmlspecialchars($usuario['nome']); ?></p>
+                <p><strong>Biografia:</strong> <?php echo nl2br(htmlspecialchars($usuario['biografia'])); ?></p>
+                <p><strong>Idiomas:</strong> <?php echo htmlspecialchars($usuario['idiomas']); ?></p>
+                <p><strong>Cidade:</strong> <?php echo htmlspecialchars($usuario['cidade']); ?></p>
+                <p><strong>Estado:</strong> <?php echo htmlspecialchars($usuario['estado']); ?></p>
             </div>
-        </div>
 
-        <div class="info-usuario">
-            <p><strong>Email:</strong> <?php echo htmlspecialchars($usuario['email']); ?></p>
-            <p><strong>Cidade/Estado:</strong> <?php echo htmlspecialchars($usuario['cidade']) . ', ' . htmlspecialchars($usuario['estado']); ?></p>
-            <p><strong>Data de Nascimento:</strong> <?php echo !empty($usuario['data_nascimento']) ? htmlspecialchars($usuario['data_nascimento']) : 'Não informado'; ?></p>
-            <p><strong>Idioma:</strong> <?php echo htmlspecialchars($usuario['idioma']) ? htmlspecialchars($usuario['idioma']) : 'Não informado'; ?></p>
-            <p><strong>Biografia:</strong> <?php echo htmlspecialchars($usuario['biografia']); ?></p>
-        </div>
+            <!-- Formulário de edição -->
+            <h3>Editar Perfil</h3>
+            <form method="POST" enctype="multipart/form-data">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($usuario['nome']); ?>" required>
 
-        <div class="actions">
-            <button onclick="window.location.href='editar_perfil.php'">Editar Perfil</button>
-            <button onclick="if(confirm('Você tem certeza que deseja excluir sua conta?')) { window.location.href='excluir_conta.php'; }">Excluir Conta</button>
-        </div>
+                <label for="biografia">Biografia:</label>
+                <textarea id="biografia" name="biografia" required><?php echo htmlspecialchars($usuario['biografia']); ?></textarea>
 
-        <button onclick="window.location.href='./dashboard.php'">Voltar para Dashboard</button>
-    </div>
-</main>
+                <label for="idiomas">Idiomas:</label>
+                <input type="text" id="idiomas" name="idiomas" value="<?php echo htmlspecialchars($usuario['idiomas']); ?>" required>
 
-<!-- Rodapé -->
-<footer class="footer">
-    <p>UNIVESP PI 2024</p>
-</footer>
+                <label for="cidade">Cidade:</label>
+                <input type="text" id="cidade" name="cidade" value="<?php echo htmlspecialchars($usuario['cidade']); ?>" required>
 
-</body>
-</html>
+                <label for="estado">Estado:</label>
+                <input type="text" id="estado" name="estado" value="<?php echo htmlspecialchars($usuario['estado']); ?>" required>
+
+                <label for="foto_perfil">Foto de Perfil:</label>
+                <input type="file" id="foto_perfil" name="foto_perfil">
+
+                <button type="submit">Salvar Alterações</button>
+            </form>
+        </section>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        UNIVESP PI 2024

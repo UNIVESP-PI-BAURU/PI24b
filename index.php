@@ -17,29 +17,30 @@
 
     <!-- Navegação -->
     <nav class="navbar">
-        <a href="./index.php">Home</a>
-        <a href="./sobre_nos.php">Sobre nós</a>
+        <button onclick="window.location.href='./index.php';">Home</button>
+        <button onclick="window.location.href='./sobre_nos.php';">Sobre nós</button>
 
         <?php
         session_start(); // Inicia a sessão para verificar o login
 
-        if (isset($_SESSION['id_aluno']) || isset($_SESSION['id_tutor'])): ?>
+        // Verifica se o usuário está logado como aluno ou tutor
+        if (isset($_SESSION['id_usuario']) && isset($_SESSION['tipo_usuario'])): ?>
             <!-- Usuário logado -->
-            <a href="./logout.php">Logout</a>
+            <button onclick="window.location.href='./logout.php';">Logout</button>
         <?php else: ?>
             <!-- Usuário não logado -->
-            <a href="./login.php">Login</a>
-            <a href="./cadastro.php">Cadastro</a>
+            <button onclick="window.location.href='./login.php';">Login</button>
+            <button onclick="window.location.href='./cadastro.php';">Cadastro</button>
         <?php endif; ?>
     </nav>
-    <!-- fim Navegação -->
+    <!-- Fim Navegação -->
 
     <!-- Conteúdo Principal -->
     <main class="main-content">
         <section class="welcome-text">
             <h1>Bem-vindo à Conectando Interesses!</h1>
             <p>Aqui você encontra tudo para impulsionar seus estudos em línguas estrangeiras. Vai ficar fora dessa?</p>
-            <a href="./cadastro.php" class="signup-button">Cadastre-se já!</a>
+            <button onclick="window.location.href='./cadastro.php';" class="signup-button">Cadastre-se já!</button>
         </section>
 
         <section class="carousel">

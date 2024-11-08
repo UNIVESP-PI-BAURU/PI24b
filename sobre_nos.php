@@ -17,7 +17,18 @@
 
     <!-- Navegação -->
     <nav class="navbar">
-        <a href="./index.php">Home</a>
+        <button onclick="window.location.href='./index.php';">Home</button>
+        <?php
+        // Inicia a sessão para verificar o login
+        session_start();
+        
+        // Verifica se o usuário está logado como aluno ou tutor
+        if (isset($_SESSION['id_usuario']) && isset($_SESSION['tipo_usuario'])): ?>
+            <button onclick="window.location.href='./logout.php';">Logout</button>
+        <?php else: ?>
+            <button onclick="window.location.href='./login.php';">Login</button>
+            <button onclick="window.location.href='./cadastro.php';">Cadastro</button>
+        <?php endif; ?>
     </nav>
     <!-- Fim Navegação -->
 

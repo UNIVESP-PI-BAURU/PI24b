@@ -49,13 +49,15 @@ body {
     padding: 1rem;
     width: 100%;
 }
-.navbar a {
+.navbar button {
     color: white;
-    text-decoration: none;
     padding: 14px 20px;
     display: block;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
 }
-.navbar a:hover {
+.navbar button:hover {
     background-color: #575757;
     border-radius: 4px;
 }
@@ -96,7 +98,7 @@ body {
 }
 
 /* Botões */
-button, .signup-button {
+button, .signup-button, .custom-button {
     padding: 0.5rem 1rem;
     background-color: #333;
     color: white;
@@ -109,7 +111,7 @@ button, .signup-button {
     display: inline-block;
     margin-top: 1rem;
 }
-button:hover, .signup-button:hover {
+button:hover, .signup-button:hover, .custom-button:hover {
     background-color: #575757;
 }
 
@@ -167,22 +169,6 @@ button:hover, .signup-button:hover {
     border: 1px solid #ccc;
     font-size: 16px;
 }
-.user-type {
-    display: flex; /* Alinha os itens em linha */
-    justify-content: space-around; /* Espaço igual entre os botões */
-    margin-bottom: 1rem; /* Espaço abaixo do grupo de botões */
-}
-
-.user-type div {
-    display: flex; /* Faz os inputs e labels ficarem em linha */
-    flex-direction: column; /* Coloca a legenda acima do botão */
-    align-items: center; /* Centraliza os itens dentro de cada coluna */
-}
-
-.user-type input[type="radio"] {
-    margin: 0; /* Remove margens padrão */
-}
-
 
 /* Área de Mensagens */
 .message-area {
@@ -191,48 +177,84 @@ button:hover, .signup-button:hover {
     margin-top: 1rem;
 }
 
-
 /* No perfil, a foto do avatar */
 .foto-perfil {
     display: flex;
-    justify-content: center; /* Centraliza a moldura na div */
-    margin-bottom: 1rem; /* Espaçamento abaixo da foto do perfil */
+    justify-content: center;
+    margin-bottom: 1rem;
 }
 
 .foto-moldura-perfil {
-    width: 190px; /* Largura da moldura */
-    height: 220px; /* Altura da moldura */
-    border: 2px solid #ccc; /* Borda da moldura */
-    border-radius: 10px; /* Bordas arredondadas */
+    width: 190px;
+    height: 220px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
     display: flex;
-    align-items: center; /* Centraliza verticalmente o conteúdo */
-    justify-content: center; /* Centraliza horizontalmente o conteúdo */
-    background-color: #f9f9f9; /* Cor de fundo para a moldura */
+    align-items: center;
+    justify-content: center;
+    background-color: #f9f9f9;
 }
 
 .avatar-perfil {
-    width: 150px; /* Largura da imagem */
-    height: 150px; /* Altura da imagem */
-    border-radius: 50%; /* Bordas arredondadas da imagem */
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
 }
-
-
 
 /* No dashboard, o resumo do perfil */
 .foto-moldura-dashboard {
-    width: 80px; /* Largura da moldura */
-    height: 110px; /* Altura da moldura */
-    border: 2px solid #ccc; /* Borda da moldura */
-    border-radius: 10px; /* Bordas arredondadas */
+    width: 80px;
+    height: 110px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
     display: flex;
-    align-items: center; /* Centraliza verticalmente o conteúdo */
-    justify-content: center; /* Centraliza horizontalmente o conteúdo */
-    background-color: #f9f9f9; /* Cor de fundo para a moldura */
+    align-items: center;
+    justify-content: center;
+    background-color: #f9f9f9;
 }
 
 .avatar-dashboard {
-    width: 60px; /* Largura da imagem do avatar */
-    height: 80px; /* Altura da imagem do avatar */
-    border-radius: 50%; /* Bordas arredondadas da imagem */
+    width: 60px;
+    height: 80px;
+    border-radius: 50%;
 }
 
+/* Pesquisa */
+.resultados-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.resultado-item {
+    border: 1px solid #ddd;
+    padding: 15px;
+    width: 250px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.avatar-resultado {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+/* Botões adicionais */
+button, .signup-button, .custom-button {
+    padding: 0.5rem 1rem;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 1rem;
+}
+
+.custom-button:hover {
+    background-color: #575757;
+}

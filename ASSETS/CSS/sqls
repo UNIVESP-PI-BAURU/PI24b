@@ -118,3 +118,98 @@ CREATE TABLE Tutores (
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     tipo ENUM('tutor') DEFAULT 'tutor'  -- Tipo fixo para Tutores
 );
+
+
+
+--------------------------
+
+
+CREATE TABLE Alunos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL,
+    nome VARCHAR(255) NOT NULL,
+    cidade VARCHAR(100),
+    estado VARCHAR(100),
+    data_nascimento DATE,
+    biografia TEXT,
+    foto_perfil VARCHAR(255),
+    idiomas TEXT,
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE Tutores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL,
+    nome VARCHAR(255) NOT NULL,
+    cidade VARCHAR(100),
+    estado VARCHAR(100),
+    data_nascimento DATE,
+    biografia TEXT,
+    foto_perfil VARCHAR(255),
+    idiomas TEXT,
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE Mensagens (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_remetente INT NOT NULL,
+    id_destinatario INT NOT NULL,
+    mensagem TEXT NOT NULL,
+    data_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_remetente) REFERENCES Alunos(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_destinatario) REFERENCES Tutores(id) ON DELETE CASCADE
+);
+
+
+
+CREATE TABLE agendamentos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_aluno INT NOT NULL,
+    id_tutor INT NOT NULL,
+    data_aula DATETIME NOT NULL,
+    status ENUM('Pendente', 'Confirmada', 'Cancelada') NOT NULL DEFAULT 'Pendente',
+    FOREIGN KEY (id_aluno) REFERENCES Alunos(id),
+    FOREIGN KEY (id_tutor) REFERENCES Tutores(id)
+);
+
+
+
+
+CREATE TABLE Curtidas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_aluno INT NOT NULL,
+    id_tutor INT NOT NULL,
+    data_curtida TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_aluno) REFERENCES Alunos(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_tutor) REFERENCES Tutores(id) ON DELETE CASCADE
+);
+
+
+
+CREATE TABLE Logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    tipo_usuario ENUM('aluno', 'tutor') NOT NULL,
+    acao VARCHAR(255) NOT NULL,
+    data_acao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES Alunos(id) ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+
+
+CREATE TABLE disponibilidade_tutores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_tutor INT NOT NULL,
+    dia_semana ENUM('Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo') NOT NULL,
+    hora_inicio TIME NOT NULL,
+    hora_fim TIME NOT NULL,
+    FOREIGN KEY (id_tutor) REFERENCES Tutores(id)
+);
+
+
+
