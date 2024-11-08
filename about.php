@@ -48,6 +48,23 @@ if (!$perfil_usuario) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil de <?php echo htmlspecialchars($perfil_usuario['nome']); ?></title>
     <link rel="stylesheet" href="ASSETS/CSS/style.css">
+    <script>
+        function curtirPerfil(id_perfil) {
+            fetch('curtir.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id_perfil })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.sucesso) {
+                    alert("Você curtiu este perfil!");
+                } else {
+                    alert("Erro ao curtir perfil.");
+                }
+            });
+        }
+    </script>
 </head>
 <body>
 
@@ -87,8 +104,8 @@ if (!$perfil_usuario) {
                 <button onclick="window.location.href='agendar.php?id=<?php echo $perfil_usuario['id']; ?>'">Contratar/Agendar Aula</button>
 
                 <?php if ($tipo_usuario_logado === 'aluno'): ?>
-                    <!-- Botão de curtir, implementável posteriormente -->
-                    <button>Curtir</button>
+                    <!-- Botão de curtir, agora com função AJAX -->
+                    <button onclick="curtirPerfil(<?php echo $perfil_usuario['id']; ?>)">Curtir</button>
                 <?php endif; ?>
             </div>
         </section>
