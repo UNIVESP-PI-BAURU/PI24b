@@ -2,7 +2,7 @@
 session_start(); // Inicia a sessão
 
 // Verifica se o usuário está logado e redireciona para login se não estiver
-if (!isset($_SESSION['id']) || !isset($_SESSION['tipo'])) {
+if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
     header("Location: login.php"); // Redireciona para login
     exit(); // Evita que o código continue
 }
@@ -15,8 +15,8 @@ if (!$conn) {
 }
 
 // Define o tipo de usuário e busca os dados
-$tipo_usuario = $_SESSION['tipo']; // Pode ser 'aluno' ou 'tutor'
-$id_usuario = $_SESSION['id']; // ID comum para todos os tipos
+$tipo_usuario = $_SESSION['tipo_usuario']; // Pode ser 'aluno' ou 'tutor'
+$id_usuario = $_SESSION['id_usuario']; // ID comum para todos os tipos
 $tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
 
 // Exibindo dados de depuração

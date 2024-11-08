@@ -101,7 +101,9 @@ if (!$usuario) {
                     </p>
                 <?php endif; ?>
                 
-                <button onclick="window.location.href='./perfil.php';">Ver meu perfil</button>
+                <!-- Atualize o botão para redirecionar com o ID do usuário -->
+                <button onclick="window.location.href='perfil.php?id=<?php echo $id_usuario; ?>';">Ver meu perfil</button>
+
             </div>
         </div>
         <!-- fim Perfil -->
