@@ -41,6 +41,26 @@ if (!$usuario) {
     header("Location: login.php");
     exit();
 }
+
+// Aulas Agendadas
+$aulas_agendadas = [];
+if ($tipo_usuario === 'aluno') {
+    $sql_aulas = "SELECT A.id, A.data_hora, T.nome AS tutor_nome FROM Aulas A JOIN Tutores T ON A.id_tutor = T.id WHERE A.id_aluno = :id_aluno ORDER BY A.data_hora DESC";
+    $stmt_aulas = $conn->prepare($sql_aulas);
+    $stmt_aulas->bindParam(':id_aluno', $id_usuario, PDO::PARAM_INT);
+    $stmt_aulas->execute();
+    $aulas_agendadas = $stmt_aulas->fetchAll(PDO::FETCH_ASSOC);
+} elseif ($tipo_usuario === 'tutor') {
+    $sql_aulas = "SELECT A.id, A.data_hora, U.nome AS aluno_nome FROM Aulas A JOIN Alunos U ON A.id_aluno = U.id WHERE A.id_tutor = :id_tutor ORDER BY A.data_hora DESC";
+    $stmt_aulas = $conn->prepare($sql_aulas);
+    $stmt_aulas->bindParam(':id_tutor', $id_usuario, PDO::PARAM_INT);
+    $stmt_aulas->execute();
+    $aulas_agendadas = $stmt_aulas->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Exibindo dados de depuração das aulas
+echo "<!-- Debugging - Aulas Agendadas -->";
+var_dump($aulas_agendadas); // Verificando as aulas retornadas
 ?>
 
 <!DOCTYPE html>
@@ -108,16 +128,19 @@ if (!$usuario) {
         </div>
         <!-- fim Perfil -->
 
-        <!-- Pesquisa -->
-        <div class="signup-section" style="margin-top: 20px;">
-            <!-- Condicional para mostrar o texto correto -->
-            <?php if ($tipo_usuario === 'aluno'): ?>
-                <button onclick="window.location.href='pesquisa.php';" class="custom-button">Pesquisar Tutores</button>
-            <?php elseif ($tipo_usuario === 'tutor'): ?>
-                <button onclick="window.location.href='pesquisa.php';" class="custom-button">Pesquisar Alunos</button>
-            <?php endif; ?>
-        </div>
-        <!-- Fim Pesquisa -->
+        <!-- Aulas Agendadas -->
+        <section class="signup-section aulas-agendadas">
+            <h3>Aulas Agendadas</h3>
+            <ul>
+                <?php foreach ($aulas_agendadas as $aula): ?>
+                    <li>
+                        <p><strong><?php echo ($tipo_usuario === 'aluno') ? 'Tutor' : 'Aluno'; ?>:</strong> <?php echo ($tipo_usuario === 'aluno') ? htmlspecialchars($aula['tutor_nome']) : htmlspecialchars($aula['aluno_nome']); ?></p>
+                        <p><strong>Data e Hora:</strong> <?php echo htmlspecialchars($aula['data_hora']); ?></p>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </section>
+        <!-- Fim Aulas Agendadas -->
 
         </section>
     </main>
