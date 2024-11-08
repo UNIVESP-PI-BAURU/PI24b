@@ -60,6 +60,23 @@ if (!$usuario) {
     header("Location: login.php");
     exit();
 }
+
+// Se o usuário for tutor, consulta a quantidade de curtidas recebidas
+if ($tipo_usuario === 'tutor') {
+    $sql_curtidas = "
+        SELECT COUNT(*) AS total_curtidas 
+        FROM Curtidas 
+        WHERE id_tutor = :id_usuario
+    ";
+    $stmt_curtidas = $conn->prepare($sql_curtidas);
+    $stmt_curtidas->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
+    $stmt_curtidas->execute();
+    $curtidas = $stmt_curtidas->fetch(PDO::FETCH_ASSOC);
+    $total_curtidas = $curtidas['total_curtidas'];
+} else {
+    $total_curtidas = 0;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -126,6 +143,13 @@ if (!$usuario) {
             </div>
         </div>
         <!-- fim Perfil -->
+
+        <!-- Exibe a quantidade de curtidas (somente para tutores) -->
+        <?php if ($tipo_usuario === 'tutor'): ?>
+            <section class="signup-section curtidas">
+                <h3>Você tem <?php echo $total_curtidas; ?> curtidas!</h3>
+            </section>
+        <?php endif; ?>
 
         <!-- Aulas Agendadas -->
         <section class="signup-section aulas-agendadas">
