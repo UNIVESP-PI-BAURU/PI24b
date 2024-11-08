@@ -21,9 +21,21 @@
         <?php
         // Inicia a sessão para verificar o login
         session_start();
-        
+
+        // Debug: Verificando os dados de sessão
+        echo "<!-- Debugging Sessão -->";
+        echo "<!-- id_usuario: " . (isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : 'não definido') . " -->";
+        echo "<!-- tipo_usuario: " . (isset($_SESSION['tipo_usuario']) ? $_SESSION['tipo_usuario'] : 'não definido') . " -->";
+
         // Verifica se o usuário está logado como aluno ou tutor
-        if (isset($_SESSION['id_usuario']) && isset($_SESSION['tipo_usuario'])): ?>
+        if (isset($_SESSION['id_usuario']) && isset($_SESSION['tipo_usuario'])):
+            // Verificação de tipo de usuário (aluno ou tutor)
+            if ($_SESSION['tipo_usuario'] == 'aluno'):
+                echo "<!-- O usuário é um aluno -->";
+            elseif ($_SESSION['tipo_usuario'] == 'tutor'):
+                echo "<!-- O usuário é um tutor -->";
+            endif;
+            ?>
             <button onclick="window.location.href='./logout.php';">Logout</button>
         <?php else: ?>
             <button onclick="window.location.href='./login.php';">Login</button>

@@ -124,6 +124,7 @@ CREATE TABLE Tutores (
 --------------------------
 
 
+-- Tabela de Alunos
 CREATE TABLE Alunos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
@@ -138,7 +139,7 @@ CREATE TABLE Alunos (
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
+-- Tabela de Tutores
 CREATE TABLE Tutores (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
@@ -153,7 +154,7 @@ CREATE TABLE Tutores (
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
+-- Tabela de Mensagens
 CREATE TABLE Mensagens (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_remetente INT NOT NULL,
@@ -164,9 +165,8 @@ CREATE TABLE Mensagens (
     FOREIGN KEY (id_destinatario) REFERENCES Tutores(id) ON DELETE CASCADE
 );
 
-
-
-CREATE TABLE agendamentos (
+-- Tabela de Agendamentos (Utilizando id_aluno e id_tutor)
+CREATE TABLE Agendamentos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_aluno INT NOT NULL,
     id_tutor INT NOT NULL,
@@ -176,9 +176,7 @@ CREATE TABLE agendamentos (
     FOREIGN KEY (id_tutor) REFERENCES Tutores(id)
 );
 
-
-
-
+-- Tabela de Curtidas (Relaciona Alunos e Tutores)
 CREATE TABLE Curtidas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_aluno INT NOT NULL,
@@ -188,8 +186,7 @@ CREATE TABLE Curtidas (
     FOREIGN KEY (id_tutor) REFERENCES Tutores(id) ON DELETE CASCADE
 );
 
-
-
+-- Tabela de Logs (Relacionado a ações de Alunos e Tutores)
 CREATE TABLE Logs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT NOT NULL,
@@ -200,9 +197,8 @@ CREATE TABLE Logs (
         ON UPDATE CASCADE
 );
 
-
-
-CREATE TABLE disponibilidade_tutores (
+-- Tabela de Disponibilidade de Tutores
+CREATE TABLE Disponibilidade_Tutores (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_tutor INT NOT NULL,
     dia_semana ENUM('Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo') NOT NULL,
@@ -210,6 +206,10 @@ CREATE TABLE disponibilidade_tutores (
     hora_fim TIME NOT NULL,
     FOREIGN KEY (id_tutor) REFERENCES Tutores(id)
 );
+
+
+
+------------------------------------------------------------------
 
 
 

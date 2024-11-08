@@ -7,9 +7,9 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
     exit();
 }
 
-require_once 'conexao.php';
+require_once 'conexao.php'; // Conexão com o banco de dados
 
-// Define o tipo de usuário logado
+// Define o tipo de usuário logado (aluno ou tutor)
 $tipo_usuario = $_SESSION['tipo_usuario'];
 
 // Define a tabela de pesquisa (alunos pesquisam tutores e tutores pesquisam alunos)
@@ -24,6 +24,7 @@ $estado = isset($_GET['estado']) ? $_GET['estado'] : null;
 $query = "SELECT id, nome, cidade, estado, idiomas, foto_perfil FROM $tabela_pesquisa WHERE 1=1";
 $params = [];
 
+// Adiciona os parâmetros de busca
 if ($idioma) {
     $query .= " AND idiomas LIKE :idioma";
     $params[':idioma'] = '%' . $idioma . '%';

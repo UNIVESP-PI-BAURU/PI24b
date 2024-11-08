@@ -19,12 +19,18 @@ $tipo_usuario = $_SESSION['tipo']; // Pode ser 'aluno' ou 'tutor'
 $id_usuario = $_SESSION['id']; // ID comum para todos os tipos
 $tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
 
+// Exibindo dados de depuração
+var_dump($tipo_usuario, $id_usuario); // Verificando as variáveis de sessão
+
 // Consulta os dados do usuário
 $sql = "SELECT nome, foto_perfil, cidade, estado, biografia, idiomas FROM $tabela_usuario WHERE id = :id";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':id', $id_usuario);
 $stmt->execute();
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Exibindo dados do usuário para depuração
+var_dump($usuario); // Verificando os dados retornados
 
 // Se o usuário não for encontrado, redireciona para o login
 if (!$usuario) {
@@ -136,3 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- Rodapé -->
     <footer class="footer">
         UNIVESP PI 2024
+    </footer>
+
+</body>
+</html>

@@ -18,14 +18,23 @@ if (!$conn) {
 $tipo_usuario = $_SESSION['tipo_usuario']; // 'aluno' ou 'tutor'
 $id_usuario = $_SESSION['id_usuario']; // ID do usuário, seja aluno ou tutor
 
+// Exibindo dados de depuração
+echo "<!-- Debugging - Tipo de Usuário e ID do Usuário -->";
+var_dump($tipo_usuario, $id_usuario); // Verificando as variáveis de sessão
+
+// Define a tabela de usuários com base no tipo de usuário (aluno ou tutor)
 $tabela_usuario = ($tipo_usuario === 'aluno') ? 'Alunos' : 'Tutores';
 
 // Consulta os dados do usuário
-$sql = "SELECT nome, foto_perfil, cidade, estado FROM $tabela_usuario WHERE id_" . ($tipo_usuario === 'aluno' ? 'aluno' : 'tutor') . " = :id";
+$sql = "SELECT nome, foto_perfil, cidade, estado FROM $tabela_usuario WHERE id = :id"; // Alterado para 'id' comum
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':id', $id_usuario);
 $stmt->execute();
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Exibindo dados do usuário para depuração
+echo "<!-- Debugging - Dados do Usuário Encontrado -->";
+var_dump($usuario);  // Verificando os dados retornados
 
 // Se o usuário não for encontrado, redireciona para o login
 if (!$usuario) {

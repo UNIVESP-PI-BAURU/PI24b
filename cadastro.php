@@ -1,6 +1,10 @@
 <?php
+// Ativar exibição de erros para debug
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 // Conexão com o banco de dados
-require_once 'conexao.php'; // Asegure-se que o arquivo de conexão com o banco de dados esteja correto
+require_once 'conexao.php'; // Certifique-se de que o arquivo de conexão com o banco de dados esteja correto
 
 // Inicialização da sessão
 session_start();
@@ -13,40 +17,51 @@ if (isset($_SESSION['id_usuario']) && isset($_SESSION['tipo_usuario'])) {
 
 // Processamento do cadastro
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $nome = $_POST['nome'];
-    $email = $_POST['email'];
-    $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT); // Criptografando a senha
-    $idioma = $_POST['idioma'];
-    $tipo = $_POST['tipo']; // Tipo: aluno ou tutor
-    
-    // Validar se o email já existe no banco
-    $sql = "SELECT * FROM Alunos WHERE email = :email UNION SELECT * FROM Tutores WHERE email = :email";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':email', $email);
-    $stmt->execute();
-    
-    if ($stmt->rowCount() > 0) {
-        $erro = "Este e-mail já está registrado. Tente outro.";
+    // Validação dos dados de entrada
+    $nome = isset($_POST['nome']) ? $_POST['nome'] : '';
+    $email = isset($_POST['email']) ? $_POST['email'] : '';
+    $senha = isset($_POST['senha']) ? $_POST['senha'] : '';
+    $idioma = isset($_POST['idioma']) ? $_POST['idioma'] : '';
+    $tipo = isset($_POST['tipo']) ? $_POST['tipo'] : '';
+
+    // Exibir dados de entrada para debug
+    echo "<!-- Debugging - Dados do Formulário -->";
+    var_dump($_POST); // Exibe todos os dados do formulário para análise
+
+    // Verificando se os campos estão preenchidos
+    if (empty($nome) || empty($email) || empty($senha) || empty($idioma) || empty($tipo)) {
+        $erro = "Todos os campos são obrigatórios!";
     } else {
-        // Cadastro do usuário no banco
-        if ($tipo === 'aluno') {
-            $sql = "INSERT INTO Alunos (email, senha, nome, idiomas, tipo) VALUES (:email, :senha, :nome, :idioma, :tipo)";
-        } else {
-            $sql = "INSERT INTO Tutores (email, senha, nome, idiomas, tipo) VALUES (:email, :senha, :nome, :idioma, :tipo)";
-        }
+        // Validar se o email já existe no banco
+        $sql = "SELECT * FROM Alunos WHERE email = :email UNION SELECT * FROM Tutores WHERE email = :email";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':senha', $senha);
-        $stmt->bindParam(':nome', $nome);
-        $stmt->bindParam(':idioma', $idioma);
-        $stmt->bindParam(':tipo', $tipo);
-        
-        if ($stmt->execute()) {
-            $_SESSION['cadastro_sucesso'] = true;
-            header('Location: login.php');
-            exit;
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+            $erro = "Este e-mail já está registrado. Tente outro.";
         } else {
-            $erro = "Erro ao cadastrar. Tente novamente.";
+            // Cadastro do usuário no banco
+            if ($tipo === 'aluno') {
+                $sql = "INSERT INTO Alunos (email, senha, nome, idiomas, tipo) VALUES (:email, :senha, :nome, :idioma, :tipo)";
+            } else {
+                $sql = "INSERT INTO Tutores (email, senha, nome, idiomas, tipo) VALUES (:email, :senha, :nome, :idioma, :tipo)";
+            }
+
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':senha', password_hash($senha, PASSWORD_DEFAULT)); // Criptografando a senha
+            $stmt->bindParam(':nome', $nome);
+            $stmt->bindParam(':idioma', $idioma);
+            $stmt->bindParam(':tipo', $tipo);
+
+            if ($stmt->execute()) {
+                $_SESSION['cadastro_sucesso'] = true;
+                header('Location: login.php');
+                exit;
+            } else {
+                $erro = "Erro ao cadastrar. Tente novamente.";
+            }
         }
     }
 }
@@ -54,14 +69,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro - Conectando Interesses</title>
     <link rel="stylesheet" href="ASSETS/CSS/style.css">
 </head>
-
 <body>
 
     <!-- Cabeçalho -->
@@ -116,5 +129,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </footer>
 
 </body>
-
 </html>

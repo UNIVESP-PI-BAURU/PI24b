@@ -23,7 +23,12 @@
         <?php
         session_start(); // Inicia a sessão para verificar o login
 
-        // Verifica se o usuário está logado como aluno ou tutor
+        // Debug: Verificando os dados de sessão
+        echo "<!-- Debugging Sessão -->";
+        echo "<!-- id_usuario: " . (isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : 'não definido') . " -->";
+        echo "<!-- tipo_usuario: " . (isset($_SESSION['tipo_usuario']) ? $_SESSION['tipo_usuario'] : 'não definido') . " -->";
+
+        // Verifica se o usuário está logado
         if (isset($_SESSION['id_usuario']) && isset($_SESSION['tipo_usuario'])): ?>
             <!-- Usuário logado -->
             <button onclick="window.location.href='./logout.php';">Logout</button>

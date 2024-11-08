@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $estado = trim($_POST['estado']);
 
     // Constrói a consulta SQL com os critérios informados
-    $sql = "SELECT nome, foto_perfil, cidade, estado, idiomas FROM $tabela_pesquisa WHERE 1=1";
+    $sql = "SELECT id, nome, foto_perfil, cidade, estado, idiomas FROM $tabela_pesquisa WHERE 1=1";
     $params = [];
 
     if (!empty($idioma)) {

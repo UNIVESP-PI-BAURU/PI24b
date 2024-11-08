@@ -17,6 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $senha = $_POST['senha'];
     $tipo = $_POST['tipo']; // Tipo: aluno ou tutor
 
+    // Exibindo dados para depuração
+    echo "<!-- Debugging - Dados do Formulário -->";
+    var_dump($_POST);  // Verificando os dados enviados pelo formulário
+
     // Verificando se o tipo de usuário é 'aluno' ou 'tutor' e selecionando a tabela correspondente
     if ($tipo === 'aluno') {
         $sql = "SELECT * FROM Alunos WHERE email = :email";
@@ -33,10 +37,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($stmt->rowCount() > 0) {
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
+        // Exibindo dados do usuário para depuração
+        echo "<!-- Debugging - Dados do Usuário Encontrado -->";
+        var_dump($usuario);  // Verificando os dados do usuário retornados
+
         // Verificando se a senha está correta
         if (password_verify($senha, $usuario['senha'])) {
             // Iniciando sessão e redirecionando para a página inicial ou perfil
-            $_SESSION['id_usuario'] = ($tipo === 'aluno') ? $usuario['id_aluno'] : $usuario['id_tutor'];
+            $_SESSION['id_usuario'] = $usuario['id'];  // Alterado para 'id', que é o campo comum em ambas as tabelas
             $_SESSION['tipo_usuario'] = $tipo;
             $_SESSION['nome_usuario'] = $usuario['nome'];
             header('Location: dashboard.php'); // Redireciona para o dashboard
