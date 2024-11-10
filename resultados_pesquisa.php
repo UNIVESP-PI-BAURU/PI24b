@@ -100,6 +100,10 @@ $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php else: ?>
                 <p>Nenhum resultado encontrado.</p>
             <?php endif; ?>
+
+        <!--Botão para retornar à Dashboard -->
+            <button onclick="window.location.href='dashboard.php'">Retornar à Dashboard</button>
+
         </section>
     </main>
 
