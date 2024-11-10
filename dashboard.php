@@ -3,6 +3,7 @@ session_start(); // Inicia a sessão
 
 // Verifica se o usuário está logado e redireciona para login se não estiver
 if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
+    echo "Usuário não logado! Redirecionando para login..."; // Debug
     header("Location: login.php"); // Redireciona para login
     exit(); // Evita que o código continue
 }
@@ -10,7 +11,10 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
 // Define o tipo de usuário e carrega o nome do usuário da sessão
 $tipo_usuario = $_SESSION['tipo_usuario']; // 'aluno' ou 'tutor'
 $nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou "Visitante" se não estiver definido
-$foto_usuario = $_SESSION['foto_usuario'] ?? ''; // Foto do usuário (se existir)
+
+// Debug: Exibe o tipo e nome do usuário
+echo "Tipo de usuário: $tipo_usuario<br>";
+echo "Nome de usuário: $nome_usuario<br>";
 ?>
 
 <!DOCTYPE html>
@@ -43,31 +47,40 @@ $foto_usuario = $_SESSION['foto_usuario'] ?? ''; // Foto do usuário (se existir
         <!-- complemento: Saudação -->
         <section class="signup-section">
             <h3>Bem-vindo(a), <?php echo htmlspecialchars($nome_usuario); ?>! Você é um(a) <?php echo ($tipo_usuario === 'aluno' ? 'Aluno(a)' : 'Tutor(a)'); ?>.</h3>
+            <?php
+                // Debug: Exibe o tipo de usuário no HTML
+                echo "<br>Debug Saudação: Nome: $nome_usuario - Tipo: $tipo_usuario";
+            ?>
         </section>
         <!-- Fim Saudação -->
 
-        <!-- complemento: Resumo do Perfil -->
-        <section class="signup-section">
-            <h3>Resumo do Perfil</h3>
-            <div class="foto-moldura-dashboard">
-                <?php if ($foto_usuario): ?>
-                    <img src="ASSETS/IMG/<?php echo htmlspecialchars($foto_usuario); ?>" alt="Foto de Perfil" class="avatar-dashboard">
-                <?php else: ?>
-                    <span>Sem foto cadastrada</span>
-                <?php endif; ?>
-            </div>
-            <p>Nome: <?php echo htmlspecialchars($nome_usuario); ?></p>
-            <p>Tipo de usuário: <?php echo ($tipo_usuario === 'aluno' ? 'Aluno(a)' : 'Tutor(a)'); ?></p>
-            <button onclick="window.location.href='perfil.php';">Ver Perfil Completo</button>
+        <!-- complemento: Resumo Perfil -->
+        <section class="perfil-resumo">
+            <h4>Resumo do Perfil</h4>
+            <?php
+                // Aqui você pode adicionar mais informações do perfil (exemplo: foto, cidade, idioma)
+                // Exemplo de debug para verificar se as variáveis estão carregando corretamente
+                echo "Debug Resumo Perfil: Nome: $nome_usuario<br>";
+                echo "Tipo de usuário: $tipo_usuario<br>";
+
+                // Se a foto do usuário estiver armazenada na sessão, exibe-a
+                if (isset($_SESSION['foto_usuario']) && !empty($_SESSION['foto_usuario'])) {
+                    $foto_usuario = $_SESSION['foto_usuario'];
+                    echo "<img src='ASSETS/IMG/$foto_usuario' alt='Foto do usuário' class='avatar-dashboard'><br>";
+                    echo "Foto do usuário: $foto_usuario<br>";
+                } else {
+                    echo "Foto não encontrada para o usuário.<br>";
+                }
+            ?>
         </section>
-        <!-- Fim Resumo do Perfil -->
+        <!-- Fim Resumo Perfil -->
 
     </main>
     <!-- Fim Conteúdo Principal -->
 
     <!-- Rodapé -->
     <footer class="footer">
-        <p>UNIVESP PI 2024</p>
+        <p>UNIVESP PI 2024.</p>
         <p><a href="https://github.com/UNIVESP-PI-BAURU/PI24b.git" target="_blank">https://github.com/UNIVESP-PI-BAURU/PI24b.git</a></p>
     </footer>
 
