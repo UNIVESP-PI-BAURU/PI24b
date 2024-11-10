@@ -15,6 +15,7 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
 // Define o tipo de usuário e carrega o nome do usuário da sessão
 $tipo_usuario = $_SESSION['tipo_usuario']; // 'aluno' ou 'tutor'
 $nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou "Visitante" se não estiver definido
+$id_usuario = $_SESSION['id_usuario'];
 
 // Lógica para pegar as últimas 3 aulas e as próximas 5 aulas
 if ($tipo_usuario === 'aluno') {
@@ -23,10 +24,20 @@ if ($tipo_usuario === 'aluno') {
     $campo_id = 'id_tutor';
 }
 
+// Consulta para pegar dados do usuário (nome, foto, idiomas, etc.)
+$sql_usuario = "SELECT nome, foto_perfil, idiomas FROM Usuarios WHERE id = ?";
+$stmt = $conn->prepare($sql_usuario);
+$stmt->bindValue(1, $id_usuario, PDO::PARAM_INT);
+$stmt->execute();
+$result_usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$foto_usuario = $result_usuario['foto_perfil'] ?? null;
+$idiomas_usuario = $result_usuario['idiomas'] ?? 'Não especificado';
+
 // Últimas 3 aulas
 $sql_aulas = "SELECT * FROM Aulas WHERE $campo_id = ? ORDER BY data_aula DESC LIMIT 3";
 $stmt = $conn->prepare($sql_aulas);
-$stmt->bindValue(1, $_SESSION['id_usuario'], PDO::PARAM_INT); // Correção aqui: Usando bindValue para PDO
+$stmt->bindValue(1, $id_usuario, PDO::PARAM_INT); // Correção aqui: Usando bindValue para PDO
 $stmt->execute();
 $result_aulas = $stmt->fetchAll(PDO::FETCH_ASSOC); // Alterado para fetchAll() para pegar todos os resultados
 $ultimas_aulas = $result_aulas;
@@ -34,7 +45,7 @@ $ultimas_aulas = $result_aulas;
 // Próximas 5 aulas
 $sql_proximas_aulas = "SELECT * FROM Aulas WHERE $campo_id = ? AND data_aula > NOW() ORDER BY data_aula ASC LIMIT 5";
 $stmt = $conn->prepare($sql_proximas_aulas);
-$stmt->bindValue(1, $_SESSION['id_usuario'], PDO::PARAM_INT); // Correção aqui também: Usando bindValue para PDO
+$stmt->bindValue(1, $id_usuario, PDO::PARAM_INT); // Correção aqui também: Usando bindValue para PDO
 $stmt->execute();
 $result_proximas_aulas = $stmt->fetchAll(PDO::FETCH_ASSOC); // Alterado para fetchAll() para pegar todos os resultados
 $proximas_aulas = $result_proximas_aulas;
@@ -78,10 +89,10 @@ $proximas_aulas = $result_proximas_aulas;
             <section class="perfil-resumo">
                 <h4>Resumo do Perfil</h4>
                 <?php
-                    if (isset($_SESSION['foto_usuario']) && !empty($_SESSION['foto_usuario'])) {
-                        $foto_usuario = $_SESSION['foto_usuario'];
+                    if ($foto_usuario) {
                         echo "<img src='ASSETS/IMG/$foto_usuario' alt='Foto do usuário' class='avatar-dashboard'><br>";
                     }
+                    echo "<p><strong>Idiomas:</strong> " . htmlspecialchars($idiomas_usuario) . "</p>";
                 ?>
             </section>
             <section class="perfil-completo">
