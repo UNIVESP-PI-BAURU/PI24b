@@ -79,13 +79,12 @@ $proximas_aulas = $result_proximas_aulas;
     <!-- Conteúdo Principal -->
     <main class="main-content">
 
-        <!-- complemento: Saudação -->
+        <!-- Saudação -->
         <section class="signup-section">
             <h4>Bem-vindo(a), <?php echo htmlspecialchars($nome_usuario); ?>! Você é um(a) <?php echo ($tipo_usuario === 'aluno' ? 'Aluno(a)' : 'Tutor(a)'); ?>.</h4>
         </section>
-        <!-- Fim Saudação -->
 
-        <!-- complemento: Resumo Perfil -->
+        <!-- Resumo do Perfil -->
         <section class="signup-section">    
             <section class="perfil-resumo">
                 <h4>Resumo do Perfil</h4>
@@ -102,7 +101,7 @@ $proximas_aulas = $result_proximas_aulas;
         </section>
         <!-- Fim Resumo Perfil -->
 
-        <!-- complemento: Aulas -->
+        <!-- Aulas -->
         <section class="signup-section">
             <section class="aulas">
                 <h4>Aulas</h4>
@@ -116,7 +115,7 @@ $proximas_aulas = $result_proximas_aulas;
                 <?php elseif ($tipo_usuario === 'aluno'): ?>
                     <!-- Botão para o aluno agendar uma aula -->
                     <button onclick="window.location.href='agendar_aula.php';">Agendar Aula</button>
-                    <hr><!-- separador do complemento -->
+                    <hr>
                 <?php endif; ?>
 
                 <h5>Últimas 3 Aulas</h5>
