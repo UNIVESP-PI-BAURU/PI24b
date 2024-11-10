@@ -17,7 +17,14 @@ $tipo_usuario = $_SESSION['tipo_usuario']; // 'aluno' ou 'tutor'
 $nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou "Visitante" se não estiver definido
 
 // Lógica para pegar as últimas 3 aulas e as próximas 5 aulas
-$sql_aulas = "SELECT * FROM Aulas WHERE id_usuario = ? ORDER BY data_aula DESC LIMIT 3";
+if ($tipo_usuario === 'aluno') {
+    $campo_id = 'id_aluno';
+} else {
+    $campo_id = 'id_tutor';
+}
+
+// Últimas 3 aulas
+$sql_aulas = "SELECT * FROM Aulas WHERE $campo_id = ? ORDER BY data_aula DESC LIMIT 3";
 $stmt = $conn->prepare($sql_aulas);
 $stmt->bindValue(1, $_SESSION['id_usuario'], PDO::PARAM_INT); // Correção aqui: Usando bindValue para PDO
 $stmt->execute();
@@ -25,7 +32,7 @@ $result_aulas = $stmt->fetchAll(PDO::FETCH_ASSOC); // Alterado para fetchAll() p
 $ultimas_aulas = $result_aulas;
 
 // Próximas 5 aulas
-$sql_proximas_aulas = "SELECT * FROM Aulas WHERE id_usuario = ? AND data_aula > NOW() ORDER BY data_aula ASC LIMIT 5";
+$sql_proximas_aulas = "SELECT * FROM Aulas WHERE $campo_id = ? AND data_aula > NOW() ORDER BY data_aula ASC LIMIT 5";
 $stmt = $conn->prepare($sql_proximas_aulas);
 $stmt->bindValue(1, $_SESSION['id_usuario'], PDO::PARAM_INT); // Correção aqui também: Usando bindValue para PDO
 $stmt->execute();
