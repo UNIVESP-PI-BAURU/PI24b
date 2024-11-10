@@ -66,6 +66,8 @@
     <!-- Rodapé -->
     <footer class="footer">
         <p>UNIVESP PI 2024</p>
+        <br>
+        <p>https://github.com/UNIVESP-PI-BAURU/PI24b.git</p>
     </footer>
 
     <!-- Scripts -->
