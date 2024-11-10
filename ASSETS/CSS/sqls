@@ -47,6 +47,16 @@ CREATE TABLE Mensagens (
     FOREIGN KEY (id_destinatario) REFERENCES Tutores(id) ON DELETE CASCADE
 );
 
+CREATE TABLE Aulas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_aluno INT NOT NULL,
+    id_tutor INT NOT NULL,
+    data_hora DATETIME NOT NULL,
+    FOREIGN KEY (id_aluno) REFERENCES Alunos(id),
+    FOREIGN KEY (id_tutor) REFERENCES Tutores(id)
+);
+
+
 -- Tabela de Agendamentos (Utilizando id_aluno e id_tutor)
 CREATE TABLE Agendamentos (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -89,16 +99,6 @@ CREATE TABLE Disponibilidade_Tutores (
     FOREIGN KEY (id_tutor) REFERENCES Tutores(id)
 );
 
-
-CREATE TABLE Aulas (
-    id_aula INT AUTO_INCREMENT PRIMARY KEY,
-    id_aluno INT NOT NULL,
-    id_tutor INT NOT NULL,
-    data_aula DATETIME NOT NULL,
-    status_aula ENUM('agendada', 'confirmada', 'cancelada') NOT NULL,
-    FOREIGN KEY (id_aluno) REFERENCES Alunos(id),
-    FOREIGN KEY (id_tutor) REFERENCES Tutores(id)
-);
 
 
 ------------------------------------------------------------------

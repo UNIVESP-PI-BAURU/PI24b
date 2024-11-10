@@ -12,44 +12,13 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
     exit(); // Evita que o código continue
 }
 
-// Define o tipo de usuário e carrega o nome e foto do usuário
+// Define o tipo de usuário e carrega o nome do usuário da sessão
 $tipo_usuario = $_SESSION['tipo_usuario']; // 'aluno' ou 'tutor'
+$nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou "Visitante" se não estiver definido
 
-// Consulta para pegar os dados do aluno ou tutor
-if ($tipo_usuario === 'aluno') {
-    $sql_usuario = "SELECT nome, foto_perfil FROM Alunos WHERE id_aluno = ?";
-    $campo_id = 'id_aluno';
-} else {
-    $sql_usuario = "SELECT nome, foto_perfil FROM Tutores WHERE id_tutor = ?";
-    $campo_id = 'id_tutor';
-}
-
-// Prepara a consulta e executa
-$stmt = $conn->prepare($sql_usuario);
-$stmt->bindValue(1, $_SESSION['id_usuario'], PDO::PARAM_INT);
-$stmt->execute();
-$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Carrega o nome e foto do usuário
-$nome_usuario = $usuario['nome'] ?? 'Visitante';
-$foto_usuario = $usuario['foto_perfil'] ?? 'default.jpg';  // Foto padrão se não houver foto
-
-// Lógica para pegar as últimas 3 aulas e as próximas 5 aulas
-// Últimas 3 aulas
-$sql_aulas = "SELECT * FROM Aulas WHERE $campo_id = ? ORDER BY data_aula DESC LIMIT 3";
-$stmt = $conn->prepare($sql_aulas);
-$stmt->bindValue(1, $_SESSION['id_usuario'], PDO::PARAM_INT);
-$stmt->execute();
-$result_aulas = $stmt->fetchAll(PDO::FETCH_ASSOC); // Alterado para fetchAll() para pegar todos os resultados
-$ultimas_aulas = $result_aulas;
-
-// Próximas 5 aulas
-$sql_proximas_aulas = "SELECT * FROM Aulas WHERE $campo_id = ? AND data_aula > NOW() ORDER BY data_aula ASC LIMIT 5";
-$stmt = $conn->prepare($sql_proximas_aulas);
-$stmt->bindValue(1, $_SESSION['id_usuario'], PDO::PARAM_INT);
-$stmt->execute();
-$result_proximas_aulas = $stmt->fetchAll(PDO::FETCH_ASSOC); // Alterado para fetchAll() para pegar todos os resultados
-$proximas_aulas = $result_proximas_aulas;
+// Debug: Exibe o tipo e nome do usuário
+echo "Tipo de usuário: $tipo_usuario<br>";
+echo "Nome de usuário: $nome_usuario<br>";
 ?>
 
 <!DOCTYPE html>
@@ -79,69 +48,55 @@ $proximas_aulas = $result_proximas_aulas;
     <!-- Conteúdo Principal -->
     <main class="main-content">
 
-        <!-- Saudação -->
+        <!-- complemento: Saudação -->
         <section class="signup-section">
             <h4>Bem-vindo(a), <?php echo htmlspecialchars($nome_usuario); ?>! Você é um(a) <?php echo ($tipo_usuario === 'aluno' ? 'Aluno(a)' : 'Tutor(a)'); ?>.</h4>
+            <?php
+                // Debug: Exibe o tipo de usuário no HTML
+                echo "<br>Debug Saudação: Nome: $nome_usuario - Tipo: $tipo_usuario";
+            ?>
         </section>
+        <!-- Fim Saudação -->
 
-        <!-- Resumo do Perfil -->
+        <!-- complemento: Resumo Perfil -->
         <section class="signup-section">    
             <section class="perfil-resumo">
                 <h4>Resumo do Perfil</h4>
                 <?php
-                    // Exibe a foto de perfil, se houver
-                    if (!empty($foto_usuario)) {
+                    // Aqui você pode adicionar mais informações do perfil (exemplo: foto, cidade, idioma)
+                    // Exemplo de debug para verificar se as variáveis estão carregando corretamente
+                    echo "Debug Resumo Perfil: Nome: $nome_usuario<br>";
+                    echo "Tipo de usuário: $tipo_usuario<br>";
+
+                    // Se a foto do usuário estiver armazenada na sessão, exibe-a
+                    if (isset($_SESSION['foto_usuario']) && !empty($_SESSION['foto_usuario'])) {
+                        $foto_usuario = $_SESSION['foto_usuario'];
                         echo "<img src='ASSETS/IMG/$foto_usuario' alt='Foto do usuário' class='avatar-dashboard'><br>";
+                        echo "Foto do usuário: $foto_usuario<br>";
+                    } else {
+                        echo "Foto não encontrada para o usuário.<br>";
                     }
                 ?>
             </section>
             <section class="perfil-completo">
                 <button onclick="window.location.href='perfil.php';">Ver Perfil Completo</button>
+                <?php
+                    // Debug: Exibe a URL para onde o botão vai redirecionar
+                    echo "Debug: Botão redireciona para perfil.php<br>";
+                ?>
             </section>
         </section>
         <!-- Fim Resumo Perfil -->
 
-        <!-- Aulas -->
+        <!-- complemento: pesquisa -->
         <section class="signup-section">
-            <section class="aulas">
-                <h4>Aulas</h4>
-                
-                <?php if ($tipo_usuario === 'tutor'): ?>
-                    <!-- Botão para o tutor adicionar a disponibilidade -->
-                    <button onclick="window.location.href='editar_disponibilidade.php';">Adicionar Disponibilidade</button>
-                    <hr>
-                    <!-- Botão para o tutor ver seus agendamentos -->
-                    <button onclick="window.location.href='agendamentos.php';">Ver Agendamentos</button>
-                <?php elseif ($tipo_usuario === 'aluno'): ?>
-                    <!-- Botão para o aluno agendar uma aula -->
-                    <button onclick="window.location.href='agendar_aula.php';">Agendar Aula</button>
-                    <hr>
-                <?php endif; ?>
-
-                <h5>Últimas 3 Aulas</h5>
-                <ul>
-                    <?php foreach ($ultimas_aulas as $aula): ?>
-                        <li>
-                            <strong><?php echo htmlspecialchars($aula['titulo']); ?></strong><br>
-                            Data: <?php echo htmlspecialchars($aula['data_aula']); ?><br>
-                            Local: <?php echo htmlspecialchars($aula['local']); ?><br>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-
-                <h5>Próximas 5 Aulas</h5>
-                <ul>
-                    <?php foreach ($proximas_aulas as $aula): ?>
-                        <li>
-                            <strong><?php echo htmlspecialchars($aula['titulo']); ?></strong><br>
-                            Data: <?php echo htmlspecialchars($aula['data_aula']); ?><br>
-                            Local: <?php echo htmlspecialchars($aula['local']); ?><br>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
+            <section class="pesquisa">
+                <h4>Pesquisar</h4>
+                <button onclick="window.location.href='pesquisa.php';">Ir para Pesquisa</button>
             </section>
         </section>
-        <!-- Fim Aulas -->
+        <!-- Fim pesquisa -->
+
 
     </main>
     <!-- Fim Conteúdo Principal -->
