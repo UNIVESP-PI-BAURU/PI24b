@@ -73,7 +73,7 @@ if (!$usuario) {
                     <?php if (!empty($usuario['foto_perfil'])): ?>
                         <img src="<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Foto de Perfil" class="foto-perfil">
                     <?php else: ?>
-                        <img src="default-avatar.png" alt="Foto de Perfil Padrão" class="foto-perfil">
+                        <p>Foto não cadastrada.</p>
                     <?php endif; ?>
                 </div>
 
