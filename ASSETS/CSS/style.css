@@ -167,28 +167,28 @@ button:hover, .signup-button:hover, .custom-button:hover {
 .footer {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centraliza o conteúdo */
-    justify-content: center; /* Alinha o conteúdo verticalmente */
+    align-items: center;
+    justify-content: center;
     background-color: #333;
     color: white;
     padding: 2rem;
     width: 100%;
     margin-top: auto;
-    text-align: center; /* Centraliza o texto */
+    text-align: center;
 }
 
 .footer p {
-    margin: 0.5rem 0; /* Espaçamento entre os parágrafos */
-    font-size: 1rem; /* Ajusta o tamanho da fonte */
+    margin: 0.5rem 0;
+    font-size: 1rem;
 }
 
 .footer a {
-    color: #fff; /* Define a cor do link */
-    text-decoration: none; /* Remove o sublinhado */
+    color: #fff;
+    text-decoration: none;
 }
 
 .footer a:hover {
-    text-decoration: underline; /* Adiciona sublinhado ao passar o mouse */
+    text-decoration: underline;
 }
 
 /* Pesquisa */
@@ -231,32 +231,32 @@ button:hover, .signup-button:hover, .custom-button:hover {
 
 /* Estilo para o Carrossel */
 .carousel {
-    width: 60%;  /* O carrossel ocupa no máximo 60% da largura da tela */
-    max-width: 1200px; /* Limita a largura do carrossel para no máximo 1200px */
-    overflow: hidden; /* Impede que o conteúdo que saia da área do carrossel seja visível */
-    position: relative; /* Necessário para o posicionamento dos slides */
-    margin: 20px auto;  /* Centraliza o carrossel na página com margem em cima e embaixo */
+    width: 60%;
+    max-width: 1200px;
+    overflow: hidden;
+    position: relative;
+    margin: 20px auto;
 }
 
 /* Container de slides */
 .slides {
-    display: flex; /* Alinha os slides lado a lado */
-    transition: transform 0.5s ease-in-out; /* Adiciona uma transição suave para o movimento */
+    display: flex;
+    transition: transform 0.5s ease-in-out;
 }
 
 /* Estilo para cada slide */
 .slide {
-    min-width: 100%; /* Cada slide ocupa 100% da largura do carrossel */
+    min-width: 100%;
     display: flex;
-    justify-content: center; /* Centraliza o conteúdo dentro do slide */
+    justify-content: center;
 }
 
 /* Imagens dentro do carrossel */
 .slide img {
-    width: 100%;  /* A imagem ocupa 100% da largura do slide */
-    height: 300px; /* Define uma altura fixa para a imagem */
-    object-fit: cover; /* Garante que a imagem não distorça, mas ocupe todo o espaço do slide */
-    border-radius: 8px; /* Deixa a imagem com bordas arredondadas */
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
 }
 
 /* Controles de navegação do carrossel */
@@ -313,10 +313,10 @@ button:hover, .signup-button:hover, .custom-button:hover {
 /* Responsividade para telas menores */
 @media (max-width: 768px) {
     .carousel {
-        width: 90%; /* Em telas menores, o carrossel ocupa 90% da largura */
+        width: 90%;
     }
 
     .slide img {
-        height: 200px; /* Ajusta a altura da imagem para telas pequenas */
+        height: 200px;
     }
 }
