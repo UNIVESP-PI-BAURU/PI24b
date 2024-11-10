@@ -211,3 +211,80 @@ button:hover, .signup-button:hover, .custom-button:hover {
     border-radius: 8px;
     background-color: #f9f9f9;
 }
+
+/* Estilo para o Carrossel */
+.carousel {
+    width: 100%;  /* O carrossel ocupa toda a largura da tela */
+    overflow: hidden; /* Impede que o conteúdo que saia da área do carrossel seja visível */
+    position: relative; /* Necessário para o posicionamento dos slides */
+    margin-top: 20px;
+}
+
+.slides {
+    display: flex; /* Alinha as imagens lado a lado */
+    transition: transform 0.5s ease-in-out; /* Adiciona uma transição suave para o movimento */
+}
+
+.slide {
+    min-width: 100%; /* Cada slide ocupa 100% da largura do carrossel */
+    display: flex;
+    justify-content: center; /* Centraliza o conteúdo dentro do slide */
+}
+
+.slide img {
+    width: 100%;  /* A imagem ocupa 100% da largura do slide */
+    height: 300px; /* Define uma altura fixa para a imagem */
+    object-fit: cover; /* Garante que a imagem não distorça, mas ocupe todo o espaço do slide */
+    border-radius: 8px; /* Deixa a imagem com bordas arredondadas */
+}
+
+/* Controles de navegação do carrossel */
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+}
+
+.carousel-nav button {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 18px;
+}
+
+.carousel-nav button:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Adicionando indicadores do carrossel */
+.carousel-indicators {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+}
+
+.carousel-indicators button {
+    background-color: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
+}
+
+.carousel-indicators button.active {
+    background-color: #333;
+}
+
+.carousel-indicators button:hover {
+    background-color: #575757;
+}
