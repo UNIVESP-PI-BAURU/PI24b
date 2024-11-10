@@ -166,12 +166,29 @@ button:hover, .signup-button:hover, .custom-button:hover {
 /* Rodapé */
 .footer {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center; /* Centraliza o conteúdo */
+    justify-content: center; /* Alinha o conteúdo verticalmente */
     background-color: #333;
     color: white;
-    padding: 1rem;
+    padding: 2rem;
     width: 100%;
     margin-top: auto;
+    text-align: center; /* Centraliza o texto */
+}
+
+.footer p {
+    margin: 0.5rem 0; /* Espaçamento entre os parágrafos */
+    font-size: 1rem; /* Ajusta o tamanho da fonte */
+}
+
+.footer a {
+    color: #fff; /* Define a cor do link */
+    text-decoration: none; /* Remove o sublinhado */
+}
+
+.footer a:hover {
+    text-decoration: underline; /* Adiciona sublinhado ao passar o mouse */
 }
 
 /* Pesquisa */
