@@ -47,26 +47,7 @@ CREATE TABLE Mensagens (
     FOREIGN KEY (id_destinatario) REFERENCES Tutores(id) ON DELETE CASCADE
 );
 
-CREATE TABLE Aulas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    id_aluno INT NOT NULL,
-    id_tutor INT NOT NULL,
-    data_hora DATETIME NOT NULL,
-    FOREIGN KEY (id_aluno) REFERENCES Alunos(id),
-    FOREIGN KEY (id_tutor) REFERENCES Tutores(id)
-);
 
-
--- Tabela de Agendamentos (Utilizando id_aluno e id_tutor)
-CREATE TABLE Agendamentos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    id_aluno INT NOT NULL,
-    id_tutor INT NOT NULL,
-    data_aula DATETIME NOT NULL,
-    status ENUM('Pendente', 'Confirmada', 'Cancelada') NOT NULL DEFAULT 'Pendente',
-    FOREIGN KEY (id_aluno) REFERENCES Alunos(id),
-    FOREIGN KEY (id_tutor) REFERENCES Tutores(id)
-);
 
 -- Tabela de Curtidas (Relaciona Alunos e Tutores)
 CREATE TABLE Curtidas (
@@ -89,13 +70,15 @@ CREATE TABLE Logs (
         ON UPDATE CASCADE
 );
 
--- Tabela de Disponibilidade de Tutores
-CREATE TABLE Disponibilidade_Tutores (
+
+-- Tabela de contratos
+CREATE TABLE Contratos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    id_tutor INT NOT NULL,
-    dia_semana ENUM('Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo') NOT NULL,
-    hora_inicio TIME NOT NULL,
-    hora_fim TIME NOT NULL,
+    id_aluno INT,
+    id_tutor INT,
+    status ENUM('pendente', 'confirmado', 'recusado') DEFAULT 'pendente',
+    data_contrato TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_aluno) REFERENCES Alunos(id),
     FOREIGN KEY (id_tutor) REFERENCES Tutores(id)
 );
 

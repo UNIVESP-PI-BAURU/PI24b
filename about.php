@@ -94,10 +94,14 @@ if (!$perfil_usuario) {
 
             <div class="interaction-buttons">
                 <!-- Botão para iniciar chat -->
-                <button onclick="window.location.href='chat.php?id=<?php echo $perfil_usuario['id']; ?>'">Iniciar Chat</button>
-                
+                <?php if ($tipo_usuario_logado === 'aluno'): ?>
+                    <button onclick="window.location.href='chat.php?id=<?php echo $perfil_usuario['id']; ?>'">Iniciar Chat</button>
+                <?php endif; ?>
+
                 <!-- Botão para contratar ou agendar aula -->
-                <button onclick="window.location.href='agendar.php?id=<?php echo $perfil_usuario['id']; ?>'">Contratar/Agendar Aula</button>
+                <?php if ($tipo_usuario_logado === 'aluno'): ?>
+                    <button onclick="window.location.href='agendar.php?id=<?php echo $perfil_usuario['id']; ?>'">Contratar/Agendar Aula</button>
+                <?php endif; ?>
 
                 <?php if ($tipo_usuario_logado === 'aluno'): ?>
                     <!-- Botão de curtir, agora com função AJAX -->
@@ -106,7 +110,7 @@ if (!$perfil_usuario) {
             </div>
 
             <br><br>
-            <!--Botão para retornar à Dashboard -->
+            <!-- Botão para retornar à Dashboard -->
             <button onclick="window.location.href='dashboard.php'">Retornar à Dashboard</button>
 
         </section>
