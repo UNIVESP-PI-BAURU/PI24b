@@ -35,31 +35,30 @@ body {
 .header {
     text-align: center;
     width: 100%; /* Garante que o header ocupe toda a largura */
-    padding: 10px 0; /* Define um padding que pode ser ajustado */
+    overflow: hidden; /* Garante que qualquer parte extra da imagem seja cortada */
 }
 
 /* Imagem do cabeçalho */
 .header img {
-    max-width: 100%;
-    height: auto;
-    display: inline-block;
+    width: 100%; /* A imagem ocupa toda a largura disponível */
+    height: 200px; /* Altura padrão da imagem */
+    object-fit: cover; /* Faz com que a imagem preencha o espaço sem distorcer */
 }
 
 /* Ajuste para telas pequenas (celulares) */
 @media (max-width: 768px) {
-    .header {
-        padding-top: 20px; /* Aumenta o padding superior no celular */
-        padding-bottom: 20px; /* Aumenta o padding inferior no celular */
+    .header img {
+        height: 250px; /* Aumenta a altura da imagem em 50px em telas pequenas */
     }
 }
 
 /* Ajuste para telas grandes */
 @media (min-width: 1024px) {
-    .header {
-        padding-top: 10px; /* Diminui o padding superior em telas grandes */
-        padding-bottom: 10px; /* Diminui o padding inferior em telas grandes */
+    .header img {
+        height: 150px; /* Diminui a altura da imagem em 50px em telas grandes */
     }
 }
+
 
 
 /* Navbar */
