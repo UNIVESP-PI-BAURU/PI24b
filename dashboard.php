@@ -77,10 +77,10 @@ echo "Nome de usuário: $nome_usuario<br>";
                 }
             ?>
             <section class="perfil-completo">
-                <button onclick="window.location.href='about.php';">Ver Perfil Completo</button>
+                <button onclick="window.location.href='perfil.php';">Ver Perfil Completo</button>
                 <?php
                     // Debug: Exibe a URL para onde o botão vai redirecionar
-                    echo "Debug: Botão redireciona para about.php<br>";
+                    echo "Debug: Botão redireciona para perfil.php<br>";
                 ?>
             </section>
         </section>
