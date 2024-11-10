@@ -95,13 +95,15 @@ $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 </div>
                             </div>
                         </li>
+                        <hr><!-- Separador entre resultados -->
                     <?php endforeach; ?>
                 </ul>
             <?php else: ?>
                 <p>Nenhum resultado encontrado.</p>
             <?php endif; ?>
 
-        <!--Botão para retornar à Dashboard -->
+            <br><br>
+            <!--Botão para retornar à Dashboard -->
             <button onclick="window.location.href='dashboard.php'">Retornar à Dashboard</button>
 
         </section>
