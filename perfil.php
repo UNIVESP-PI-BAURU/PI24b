@@ -12,10 +12,22 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
 }
 
 $id_usuario = $_SESSION['id_usuario'];
+$tipo_usuario = $_SESSION['tipo_usuario']; // 'aluno' ou 'tutor'
 
-// Consulta os dados do usuário
-$query = "SELECT * FROM usuarios WHERE id = :id_usuario";
-$stmt = $conn->prepare($query); // Alterado de $pdo para $conn
+// Definir qual tabela usar com base no tipo de usuário
+if ($tipo_usuario == 'aluno') {
+    $tabela = 'alunos';
+} elseif ($tipo_usuario == 'tutor') {
+    $tabela = 'tutores';
+} else {
+    // Caso o tipo de usuário seja inválido, redireciona
+    header("Location: login.php?msg=tipo-usuario-invalido");
+    exit();
+}
+
+// Consulta os dados do usuário (ajustado para a tabela correta)
+$query = "SELECT * FROM $tabela WHERE id = :id_usuario";
+$stmt = $conn->prepare($query); // Usando $conn
 $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
 $stmt->execute();
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
