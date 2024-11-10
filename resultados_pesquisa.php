@@ -71,7 +71,7 @@ $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <!-- Conteúdo Principal -->
     <main class="main-content">
         <section class="signup-section">
-            <h2>Resultados da Pesquisa</h2>
+            <h3>Resultados da Pesquisa</h3>
 
             <?php if (count($resultados) > 0): ?>
                 <ul>

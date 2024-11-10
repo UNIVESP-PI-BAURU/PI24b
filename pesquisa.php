@@ -34,7 +34,7 @@ $tipo_usuario = $_SESSION['tipo_usuario']; // Aluno ou Tutor
     <!-- Conteúdo Principal -->
     <main class="main-content">
         <section class="signup-section">
-            <h2>Pesquisar <?php echo ($tipo_usuario === 'aluno') ? 'Tutores' : 'Alunos'; ?></h2>
+            <h3>Pesquisar <?php echo ($tipo_usuario === 'aluno') ? 'Tutores' : 'Alunos'; ?></h3>
             
             <form method="GET" action="resultados_pesquisa.php">
                 <label for="idioma">Idioma:</label>

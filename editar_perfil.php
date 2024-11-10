@@ -139,7 +139,7 @@ function processarFoto($foto_perfil) {
 <main class="main-content">
     <section class="signup-section">
         
-        <h1>Editar Perfil</h1>
+        <h3>Editar Perfil</h3>
 
         <!-- Formulário de edição -->
         <form action="editar_perfil.php" method="POST" enctype="multipart/form-data">

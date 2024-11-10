@@ -66,7 +66,7 @@ if (!$usuario) {
         <!-- Conteúdo Principal -->
         <main class="main-content">
             <section class="signup-section">
-                <h1>Perfil de <?php echo htmlspecialchars($usuario['nome']); ?></h1>
+                <h3>Perfil de <?php echo htmlspecialchars($usuario['nome']); ?></h3>
 
                 <!-- Exibição da foto de perfil -->
                 <div class="perfil-foto">

@@ -22,7 +22,7 @@ $tipo_usuario_logado = $_SESSION['tipo_usuario'];
 $tabela_perfil = ($tipo_usuario_logado === 'aluno') ? 'Tutores' : 'Alunos';
 
 // Consulta os dados do usuário do perfil
-$sql = "SELECT id, nome, foto_perfil, cidade, estado, idiomas, biografia FROM $tabela_perfil WHERE id = :id";
+$sql = "SELECT id, nome, foto_perfil, cidade, estado, idiomas, biografia, data_nascimento FROM $tabela_perfil WHERE id = :id";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':id', $id_perfil, PDO::PARAM_INT);
 $stmt->execute();
@@ -75,7 +75,7 @@ if (!$perfil_usuario) {
 
     <main class="main-content">
         <section class="signup-section">
-            <h2><?php echo htmlspecialchars($perfil_usuario['nome']); ?></h2>
+            <h3>Mais sobre <?php echo htmlspecialchars($perfil_usuario['nome']); ?></h3>
             <div style="display: flex; align-items: center; margin-bottom: 20px;">
                 <div class="foto-moldura">
                     <?php if (!empty($perfil_usuario['foto_perfil'])): ?>
@@ -88,6 +88,7 @@ if (!$perfil_usuario) {
                     <p><strong>Cidade/Estado:</strong> <?php echo htmlspecialchars($perfil_usuario['cidade'] . ', ' . $perfil_usuario['estado']); ?></p>
                     <p><strong>Idiomas:</strong> <?php echo htmlspecialchars($perfil_usuario['idiomas']); ?></p>
                     <p><strong>Biografia:</strong> <?php echo nl2br(htmlspecialchars($perfil_usuario['biografia'])); ?></p>
+                    <p><strong>Data de Nascimento:</strong> <?php echo htmlspecialchars(date('d/m/Y', strtotime($perfil_usuario['data_nascimento']))); ?></p>
                 </div>
             </div>
 
