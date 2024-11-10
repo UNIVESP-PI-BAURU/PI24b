@@ -1,6 +1,6 @@
 <?php
 // Conexão com o banco de dados
-require_once 'conexao.php';
+require_once 'conexao.php'; // Certifique-se que o arquivo de conexão define $conn corretamente
 
 // Inicialização da sessão
 session_start();
@@ -14,8 +14,8 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
 $id_usuario = $_SESSION['id_usuario'];
 
 // Consulta os dados do usuário
-$query = "SELECT * FROM usuarios WHERE id = :id_usuario";
-$stmt = $pdo->prepare($query);
+$query = "SELECT * FROM " . ($_SESSION['tipo_usuario'] == 'aluno' ? 'Alunos' : 'Tutores') . " WHERE id = :id_usuario";
+$stmt = $conn->prepare($query);
 $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
 $stmt->execute();
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -47,8 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Atualiza os dados no banco
-    $update_query = "UPDATE usuarios SET nome = :nome, email = :email, idiomas = :idiomas, biografia = :biografia, cidade = :cidade, estado = :estado, foto_perfil = :foto_perfil WHERE id = :id_usuario";
-    $update_stmt = $pdo->prepare($update_query);
+    $update_query = "UPDATE " . ($_SESSION['tipo_usuario'] == 'aluno' ? 'Alunos' : 'Tutores') . " SET nome = :nome, email = :email, idiomas = :idiomas, biografia = :biografia, cidade = :cidade, estado = :estado, foto_perfil = :foto_perfil WHERE id = :id_usuario";
+    $update_stmt = $conn->prepare($update_query);
     $update_stmt->bindParam(':nome', $nome);
     $update_stmt->bindParam(':email', $email);
     $update_stmt->bindParam(':idiomas', $idiomas);
@@ -70,7 +70,6 @@ function processarFoto($foto_perfil) {
     $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
     $max_size = 5 * 1024 * 1024; // 5 MB
     $target_dir = 'uploads/';
-    $target_file = $target_dir . basename($foto_perfil['name']);
     
     // Verifica se o tipo do arquivo é permitido
     if (!in_array($foto_perfil['type'], $allowed_types)) {
@@ -81,6 +80,9 @@ function processarFoto($foto_perfil) {
     if ($foto_perfil['size'] > $max_size) {
         return "Arquivo muito grande. O tamanho máximo permitido é 5MB.";
     }
+    
+    // Gera um nome único para o arquivo
+    $target_file = $target_dir . uniqid() . '-' . basename($foto_perfil['name']);
     
     // Move o arquivo para o diretório de uploads
     if (move_uploaded_file($foto_perfil['tmp_name'], $target_file)) {
@@ -93,68 +95,68 @@ function processarFoto($foto_perfil) {
 
 <!DOCTYPE html>
 <html lang="pt-br">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Perfil</title>
-        <link rel="stylesheet" href="ASSETS/CSS/style.css">
-    </head>
-    <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil</title>
+    <link rel="stylesheet" href="ASSETS/CSS/style.css">
+</head>
+<body>
 
-        <!-- Cabeçalho -->
-        <header class="header">
-            <img src="ASSETS/IMG/capa.png" alt="Capa do site">
-        </header>
+<!-- Cabeçalho -->
+<header class="header">
+    <img src="ASSETS/IMG/capa.png" alt="Capa do site">
+</header>
 
-        <!-- Navegação -->
-        <nav class="navbar">
-            <button onclick="window.location.href='index.php';">Home</button>
-            <button onclick="window.location.href='sobre_nos.php';">Sobre nós</button>
-            <button onclick="window.location.href='dashboard.php';">Dashboard</button>
-            <button onclick="window.location.href='logout.php';">Logout</button>
-        </nav>
-        <!-- Fim Navegação -->
+<!-- Navegação -->
+<nav class="navbar">
+    <button onclick="window.location.href='index.php';">Home</button>
+    <button onclick="window.location.href='sobre_nos.php';">Sobre nós</button>
+    <button onclick="window.location.href='dashboard.php';">Dashboard</button>
+    <button onclick="window.location.href='logout.php';">Logout</button>
+</nav>
+<!-- Fim Navegação -->
 
-        <!-- Conteúdo Principal -->
-        <main class="main-content">
-            <section class="signup-section">
-                
-                <h1>Editar Perfil</h1>
+<!-- Conteúdo Principal -->
+<main class="main-content">
+    <section class="signup-section">
+        
+        <h1>Editar Perfil</h1>
 
-                <!-- Formulário de edição -->
-                <form action="editar_perfil.php" method="POST" enctype="multipart/form-data">
-                    <label for="nome">Nome:</label>
-                    <input type="text" name="nome" value="<?php echo htmlspecialchars($usuario['nome']); ?>" required>
+        <!-- Formulário de edição -->
+        <form action="editar_perfil.php" method="POST" enctype="multipart/form-data">
+            <label for="nome">Nome:</label>
+            <input type="text" name="nome" value="<?php echo htmlspecialchars($usuario['nome']); ?>" required>
 
-                    <label for="email">Email:</label>
-                    <input type="email" name="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" required>
+            <label for="email">Email:</label>
+            <input type="email" name="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" required>
 
-                    <label for="idiomas">Idiomas:</label>
-                    <input type="text" name="idiomas" value="<?php echo htmlspecialchars($usuario['idiomas']); ?>" required>
+            <label for="idiomas">Idiomas:</label>
+            <input type="text" name="idiomas" value="<?php echo htmlspecialchars($usuario['idiomas']); ?>" required>
 
-                    <label for="biografia">Biografia:</label>
-                    <textarea name="biografia" required><?php echo htmlspecialchars($usuario['biografia']); ?></textarea>
+            <label for="biografia">Biografia:</label>
+            <textarea name="biografia" required><?php echo htmlspecialchars($usuario['biografia']); ?></textarea>
 
-                    <label for="cidade">Cidade:</label>
-                    <input type="text" name="cidade" value="<?php echo htmlspecialchars($usuario['cidade']); ?>" required>
+            <label for="cidade">Cidade:</label>
+            <input type="text" name="cidade" value="<?php echo htmlspecialchars($usuario['cidade']); ?>" required>
 
-                    <label for="estado">Estado:</label>
-                    <input type="text" name="estado" value="<?php echo htmlspecialchars($usuario['estado']); ?>" required>
+            <label for="estado">Estado:</label>
+            <input type="text" name="estado" value="<?php echo htmlspecialchars($usuario['estado']); ?>" required>
 
-                    <label for="foto_perfil">Foto de Perfil:</label>
-                    <input type="file" name="foto_perfil">
+            <label for="foto_perfil">Foto de Perfil:</label>
+            <input type="file" name="foto_perfil">
 
-                    <button type="submit">Salvar Alterações</button>
-                </form>
-            </section>
-        </main>
-        <!-- fim Conteúdo Principal -->
+            <button type="submit">Salvar Alterações</button>
+        </form>
+    </section>
+</main>
+<!-- fim Conteúdo Principal -->
 
-        <!-- Rodapé -->
-        <footer class="footer">
-            <p>UNIVESP PI 2024</p>
-            <p><a href="https://github.com/UNIVESP-PI-BAURU/PI24b.git" target="_blank">https://github.com/UNIVESP-PI-BAURU/PI24b.git</a></p>
-        </footer>
+<!-- Rodapé -->
+<footer class="footer">
+    <p>UNIVESP PI 2024</p>
+    <p><a href="https://github.com/UNIVESP-PI-BAURU/PI24b.git" target="_blank">https://github.com/UNIVESP-PI-BAURU/PI24b.git</a></p>
+</footer>
 
-    </body>
+</body>
 </html>
