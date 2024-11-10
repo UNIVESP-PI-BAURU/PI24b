@@ -75,9 +75,9 @@ if (!$perfil_usuario) {
             </div>
 
             <div class="interaction-buttons">
-                <!-- Botão para contratar ou agendar aula, apenas para alunos -->
+                <!-- Botão para contratar, apenas para alunos -->
                 <?php if ($tipo_usuario_logado === 'aluno'): ?>
-                    <button onclick="window.location.href='agendar.php?id=<?php echo $perfil_usuario['id']; ?>'">Contratar/Agendar Aula</button>
+                    <button onclick="window.location.href='contratar.php?id=<?php echo $perfil_usuario['id']; ?>'">Contratar</button>
                 <?php endif; ?>
             </div>
 
