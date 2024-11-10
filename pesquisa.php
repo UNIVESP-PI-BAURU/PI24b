@@ -48,6 +48,10 @@ $tipo_usuario = $_SESSION['tipo_usuario']; // Aluno ou Tutor
                 <br>
                 <button type="submit">Pesquisar</button>
             </form>
+
+            <!-- Botão para retornar à Dashboard -->
+            <button onclick="window.location.href='dashboard.php'">Retornar à Dashboard</button>
+
         </section>
     </main>
 
