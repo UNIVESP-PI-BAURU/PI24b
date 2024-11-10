@@ -85,6 +85,14 @@ body {
     }
 }
 
+/* Media query para telas grandes */
+@media (min-width: 768px) {
+    .main-content {
+        width: 90%; /* Em telas grandes, o main ocupa 90% da largura */
+        margin: 0 auto; /* Centraliza o conteúdo */
+    }
+}
+
 /* Form Sections */
 .signup-section {
     padding: 2rem;
