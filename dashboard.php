@@ -1,11 +1,6 @@
 <?php
 session_start(); // Inicia a sessão
 
-// Saída de depuração para verificar as variáveis de sessão
-echo "<pre>";
-print_r($_SESSION);
-echo "</pre>";
-
 // Verifica se o usuário está logado e redireciona para login se não estiver
 if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
     header("Location: login.php"); // Redireciona para login
@@ -16,8 +11,6 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
 $tipo_usuario = $_SESSION['tipo_usuario']; // 'aluno' ou 'tutor'
 $nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou "Visitante" se não estiver definido
 
-// Saída de depuração para verificar nome do usuário
-echo "Nome do usuário: " . htmlspecialchars($nome_usuario);
 ?>
 
 <!DOCTYPE html>
@@ -47,11 +40,9 @@ echo "Nome do usuário: " . htmlspecialchars($nome_usuario);
     <!-- Conteúdo Principal -->
     <main class="main-content">
 
-        <!-- Saudação -->
+        <!-- complemento: Saudação -->
         <section class="signup-section">
-            <div class="signup-section">
-                <h3>Bem-vindo(a) <?php echo ($tipo_usuario === 'aluno' ? 'Aluno(a), ' : 'Tutor(a), '); ?><?php echo htmlspecialchars($nome_usuario); ?>!</h3>
-            </div>
+            <h3>Bem-vindo(a), <?php echo htmlspecialchars($nome_usuario); ?>! Você é um(a) <?php echo ($tipo_usuario === 'aluno' ? 'Aluno(a)' : 'Tutor(a)'); ?>.</h3>
         </section>
         <!-- Fim Saudação -->
         
@@ -60,7 +51,8 @@ echo "Nome do usuário: " . htmlspecialchars($nome_usuario);
 
     <!-- Rodapé -->
     <footer class="footer">
-        <p> 2024 - UNIVESP</p>
+        <p>UNIVESP PI 2024</p>
+        <p><a href="https://github.com/UNIVESP-PI-BAURU/PI24b.git" target="_blank">https://github.com/UNIVESP-PI-BAURU/PI24b.git</a></p>
     </footer>
 
 </body>
