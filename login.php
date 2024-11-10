@@ -119,7 +119,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <!-- Rodapé -->
     <footer class="footer">
-        UNIVESP PI 2024
+        <p>UNIVESP PI 2024</p>
+        <p><a href="https://github.com/UNIVESP-PI-BAURU/PI24b.git" target="_blank">https://github.com/UNIVESP-PI-BAURU/PI24b.git</a></p>
     </footer>
 
 </body>
