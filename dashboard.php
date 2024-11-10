@@ -12,32 +12,33 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
     exit(); // Evita que o código continue
 }
 
-// Define o tipo de usuário e carrega o nome do usuário da sessão
+// Define o tipo de usuário e carrega o nome e foto do usuário
 $tipo_usuario = $_SESSION['tipo_usuario']; // 'aluno' ou 'tutor'
-$nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou "Visitante" se não estiver definido
-$id_usuario = $_SESSION['id_usuario'];
 
-// Lógica para pegar as últimas 3 aulas e as próximas 5 aulas
+// Consulta para pegar os dados do aluno ou tutor
 if ($tipo_usuario === 'aluno') {
+    $sql_usuario = "SELECT nome, foto_perfil FROM Alunos WHERE id_aluno = ?";
     $campo_id = 'id_aluno';
 } else {
+    $sql_usuario = "SELECT nome, foto_perfil FROM Tutores WHERE id_tutor = ?";
     $campo_id = 'id_tutor';
 }
 
-// Consulta para pegar dados do usuário (nome, foto, idiomas, etc.)
-$sql_usuario = "SELECT nome, foto_perfil, idiomas FROM Usuarios WHERE id = ?";
+// Prepara a consulta e executa
 $stmt = $conn->prepare($sql_usuario);
-$stmt->bindValue(1, $id_usuario, PDO::PARAM_INT);
+$stmt->bindValue(1, $_SESSION['id_usuario'], PDO::PARAM_INT);
 $stmt->execute();
-$result_usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$foto_usuario = $result_usuario['foto_perfil'] ?? null;
-$idiomas_usuario = $result_usuario['idiomas'] ?? 'Não especificado';
+// Carrega o nome e foto do usuário
+$nome_usuario = $usuario['nome'] ?? 'Visitante';
+$foto_usuario = $usuario['foto_perfil'] ?? 'default.jpg';  // Foto padrão se não houver foto
 
+// Lógica para pegar as últimas 3 aulas e as próximas 5 aulas
 // Últimas 3 aulas
 $sql_aulas = "SELECT * FROM Aulas WHERE $campo_id = ? ORDER BY data_aula DESC LIMIT 3";
 $stmt = $conn->prepare($sql_aulas);
-$stmt->bindValue(1, $id_usuario, PDO::PARAM_INT); // Correção aqui: Usando bindValue para PDO
+$stmt->bindValue(1, $_SESSION['id_usuario'], PDO::PARAM_INT);
 $stmt->execute();
 $result_aulas = $stmt->fetchAll(PDO::FETCH_ASSOC); // Alterado para fetchAll() para pegar todos os resultados
 $ultimas_aulas = $result_aulas;
@@ -45,7 +46,7 @@ $ultimas_aulas = $result_aulas;
 // Próximas 5 aulas
 $sql_proximas_aulas = "SELECT * FROM Aulas WHERE $campo_id = ? AND data_aula > NOW() ORDER BY data_aula ASC LIMIT 5";
 $stmt = $conn->prepare($sql_proximas_aulas);
-$stmt->bindValue(1, $id_usuario, PDO::PARAM_INT); // Correção aqui também: Usando bindValue para PDO
+$stmt->bindValue(1, $_SESSION['id_usuario'], PDO::PARAM_INT);
 $stmt->execute();
 $result_proximas_aulas = $stmt->fetchAll(PDO::FETCH_ASSOC); // Alterado para fetchAll() para pegar todos os resultados
 $proximas_aulas = $result_proximas_aulas;
@@ -89,10 +90,10 @@ $proximas_aulas = $result_proximas_aulas;
             <section class="perfil-resumo">
                 <h4>Resumo do Perfil</h4>
                 <?php
-                    if ($foto_usuario) {
+                    // Exibe a foto de perfil, se houver
+                    if (!empty($foto_usuario)) {
                         echo "<img src='ASSETS/IMG/$foto_usuario' alt='Foto do usuário' class='avatar-dashboard'><br>";
                     }
-                    echo "<p><strong>Idiomas:</strong> " . htmlspecialchars($idiomas_usuario) . "</p>";
                 ?>
             </section>
             <section class="perfil-completo">
