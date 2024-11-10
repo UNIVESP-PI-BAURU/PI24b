@@ -214,23 +214,27 @@ button:hover, .signup-button:hover, .custom-button:hover {
 
 /* Estilo para o Carrossel */
 .carousel {
-    width: 100%;  /* O carrossel ocupa toda a largura da tela */
+    width: 60%;  /* O carrossel ocupa no máximo 60% da largura da tela */
+    max-width: 1200px; /* Limita a largura do carrossel para no máximo 1200px */
     overflow: hidden; /* Impede que o conteúdo que saia da área do carrossel seja visível */
     position: relative; /* Necessário para o posicionamento dos slides */
-    margin-top: 20px;
+    margin: 20px auto;  /* Centraliza o carrossel na página com margem em cima e embaixo */
 }
 
+/* Container de slides */
 .slides {
-    display: flex; /* Alinha as imagens lado a lado */
+    display: flex; /* Alinha os slides lado a lado */
     transition: transform 0.5s ease-in-out; /* Adiciona uma transição suave para o movimento */
 }
 
+/* Estilo para cada slide */
 .slide {
     min-width: 100%; /* Cada slide ocupa 100% da largura do carrossel */
     display: flex;
     justify-content: center; /* Centraliza o conteúdo dentro do slide */
 }
 
+/* Imagens dentro do carrossel */
 .slide img {
     width: 100%;  /* A imagem ocupa 100% da largura do slide */
     height: 300px; /* Define uma altura fixa para a imagem */
@@ -262,7 +266,7 @@ button:hover, .signup-button:hover, .custom-button:hover {
     background-color: rgba(0, 0, 0, 0.7);
 }
 
-/* Adicionando indicadores do carrossel */
+/* Indicadores de navegação do carrossel */
 .carousel-indicators {
     position: absolute;
     bottom: 10px;
@@ -287,4 +291,15 @@ button:hover, .signup-button:hover, .custom-button:hover {
 
 .carousel-indicators button:hover {
     background-color: #575757;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .carousel {
+        width: 90%; /* Em telas menores, o carrossel ocupa 90% da largura */
+    }
+
+    .slide img {
+        height: 200px; /* Ajusta a altura da imagem para telas pequenas */
+    }
 }
