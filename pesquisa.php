@@ -39,13 +39,13 @@ $tipo_usuario = $_SESSION['tipo_usuario']; // Aluno ou Tutor
             <form method="GET" action="resultados_pesquisa.php">
                 <label for="idioma">Idioma:</label>
                 <input type="text" id="idioma" name="idioma" placeholder="Ex: Inglês, Espanhol">
-
+                <br>
                 <label for="cidade">Cidade:</label>
                 <input type="text" id="cidade" name="cidade" placeholder="Ex: São Paulo">
-
+                <br>
                 <label for="estado">Estado:</label>
                 <input type="text" id="estado" name="estado" placeholder="Ex: SP">
-                
+                <br>
                 <button type="submit">Pesquisar</button>
             </form>
         </section>
