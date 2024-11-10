@@ -16,9 +16,27 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
 $tipo_usuario = $_SESSION['tipo_usuario']; // 'aluno' ou 'tutor'
 $nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou "Visitante" se não estiver definido
 
-// Debug: Exibe o tipo e nome do usuário
-echo "Tipo de usuário: $tipo_usuario<br>";
-echo "Nome de usuário: $nome_usuario<br>";
+// Lógica para pegar as últimas 3 aulas e as próximas 5 aulas
+$sql_aulas = "SELECT * FROM Aulas WHERE id_usuario = ? ORDER BY data_aula DESC LIMIT 3";
+$stmt = $conn->prepare($sql_aulas);
+$stmt->bind_param("i", $_SESSION['id_usuario']);
+$stmt->execute();
+$result_aulas = $stmt->get_result();
+$ultimas_aulas = [];
+while ($row = $result_aulas->fetch_assoc()) {
+    $ultimas_aulas[] = $row;
+}
+
+// Próximas 5 aulas
+$sql_proximas_aulas = "SELECT * FROM Aulas WHERE id_usuario = ? AND data_aula > NOW() ORDER BY data_aula ASC LIMIT 5";
+$stmt = $conn->prepare($sql_proximas_aulas);
+$stmt->bind_param("i", $_SESSION['id_usuario']);
+$stmt->execute();
+$result_proximas_aulas = $stmt->get_result();
+$proximas_aulas = [];
+while ($row = $result_proximas_aulas->fetch_assoc()) {
+    $proximas_aulas[] = $row;
+}
 ?>
 
 <!DOCTYPE html>
@@ -51,10 +69,6 @@ echo "Nome de usuário: $nome_usuario<br>";
         <!-- complemento: Saudação -->
         <section class="signup-section">
             <h4>Bem-vindo(a), <?php echo htmlspecialchars($nome_usuario); ?>! Você é um(a) <?php echo ($tipo_usuario === 'aluno' ? 'Aluno(a)' : 'Tutor(a)'); ?>.</h4>
-            <?php
-                // Debug: Exibe o tipo de usuário no HTML
-                echo "<br>Debug Saudação: Nome: $nome_usuario - Tipo: $tipo_usuario";
-            ?>
         </section>
         <!-- Fim Saudação -->
 
@@ -63,40 +77,59 @@ echo "Nome de usuário: $nome_usuario<br>";
             <section class="perfil-resumo">
                 <h4>Resumo do Perfil</h4>
                 <?php
-                    // Aqui você pode adicionar mais informações do perfil (exemplo: foto, cidade, idioma)
-                    // Exemplo de debug para verificar se as variáveis estão carregando corretamente
-                    echo "Debug Resumo Perfil: Nome: $nome_usuario<br>";
-                    echo "Tipo de usuário: $tipo_usuario<br>";
-
-                    // Se a foto do usuário estiver armazenada na sessão, exibe-a
                     if (isset($_SESSION['foto_usuario']) && !empty($_SESSION['foto_usuario'])) {
                         $foto_usuario = $_SESSION['foto_usuario'];
                         echo "<img src='ASSETS/IMG/$foto_usuario' alt='Foto do usuário' class='avatar-dashboard'><br>";
-                        echo "Foto do usuário: $foto_usuario<br>";
-                    } else {
-                        echo "Foto não encontrada para o usuário.<br>";
                     }
                 ?>
             </section>
             <section class="perfil-completo">
                 <button onclick="window.location.href='perfil.php';">Ver Perfil Completo</button>
-                <?php
-                    // Debug: Exibe a URL para onde o botão vai redirecionar
-                    echo "Debug: Botão redireciona para perfil.php<br>";
-                ?>
             </section>
         </section>
         <!-- Fim Resumo Perfil -->
 
-        <!-- complemento: pesquisa -->
+        <!-- complemento: Aulas -->
         <section class="signup-section">
-            <section class="pesquisa">
-                <h4>Pesquisar</h4>
-                <button onclick="window.location.href='pesquisa.php';">Ir para Pesquisa</button>
+            <section class="aulas">
+                <h4>Aulas</h4>
+                
+                <?php if ($tipo_usuario === 'tutor'): ?>
+                    <!-- Botão para o tutor adicionar a disponibilidade -->
+                    <button onclick="window.location.href='editar_disponibilidade.php';">Adicionar Disponibilidade</button>
+                    <hr>
+                    <!-- Botão para o tutor ver seus agendamentos -->
+                    <button onclick="window.location.href='agendamentos.php';">Ver Agendamentos</button>
+                <?php elseif ($tipo_usuario === 'aluno'): ?>
+                    <!-- Botão para o aluno agendar uma aula -->
+                    <button onclick="window.location.href='agendar_aula.php';">Agendar Aula</button>
+                    <hr><!-- separador do complemento -->
+                <?php endif; ?>
+
+                <h5>Últimas 3 Aulas</h5>
+                <ul>
+                    <?php foreach ($ultimas_aulas as $aula): ?>
+                        <li>
+                            <strong><?php echo htmlspecialchars($aula['titulo']); ?></strong><br>
+                            Data: <?php echo htmlspecialchars($aula['data_aula']); ?><br>
+                            Local: <?php echo htmlspecialchars($aula['local']); ?><br>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+
+                <h5>Próximas 5 Aulas</h5>
+                <ul>
+                    <?php foreach ($proximas_aulas as $aula): ?>
+                        <li>
+                            <strong><?php echo htmlspecialchars($aula['titulo']); ?></strong><br>
+                            Data: <?php echo htmlspecialchars($aula['data_aula']); ?><br>
+                            Local: <?php echo htmlspecialchars($aula['local']); ?><br>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
             </section>
         </section>
-        <!-- Fim pesquisa -->
-
+        <!-- Fim Aulas -->
 
     </main>
     <!-- Fim Conteúdo Principal -->

@@ -48,13 +48,17 @@ CREATE TABLE Mensagens (
 );
 
 CREATE TABLE Aulas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    id_aluno INT NOT NULL,
-    id_tutor INT NOT NULL,
-    data_hora DATETIME NOT NULL,
-    FOREIGN KEY (id_aluno) REFERENCES Alunos(id),
-    FOREIGN KEY (id_tutor) REFERENCES Tutores(id)
+    id_aula INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT,  -- aluno
+    id_tutor INT,
+    data_aula DATE,
+    hora_aula TIME,
+    local VARCHAR(255),
+    status ENUM('pendente', 'confirmada', 'cancelada') DEFAULT 'pendente',
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
+    FOREIGN KEY (id_tutor) REFERENCES usuarios(id_usuario)
 );
+
 
 
 -- Tabela de Agendamentos (Utilizando id_aluno e id_tutor)
