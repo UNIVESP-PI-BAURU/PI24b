@@ -13,28 +13,11 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
 
 $id_usuario = $_SESSION['id_usuario'];
 
-// Verifica se a variável $pdo está definida corretamente
-if (!$pdo) {
-    die("Erro de conexão com o banco de dados.");
-}
-
 // Consulta os dados do usuário
 $query = "SELECT * FROM usuarios WHERE id = :id_usuario";
-$stmt = $pdo->prepare($query);
-
-// Verifica se o preparo da consulta falhou
-if (!$stmt) {
-    die("Erro ao preparar a consulta.");
-}
-
+$stmt = $conn->prepare($query); // Alterado de $pdo para $conn
 $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
 $stmt->execute();
-
-// Verifica se a execução da consulta falhou
-if ($stmt->errorCode() != '00000') {
-    die("Erro ao executar a consulta: " . implode(", ", $stmt->errorInfo()));
-}
-
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Se o usuário não for encontrado, redireciona para o login
