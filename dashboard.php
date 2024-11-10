@@ -19,22 +19,24 @@ $nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou
 // Lógica para pegar as últimas 3 aulas e as próximas 5 aulas
 $sql_aulas = "SELECT * FROM Aulas WHERE id_usuario = ? ORDER BY data_aula DESC LIMIT 3";
 $stmt = $conn->prepare($sql_aulas);
-$stmt->bind_param("i", $_SESSION['id_usuario']);
+$stmt->bindValue(1, $_SESSION['id_usuario'], PDO::PARAM_INT); // Usando bindValue() com PDO
 $stmt->execute();
-$result_aulas = $stmt->get_result();
+$result_aulas = $stmt->fetchAll(PDO::FETCH_ASSOC); // fetchAll é uma maneira de obter os resultados com PDO
+
 $ultimas_aulas = [];
-while ($row = $result_aulas->fetch_assoc()) {
+foreach ($result_aulas as $row) {
     $ultimas_aulas[] = $row;
 }
 
 // Próximas 5 aulas
 $sql_proximas_aulas = "SELECT * FROM Aulas WHERE id_usuario = ? AND data_aula > NOW() ORDER BY data_aula ASC LIMIT 5";
 $stmt = $conn->prepare($sql_proximas_aulas);
-$stmt->bind_param("i", $_SESSION['id_usuario']);
+$stmt->bindValue(1, $_SESSION['id_usuario'], PDO::PARAM_INT); // Usando bindValue() com PDO
 $stmt->execute();
-$result_proximas_aulas = $stmt->get_result();
+$result_proximas_aulas = $stmt->fetchAll(PDO::FETCH_ASSOC); // fetchAll é uma maneira de obter os resultados com PDO
+
 $proximas_aulas = [];
-while ($row = $result_proximas_aulas->fetch_assoc()) {
+foreach ($result_proximas_aulas as $row) {
     $proximas_aulas[] = $row;
 }
 ?>
