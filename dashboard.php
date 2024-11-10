@@ -72,6 +72,13 @@ echo "Nome de usuário: $nome_usuario<br>";
                     echo "Foto não encontrada para o usuário.<br>";
                 }
             ?>
+            <section class="perfil-completo">
+                <button onclick="window.location.href='about.php';">Ver Perfil Completo</button>
+                <?php
+                    // Debug: Exibe a URL para onde o botão vai redirecionar
+                    echo "Debug: Botão redireciona para about.php<br>";
+                ?>
+            </section>
         </section>
         <!-- Fim Resumo Perfil -->
 
@@ -80,7 +87,7 @@ echo "Nome de usuário: $nome_usuario<br>";
 
     <!-- Rodapé -->
     <footer class="footer">
-        <p>UNIVESP PI 2024.</p>
+        <p>UNIVESP PI 2024</p>
         <p><a href="https://github.com/UNIVESP-PI-BAURU/PI24b.git" target="_blank">https://github.com/UNIVESP-PI-BAURU/PI24b.git</a></p>
     </footer>
 
