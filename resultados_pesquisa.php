@@ -1,13 +1,12 @@
 <?php
 session_start();
+require_once 'conexao.php'; 
 
 // Verifica se o usuário está logado
 if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
     header("Location: login.php");
     exit();
 }
-
-require_once 'conexao.php'; // Conexão com o banco de dados
 
 // Define o tipo de usuário logado (aluno ou tutor)
 $tipo_usuario = $_SESSION['tipo_usuario'];
@@ -69,8 +68,9 @@ $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <button onclick="window.location.href='logout.php'">Logout</button>
     </nav>
 
+    <!-- Conteúdo Principal -->
     <main class="main-content">
-        <section class="search-results">
+        <section class="signup-section">
             <h2>Resultados da Pesquisa</h2>
 
             <?php if (count($resultados) > 0): ?>
@@ -88,9 +88,10 @@ $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <p><strong>Nome:</strong> <?php echo htmlspecialchars($usuario['nome']); ?></p>
                                     <p><strong>Cidade/Estado:</strong> <?php echo htmlspecialchars($usuario['cidade']) . ', ' . htmlspecialchars($usuario['estado']); ?></p>
                                     <p><strong>Idiomas:</strong> <?php echo htmlspecialchars($usuario['idiomas']); ?></p>
-                                    
-                                    <!-- Redireciona para o perfil completo -->
-                                    <button onclick="window.location.href='about.php?id=<?php echo $usuario['id']; ?>'">Ver Perfil</button>
+                                    <p>
+                                        <!-- Botão 'Ver Mais' -->
+                                        <button onclick="window.location.href='about.php?id=<?php echo $usuario['id']; ?>'">Ver Mais</button>
+                                    </p>
                                 </div>
                             </div>
                         </li>
@@ -102,8 +103,10 @@ $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </section>
     </main>
 
+    <!-- Rodapé -->
     <footer class="footer">
-        UNIVESP PI 2024
+        <p>UNIVESP PI 2024</p>
+        <p><a href="https://github.com/UNIVESP-PI-BAURU/PI24b.git" target="_blank">https://github.com/UNIVESP-PI-BAURU/PI24b.git</a></p>
     </footer>
 
 </body>

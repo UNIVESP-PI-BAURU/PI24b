@@ -50,7 +50,7 @@ echo "Nome de usuário: $nome_usuario<br>";
 
         <!-- complemento: Saudação -->
         <section class="signup-section">
-            <h3>Bem-vindo(a), <?php echo htmlspecialchars($nome_usuario); ?>! Você é um(a) <?php echo ($tipo_usuario === 'aluno' ? 'Aluno(a)' : 'Tutor(a)'); ?>.</h3>
+            <h4>Bem-vindo(a), <?php echo htmlspecialchars($nome_usuario); ?>! Você é um(a) <?php echo ($tipo_usuario === 'aluno' ? 'Aluno(a)' : 'Tutor(a)'); ?>.</h4>
             <?php
                 // Debug: Exibe o tipo de usuário no HTML
                 echo "<br>Debug Saudação: Nome: $nome_usuario - Tipo: $tipo_usuario";
@@ -59,23 +59,25 @@ echo "Nome de usuário: $nome_usuario<br>";
         <!-- Fim Saudação -->
 
         <!-- complemento: Resumo Perfil -->
-        <section class="perfil-resumo">
-            <h4>Resumo do Perfil</h4>
-            <?php
-                // Aqui você pode adicionar mais informações do perfil (exemplo: foto, cidade, idioma)
-                // Exemplo de debug para verificar se as variáveis estão carregando corretamente
-                echo "Debug Resumo Perfil: Nome: $nome_usuario<br>";
-                echo "Tipo de usuário: $tipo_usuario<br>";
+        <section class="signup-section">    
+            <section class="perfil-resumo">
+                <h4>Resumo do Perfil</h4>
+                <?php
+                    // Aqui você pode adicionar mais informações do perfil (exemplo: foto, cidade, idioma)
+                    // Exemplo de debug para verificar se as variáveis estão carregando corretamente
+                    echo "Debug Resumo Perfil: Nome: $nome_usuario<br>";
+                    echo "Tipo de usuário: $tipo_usuario<br>";
 
-                // Se a foto do usuário estiver armazenada na sessão, exibe-a
-                if (isset($_SESSION['foto_usuario']) && !empty($_SESSION['foto_usuario'])) {
-                    $foto_usuario = $_SESSION['foto_usuario'];
-                    echo "<img src='ASSETS/IMG/$foto_usuario' alt='Foto do usuário' class='avatar-dashboard'><br>";
-                    echo "Foto do usuário: $foto_usuario<br>";
-                } else {
-                    echo "Foto não encontrada para o usuário.<br>";
-                }
-            ?>
+                    // Se a foto do usuário estiver armazenada na sessão, exibe-a
+                    if (isset($_SESSION['foto_usuario']) && !empty($_SESSION['foto_usuario'])) {
+                        $foto_usuario = $_SESSION['foto_usuario'];
+                        echo "<img src='ASSETS/IMG/$foto_usuario' alt='Foto do usuário' class='avatar-dashboard'><br>";
+                        echo "Foto do usuário: $foto_usuario<br>";
+                    } else {
+                        echo "Foto não encontrada para o usuário.<br>";
+                    }
+                ?>
+            </section>
             <section class="perfil-completo">
                 <button onclick="window.location.href='perfil.php';">Ver Perfil Completo</button>
                 <?php
@@ -85,6 +87,16 @@ echo "Nome de usuário: $nome_usuario<br>";
             </section>
         </section>
         <!-- Fim Resumo Perfil -->
+
+        <!-- complemento: pesquisa -->
+        <section class="signup-section">
+            <section class="pesquisa">
+                <h4>Pesquisar</h4>
+                <button onclick="window.location.href='pesquisa.php';">Ir para Pesquisa</button>
+            </section>
+        </section>
+        <!-- Fim pesquisa -->
+
 
     </main>
     <!-- Fim Conteúdo Principal -->

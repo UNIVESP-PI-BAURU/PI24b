@@ -1,5 +1,5 @@
 <?php
-// Conexão com o banco de dados
+session_start();
 require_once 'conexao.php'; 
 
 // Verifica se o usuário está logado
@@ -31,11 +31,12 @@ $tipo_usuario = $_SESSION['tipo_usuario']; // Aluno ou Tutor
         <button onclick="window.location.href='logout.php'">Logout</button>
     </nav>
 
+    <!-- Conteúdo Principal -->
     <main class="main-content">
-        <section class="search-section">
+        <section class="signup-section">
             <h2>Pesquisar <?php echo ($tipo_usuario === 'aluno') ? 'Tutores' : 'Alunos'; ?></h2>
             
-            <form method="POST" action="resultados_pesquisa.php">
+            <form method="GET" action="resultados_pesquisa.php">
                 <label for="idioma">Idioma:</label>
                 <input type="text" id="idioma" name="idioma" placeholder="Ex: Inglês, Espanhol">
 

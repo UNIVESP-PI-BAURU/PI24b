@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once 'conexao.php';
 
 // Verifica se o usuário está logado
 if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
@@ -7,15 +8,8 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
     exit();
 }
 
-require_once 'conexao.php'; // Inclui a conexão com o banco de dados
-
-// Verifica a conexão com o banco de dados
-if (!$conn) {
-    die("Falha na conexão com o banco de dados.");
-}
-
 // Obtém o ID do perfil visitado da URL
-$id_perfil = isset($_GET['id']) ? $_GET['id'] : null;
+$id_perfil = isset($_GET['id']) ? intval($_GET['id']) : null;
 if (!$id_perfil) {
     header("Location: dashboard.php"); // Redireciona se o ID não for válido
     exit();
@@ -24,10 +18,10 @@ if (!$id_perfil) {
 // Verifica o tipo do usuário logado
 $tipo_usuario_logado = $_SESSION['tipo_usuario'];
 
-// Define o tipo de usuário do perfil visitado (oposto ao usuário logado)
+// Define a tabela de pesquisa com base no tipo do usuário logado
 $tabela_perfil = ($tipo_usuario_logado === 'aluno') ? 'Tutores' : 'Alunos';
 
-// Consulta os dados do usuário selecionado no perfil
+// Consulta os dados do usuário do perfil
 $sql = "SELECT id, nome, foto_perfil, cidade, estado, idiomas, biografia FROM $tabela_perfil WHERE id = :id";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':id', $id_perfil, PDO::PARAM_INT);
@@ -62,7 +56,8 @@ if (!$perfil_usuario) {
                 } else {
                     alert("Erro ao curtir perfil.");
                 }
-            });
+            })
+            .catch(error => console.error("Erro:", error));
         }
     </script>
 </head>
@@ -79,7 +74,7 @@ if (!$perfil_usuario) {
     </nav>
 
     <main class="main-content">
-        <section class="profile-section">
+        <section class="signup-section">
             <h2><?php echo htmlspecialchars($perfil_usuario['nome']); ?></h2>
             <div style="display: flex; align-items: center; margin-bottom: 20px;">
                 <div class="foto-moldura">
@@ -111,8 +106,10 @@ if (!$perfil_usuario) {
         </section>
     </main>
 
+    <!-- Rodapé -->
     <footer class="footer">
-        UNIVESP PI 2024
+        <p>UNIVESP PI 2024</p>
+        <p><a href="https://github.com/UNIVESP-PI-BAURU/PI24b.git" target="_blank">https://github.com/UNIVESP-PI-BAURU/PI24b.git</a></p>
     </footer>
     
 </body>
