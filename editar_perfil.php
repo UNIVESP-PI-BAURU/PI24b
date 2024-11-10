@@ -39,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] == 0) {
         $foto_perfil = processarFoto($_FILES['foto_perfil']);
         if (is_string($foto_perfil)) {
-            // Se houver erro no upload, exibe a mensagem de erro
             echo "<p class='error-message'>$foto_perfil</p>";
         }
     } else {
@@ -62,6 +61,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "<p class='success-message'>Perfil atualizado com sucesso!</p>";
     } else {
         echo "<p class='error-message'>Erro ao atualizar perfil.</p>";
+    }
+}
+
+// Processa a exclusão de conta
+if (isset($_GET['excluir']) && $_GET['excluir'] == '1') {
+    // Deleta o usuário da tabela correspondente
+    $delete_query = "DELETE FROM " . ($_SESSION['tipo_usuario'] == 'aluno' ? 'Alunos' : 'Tutores') . " WHERE id = :id_usuario";
+    $delete_stmt = $conn->prepare($delete_query);
+    $delete_stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
+
+    if ($delete_stmt->execute()) {
+        // Exclui a sessão e redireciona para a página de login com mensagem de conta excluída
+        session_destroy();
+        header("Location: login.php?msg=conta-excluida");
+        exit();
+    } else {
+        echo "<p class='error-message'>Erro ao excluir conta. Tente novamente mais tarde.</p>";
     }
 }
 
@@ -126,27 +142,28 @@ function processarFoto($foto_perfil) {
         <!-- Formulário de edição -->
         <form action="editar_perfil.php" method="POST" enctype="multipart/form-data">
             <label for="nome">Nome:</label>
-            <input type="text" name="nome" value="<?php echo htmlspecialchars($usuario['nome']); ?>" required>
-
+            <input type="text" name="nome" value="<?php echo htmlspecialchars($usuario['nome']); ?>" >
+            <br>
             <label for="email">Email:</label>
-            <input type="email" name="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" required>
-
+            <input type="email" name="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" >
+            <br>
             <label for="idiomas">Idiomas:</label>
-            <input type="text" name="idiomas" value="<?php echo htmlspecialchars($usuario['idiomas']); ?>" required>
-
+            <input type="text" name="idiomas" value="<?php echo htmlspecialchars($usuario['idiomas']); ?>" >
+            <br>
             <label for="biografia">Biografia:</label>
-            <textarea name="biografia" required><?php echo htmlspecialchars($usuario['biografia']); ?></textarea>
-
+            <textarea name="biografia" ><?php echo htmlspecialchars($usuario['biografia']); ?></textarea>
+            <br>
             <label for="cidade">Cidade:</label>
-            <input type="text" name="cidade" value="<?php echo htmlspecialchars($usuario['cidade']); ?>" required>
-
+            <input type="text" name="cidade" value="<?php echo htmlspecialchars($usuario['cidade']); ?>" >
+            <br>
             <label for="estado">Estado:</label>
-            <input type="text" name="estado" value="<?php echo htmlspecialchars($usuario['estado']); ?>" required>
-
+            <input type="text" name="estado" value="<?php echo htmlspecialchars($usuario['estado']); ?>" >
+            <br>
             <label for="foto_perfil">Foto de Perfil:</label>
             <input type="file" name="foto_perfil">
-
+            <br>
             <button type="submit">Salvar Alterações</button>
+            <button type="button" onclick="confirmarExclusao()">Excluir Conta</button>
         </form>
     </section>
 </main>
@@ -157,6 +174,14 @@ function processarFoto($foto_perfil) {
     <p>UNIVESP PI 2024</p>
     <p><a href="https://github.com/UNIVESP-PI-BAURU/PI24b.git" target="_blank">https://github.com/UNIVESP-PI-BAURU/PI24b.git</a></p>
 </footer>
+
+<script>
+    function confirmarExclusao() {
+        if (confirm("Você tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.")) {
+            window.location.href = "editar_perfil.php?excluir=1";
+        }
+    }
+</script>
 
 </body>
 </html>
