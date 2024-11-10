@@ -21,22 +21,16 @@ $sql_aulas = "SELECT * FROM Aulas WHERE id_usuario = ? ORDER BY data_aula DESC L
 $stmt = $conn->prepare($sql_aulas);
 $stmt->bindValue(1, $_SESSION['id_usuario'], PDO::PARAM_INT); // Correção aqui: Usando bindValue para PDO
 $stmt->execute();
-$result_aulas = $stmt->get_result();
-$ultimas_aulas = [];
-while ($row = $result_aulas->fetch_assoc()) {
-    $ultimas_aulas[] = $row;
-}
+$result_aulas = $stmt->fetchAll(PDO::FETCH_ASSOC); // Alterado para fetchAll() para pegar todos os resultados
+$ultimas_aulas = $result_aulas;
 
 // Próximas 5 aulas
 $sql_proximas_aulas = "SELECT * FROM Aulas WHERE id_usuario = ? AND data_aula > NOW() ORDER BY data_aula ASC LIMIT 5";
 $stmt = $conn->prepare($sql_proximas_aulas);
 $stmt->bindValue(1, $_SESSION['id_usuario'], PDO::PARAM_INT); // Correção aqui também: Usando bindValue para PDO
 $stmt->execute();
-$result_proximas_aulas = $stmt->get_result();
-$proximas_aulas = [];
-while ($row = $result_proximas_aulas->fetch_assoc()) {
-    $proximas_aulas[] = $row;
-}
+$result_proximas_aulas = $stmt->fetchAll(PDO::FETCH_ASSOC); // Alterado para fetchAll() para pegar todos os resultados
+$proximas_aulas = $result_proximas_aulas;
 ?>
 
 <!DOCTYPE html>
