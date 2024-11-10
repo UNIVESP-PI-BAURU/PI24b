@@ -1,5 +1,9 @@
 <?php
-session_start(); // Inicia a sessão
+// Conexão com o banco de dados
+require_once 'conexao.php';
+
+// Inicialização da sessão
+session_start();
 
 // Verifica se o usuário está logado e redireciona para login se não estiver
 if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {

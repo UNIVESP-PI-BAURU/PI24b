@@ -1,6 +1,9 @@
 <?php
+// Conexão com o banco de dados
+require_once 'conexao.php';
+
+// Inicialização da sessão
 session_start();
-include('conexao.php'); // Certifique-se de incluir sua conexão com o banco de dados
 
 // Verifica se o usuário está logado
 if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
