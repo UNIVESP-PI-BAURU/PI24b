@@ -58,7 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $update_stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
 
     if ($update_stmt->execute()) {
-        echo "<p class='success-message'>Perfil atualizado com sucesso!</p>";
+        // Redireciona para perfil.php após atualização bem-sucedida
+        header("Location: perfil.php");
+        exit();
     } else {
         echo "<p class='error-message'>Erro ao atualizar perfil.</p>";
     }
