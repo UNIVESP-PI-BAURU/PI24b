@@ -16,9 +16,9 @@ $tipo_usuario = $_SESSION['tipo_usuario']; // 'aluno' ou 'tutor'
 
 // Definir qual tabela usar com base no tipo de usuário
 if ($tipo_usuario == 'aluno') {
-    $tabela = 'alunos';
+    $tabela = 'Alunos';
 } elseif ($tipo_usuario == 'tutor') {
-    $tabela = 'tutores';
+    $tabela = 'Tutores';
 } else {
     // Caso o tipo de usuário seja inválido, redireciona
     header("Location: login.php?msg=tipo-usuario-invalido");
