@@ -10,7 +10,7 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
 // Define o tipo de usuário e carrega o nome do usuário da sessão
 $tipo_usuario = $_SESSION['tipo_usuario']; // 'aluno' ou 'tutor'
 $nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou "Visitante" se não estiver definido
-
+$foto_usuario = $_SESSION['foto_usuario'] ?? ''; // Foto do usuário (se existir)
 ?>
 
 <!DOCTYPE html>
@@ -45,9 +45,25 @@ $nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou
             <h3>Bem-vindo(a), <?php echo htmlspecialchars($nome_usuario); ?>! Você é um(a) <?php echo ($tipo_usuario === 'aluno' ? 'Aluno(a)' : 'Tutor(a)'); ?>.</h3>
         </section>
         <!-- Fim Saudação -->
-        
+
+        <!-- complemento: Resumo do Perfil -->
+        <section class="signup-section">
+            <h3>Resumo do Perfil</h3>
+            <div class="foto-moldura-dashboard">
+                <?php if ($foto_usuario): ?>
+                    <img src="ASSETS/IMG/<?php echo htmlspecialchars($foto_usuario); ?>" alt="Foto de Perfil" class="avatar-dashboard">
+                <?php else: ?>
+                    <span>Sem foto cadastrada</span>
+                <?php endif; ?>
+            </div>
+            <p>Nome: <?php echo htmlspecialchars($nome_usuario); ?></p>
+            <p>Tipo de usuário: <?php echo ($tipo_usuario === 'aluno' ? 'Aluno(a)' : 'Tutor(a)'); ?></p>
+            <button onclick="window.location.href='perfil.php';">Ver Perfil Completo</button>
+        </section>
+        <!-- Fim Resumo do Perfil -->
+
     </main>
-    <!-- fim Conteúdo Principal -->
+    <!-- Fim Conteúdo Principal -->
 
     <!-- Rodapé -->
     <footer class="footer">
