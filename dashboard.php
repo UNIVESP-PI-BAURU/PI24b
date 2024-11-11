@@ -137,7 +137,6 @@ $id_usuario = $_SESSION['id_usuario']; // Garantindo que id_usuario esteja corre
                         } else {
                             echo "<p>Não há contratos registrados.</p>";
                         }
-                        $stmt->close();
                     } catch (PDOException $e) {
                         echo "Erro: " . $e->getMessage();
                     }

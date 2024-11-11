@@ -12,7 +12,7 @@ $id_usuario_logado = $_SESSION['id_usuario'];
 $id_conversa = $_GET['id_conversa'];
 
 // Carrega as mensagens entre o usuário logado e o destinatário
-$sql_mensagens = "SELECT m.*, u1.nome AS remetente_nome, u2.nome AS destinatario_nome
+$sql_mensagens = "SELECT m.*, u1.nome AS remetente_nome, u2.nome AS destinatario_nome, u2.id AS id_destinatario
                   FROM Mensagens m
                   JOIN Alunos u1 ON m.id_remetente = u1.id
                   JOIN Tutores u2 ON m.id_destinatario = u2.id
@@ -26,20 +26,35 @@ $mensagens = $stmt_mensagens->fetchAll(PDO::FETCH_ASSOC);
 // Processa o envio de uma nova mensagem
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['mensagem'])) {
     $mensagem = trim($_POST['mensagem']);
+    
+    // Encontra o destinatário da conversa
+    $sql_destinatario = "SELECT id_destinatario FROM Mensagens WHERE id_conversa = :id_conversa AND id_remetente != :id_remetente LIMIT 1";
+    $stmt_destinatario = $conn->prepare($sql_destinatario);
+    $stmt_destinatario->bindParam(':id_conversa', $id_conversa, PDO::PARAM_INT);
+    $stmt_destinatario->bindParam(':id_remetente', $id_usuario_logado, PDO::PARAM_INT);
+    $stmt_destinatario->execute();
+    $destinatario = $stmt_destinatario->fetch(PDO::FETCH_ASSOC);
 
-    // Insere a nova mensagem na tabela Mensagens
-    $sql_envio = "INSERT INTO Mensagens (id_remetente, id_destinatario, mensagem, data_envio, id_conversa)
-                  VALUES (:id_remetente, :id_destinatario, :mensagem, NOW(), :id_conversa)";
-    $stmt_envio = $conn->prepare($sql_envio);
-    $stmt_envio->bindParam(':id_remetente', $id_usuario_logado, PDO::PARAM_INT);
-    $stmt_envio->bindParam(':id_destinatario', $id_destinatario, PDO::PARAM_INT);
-    $stmt_envio->bindParam(':mensagem', $mensagem, PDO::PARAM_STR);
-    $stmt_envio->bindParam(':id_conversa', $id_conversa, PDO::PARAM_INT);
-    $stmt_envio->execute();
+    if ($destinatario) {
+        $id_destinatario = $destinatario['id_destinatario'];
 
-    // Atualiza a página para mostrar a nova mensagem
-    header("Location: conversa.php?id_conversa=$id_conversa");
-    exit();
+        // Insere a nova mensagem na tabela Mensagens
+        $sql_envio = "INSERT INTO Mensagens (id_remetente, id_destinatario, mensagem, data_envio, id_conversa)
+                      VALUES (:id_remetente, :id_destinatario, :mensagem, NOW(), :id_conversa)";
+        $stmt_envio = $conn->prepare($sql_envio);
+        $stmt_envio->bindParam(':id_remetente', $id_usuario_logado, PDO::PARAM_INT);
+        $stmt_envio->bindParam(':id_destinatario', $id_destinatario, PDO::PARAM_INT);
+        $stmt_envio->bindParam(':mensagem', $mensagem, PDO::PARAM_STR);
+        $stmt_envio->bindParam(':id_conversa', $id_conversa, PDO::PARAM_INT);
+        $stmt_envio->execute();
+
+        // Atualiza a página para mostrar a nova mensagem
+        header("Location: conversa.php?id_conversa=$id_conversa");
+        exit();
+    } else {
+        // Caso não consiga encontrar o destinatário
+        $msg_erro = "Erro: Destinatário não encontrado!";
+    }
 }
 ?>
 
@@ -59,6 +74,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['mensagem'])) {
 
 <main class="main-content">
     <h2>Conversa</h2>
+
+    <?php if (isset($msg_erro)): ?>
+        <div class="erro">
+            <p><?php echo htmlspecialchars($msg_erro); ?></p>
+        </div>
+    <?php endif; ?>
 
     <!-- Exibição das mensagens -->
     <div class="chat-box">
