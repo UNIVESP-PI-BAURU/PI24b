@@ -38,10 +38,34 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contratação Concluída</title>
+    <title>Contratar</title>
+    <link rel="stylesheet" href="ASSETS/CSS/style.css">
 </head>
 <body>
-    <h3><?php echo $msg; ?></h3>
-    <button onclick="window.location.href='dashboard.php'">Voltar para a Dashboard</button>
+
+    <header class="header">
+        <img src="ASSETS/IMG/capa.png" alt="Imagem de Capa">
+    </header>
+
+    <nav class="navbar">
+        <button onclick="window.location.href='index.php'">Home</button>
+        <button onclick="window.location.href='dashboard.php'">Dashboard</button>
+        <button onclick="window.location.href='logout.php'">Logout</button>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main class="main-content">
+        <section class="signup-section">
+            <h3><?php echo $msg; ?></h3>
+            <button onclick="window.location.href='dashboard.php'">Voltar para a Dashboard</button>
+        </section>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <p>UNIVESP PI 2024</p>
+        <p><a href="https://github.com/UNIVESP-PI-BAURU/PI24b.git" target="_blank">https://github.com/UNIVESP-PI-BAURU/PI24b.git</a></p>
+    </footer>
+    
 </body>
 </html>
