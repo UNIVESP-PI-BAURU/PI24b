@@ -52,6 +52,10 @@ ADD COLUMN id_conversa INT(11) NOT NULL,
 ADD CONSTRAINT fk_conversa
 FOREIGN KEY (id_conversa) REFERENCES Conversas(id_conversa) ON DELETE CASCADE;
 
+ALTER TABLE Mensagens
+ADD COLUMN status_leitura ENUM('lida', 'não_lida') DEFAULT 'não_lida';
+
+
 
 
 -- Tabela de Conversas

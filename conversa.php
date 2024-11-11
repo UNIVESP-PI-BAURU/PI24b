@@ -10,6 +10,17 @@ if (!isset($_SESSION['id_usuario']) || !isset($_GET['id_conversa'])) {
 $id_conversa = intval($_GET['id_conversa']);
 $id_usuario_logado = $_SESSION['id_usuario'];
 
+// Atualizar o status das mensagens para "lida" ao acessar a conversa
+$sql_atualiza_status = "UPDATE Mensagens 
+                        SET status_leitura = 'lida' 
+                        WHERE id_conversa = :id_conversa 
+                          AND id_destinatario = :id_usuario 
+                          AND status_leitura = 'não_lida'"; 
+$stmt_atualiza_status = $conn->prepare($sql_atualiza_status);
+$stmt_atualiza_status->bindParam(':id_conversa', $id_conversa, PDO::PARAM_INT);
+$stmt_atualiza_status->bindParam(':id_usuario', $id_usuario_logado, PDO::PARAM_INT);
+$stmt_atualiza_status->execute();
+
 // Recupera as mensagens da conversa
 $sql_mensagens = "SELECT m.*, 
                   CASE WHEN m.id_remetente = :id_usuario THEN 'Você' ELSE 'Outro' END AS remetente
@@ -58,59 +69,95 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['mensagem'])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Conversa</title>
-    <style>
-        #mensagens {
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            padding: 10px;
-        }
-        .mensagem {
-            margin-bottom: 10px;
-        }
-        .remetente {
-            font-weight: bold;
-        }
-        .data-envio {
-            font-size: 0.8em;
-            color: #888;
-        }
-    </style>
-</head>
-<body>
-    <h1>Conversa</h1>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pesquisa</title>
+        <link rel="stylesheet" href="ASSETS/CSS/style.css">
+            <style>
+                #mensagens {
+                    max-height: 400px;
+                    overflow-y: auto;
+                    border: 1px solid #ddd;
+                    padding: 10px;
+                }
+                .mensagem {
+                    margin-bottom: 10px;
+                }
+                .remetente {
+                    font-weight: bold;
+                }
+                .data-envio {
+                    font-size: 0.8em;
+                    color: #888;
+                }
+                .status-leitura {
+                    font-size: 0.9em;
+                    color: green;
+                }
+            </style>
+    </head>
+    <body>
 
-    <!-- Exibindo as mensagens -->
-    <div id="mensagens">
-        <?php foreach ($mensagens as $mensagem): ?>
-            <div class="mensagem">
-                <span class="remetente"><?php echo htmlspecialchars($mensagem['remetente']); ?>:</span>
-                <span><?php echo htmlspecialchars($mensagem['mensagem']); ?></span>
-                <br>
-                <span class="data-envio"><?php echo htmlspecialchars($mensagem['data_envio']); ?></span>
+        <header class="header">
+            <img src="ASSETS/IMG/capa.png" alt="Imagem de Capa">
+        </header>
+
+        <nav class="navbar">
+            <button onclick="window.location.href='index.php'">Home</button>
+            <button onclick="window.location.href='dashboard.php'">Dashboard</button>
+            <button onclick="window.location.href='logout.php'">Logout</button>
+        </nav>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <section class="signup-section">
+
+            <h3>Conversa</h3>
+
+            <!-- Exibindo as mensagens -->
+            <div id="mensagens">
+                <?php foreach ($mensagens as $mensagem): ?>
+                    <div class="mensagem">
+                        <span class="remetente"><?php echo htmlspecialchars($mensagem['remetente']); ?>:</span>
+                        <span><?php echo htmlspecialchars($mensagem['mensagem']); ?></span>
+                        <br>
+                        <span class="data-envio"><?php echo htmlspecialchars($mensagem['data_envio']); ?></span>
+                        <?php if ($mensagem['status_leitura'] == 'não_lida'): ?>
+                            <span class="status-leitura">(Não lida)</span>
+                        <?php else: ?>
+                            <span class="status-leitura">(Lida)</span>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
             </div>
-        <?php endforeach; ?>
-    </div>
 
-    <!-- Formulário para enviar uma nova mensagem -->
-    <form method="post" action="">
-        <textarea name="mensagem" rows="3" cols="50" placeholder="Digite sua mensagem"></textarea>
-        <button type="submit">Enviar</button>
-    </form>
+            <!-- Formulário para enviar uma nova mensagem -->
+            <form method="post" action="">
+                <textarea name="mensagem" rows="3" cols="50" placeholder="Digite sua mensagem"></textarea>
+                <button type="submit">Enviar</button>
+            </form>
 
-    <script>
-        // Função para atualizar as mensagens automaticamente
-        setInterval(() => {
-            fetch(`conversa.php?id_conversa=<?php echo $id_conversa; ?>&update=1`)
-                .then(response => response.text())
-                .then(data => {
-                    document.querySelector('#mensagens').innerHTML = data;
-                });
-        }, 3000); // Atualiza a cada 3 segundos
-    </script>
-</body>
+            </section>
+        </main>
+
+            <script>
+                // Função para atualizar as mensagens automaticamente
+                setInterval(() => {
+                    fetch(`conversa.php?id_conversa=<?php echo $id_conversa; ?>&update=1`)
+                        .then(response => response.text())
+                        .then(data => {
+                            document.querySelector('#mensagens').innerHTML = data;
+                        });
+                }, 3000); // Atualiza a cada 3 segundos
+            </script>
+
+        <!-- Rodapé -->
+        <footer class="footer">
+            <p>UNIVESP PI 2024</p>
+            <p><a href="https://github.com/UNIVESP-PI-BAURU/PI24b.git" target="_blank">https://github.com/UNIVESP-PI-BAURU/PI24b.git</a></p>
+        </footer>
+        
+    </body>
 </html>
