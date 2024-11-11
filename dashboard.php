@@ -151,12 +151,14 @@ $id_usuario = $_SESSION['id_usuario']; // Garantindo que id_usuario esteja corre
                 <h4>Últimas Mensagens</h4>
                 <?php
                     // Consulta para pegar as últimas 5 mensagens trocadas
-                    $sql_mensagens = "SELECT m.id, m.mensagem AS conteudo, m.data_envio, m.status_leitura, u.nome AS usuario_nome
-                    FROM Mensagens m
-                    JOIN Alunos a ON a.id = m.id_remetente OR a.id = m.id_destinatario
-                    JOIN Tutores t ON t.id = m.id_remetente OR t.id = m.id_destinatario
-                    WHERE (m.id_remetente = :id_usuario OR m.id_destinatario = :id_usuario)
-                    ORDER BY m.data_envio DESC LIMIT 5"; // Limitar para as últimas 5 mensagens
+                    $sql_mensagens = "SELECT m.id, m.mensagem AS conteudo, m.data_envio, m.status_leitura, 
+                        COALESCE(a.nome, t.nome) AS usuario_nome
+                        FROM Mensagens m
+                        LEFT JOIN Alunos a ON a.id = m.id_remetente OR a.id = m.id_destinatario
+                        LEFT JOIN Tutores t ON t.id = m.id_remetente OR t.id = m.id_destinatario
+                        WHERE (m.id_remetente = :id_usuario OR m.id_destinatario = :id_usuario)
+                        ORDER BY m.data_envio DESC LIMIT 5"; // Limitar para as últimas 5 mensagens
+
 
                     try {
                         $stmt_mensagens = $conn->prepare($sql_mensagens);
