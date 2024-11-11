@@ -59,12 +59,15 @@ $nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou
             <section class="perfil-resumo">
                 <h4>Resumo do Perfil</h4>
                 <?php
-                    // Exibe informações adicionais do perfil (exemplo: foto, cidade, idioma)
+                    // Verifica se a variável de foto do usuário está definida
                     if (isset($_SESSION['foto_usuario']) && !empty($_SESSION['foto_usuario'])) {
                         $foto_usuario = $_SESSION['foto_usuario'];
                         echo "<img src='ASSETS/IMG/$foto_usuario' alt='Foto do usuário' class='avatar-dashboard'><br>";
+                    } else {
+                        echo "<p>Foto não disponível.</p>";  // Mensagem se a foto não estiver definida
                     }
                 ?>
+                <p>Nome: <?php echo htmlspecialchars($nome_usuario); ?></p>
             </section>
             <section class="perfil-completo">
                 <button onclick="window.location.href='perfil.php';">Ver Perfil Completo</button>
