@@ -15,6 +15,7 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
 // Define o tipo de usuário e carrega o nome do usuário da sessão
 $tipo_usuario = $_SESSION['tipo_usuario']; // 'aluno' ou 'tutor'
 $nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou "Visitante" se não estiver definido
+$id_usuario = $_SESSION['id_usuario']; // Garantindo que id_usuario esteja corretamente setado
 
 // Debug: Exibe o tipo e nome do usuário
 // echo "Tipo de usuário: $tipo_usuario<br>";
@@ -95,23 +96,23 @@ $nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou
                         $sql = "SELECT c.id, t.nome AS tutor_nome, c.status
                                 FROM Contratos c
                                 JOIN Tutores t ON c.id_tutor = t.id
-                                WHERE c.id_aluno = ?"; // Ajuste com a consulta que você quer
+                                WHERE c.id_aluno = :id_usuario"; // Ajuste com a consulta que você quer
                     } else {
                         // Exibe contratos do tutor
                         $sql = "SELECT c.id, a.nome AS aluno_nome, c.status
                                 FROM Contratos c
                                 JOIN Alunos a ON c.id_aluno = a.id
-                                WHERE c.id_tutor = ?"; // Ajuste com a consulta que você quer
+                                WHERE c.id_tutor = :id_usuario"; // Ajuste com a consulta que você quer
                     }
 
                     // Preparar e executar a consulta
                     if ($stmt = $conn->prepare($sql)) {
                         $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT); // Usando id_usuario da sessão
                         $stmt->execute();
-                        $result = $stmt->get_result();
+                        $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // Usar fetchAll para obter todas as linhas de uma vez
 
-                        if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
+                        if (count($result) > 0) {
+                            foreach ($result as $row) {
                                 $nome_contratado = ($tipo_usuario === 'aluno') ? $row['tutor_nome'] : $row['aluno_nome'];
                                 $status = $row['status'];
                                 $contrato_id = $row['id'];
