@@ -16,8 +16,9 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
 $tipo_usuario = $_SESSION['tipo_usuario']; // 'aluno' ou 'tutor'
 $nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou "Visitante" se não estiver definido
 
-// Recupera o ID do usuário para fazer consultas na tabela de Contratos
-$id_usuario = $_SESSION['id_usuario'];
+// Debug: Exibe o tipo e nome do usuário
+// echo "Tipo de usuário: $tipo_usuario<br>";
+// echo "Nome de usuário: $nome_usuario<br>";
 ?>
 
 <!DOCTYPE html>
@@ -74,12 +75,21 @@ $id_usuario = $_SESSION['id_usuario'];
         </section>
         <!-- Fim Resumo Perfil -->
 
+        <!-- complemento: Pesquisa -->
+        <section class="signup-section">
+            <section class="pesquisa">
+                <h4>Pesquisar</h4>
+                <button onclick="window.location.href='pesquisa.php';">Ir para Pesquisa</button>
+            </section>
+        </section>
+        <!-- Fim Pesquisa -->
+
         <!-- complemento: Contratos -->
         <section class="signup-section">
             <section class="contratos">
                 <h4>Contratos</h4>
                 <?php
-                    // Defina a consulta SQL dependendo do tipo de usuário
+                    // Exibe os contratos dependendo do tipo de usuário
                     if ($tipo_usuario === 'aluno') {
                         // Exibe contratos do aluno
                         $sql = "SELECT c.id, t.nome AS tutor_nome, c.status
@@ -96,20 +106,16 @@ $id_usuario = $_SESSION['id_usuario'];
 
                     // Preparar e executar a consulta
                     if ($stmt = $conn->prepare($sql)) {
-                        // Passa o id do usuário (tutor ou aluno) para a consulta
-                        $stmt->bind_param("i", $id_usuario);
+                        $stmt->bind_param("i", $_SESSION['id_usuario']); // Usando id_usuario da sessão
                         $stmt->execute();
                         $result = $stmt->get_result();
 
-                        // Verifica se existem resultados
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
-                                // Define as variáveis para o nome e o status
                                 $nome_contratado = ($tipo_usuario === 'aluno') ? $row['tutor_nome'] : $row['aluno_nome'];
                                 $status = $row['status'];
                                 $contrato_id = $row['id'];
 
-                                // Exibe os contratos
                                 echo "<p>Contrato ID: $contrato_id - " . ($tipo_usuario === 'aluno' ? 'Tutor(a): ' : 'Aluno(a): ') . htmlspecialchars($nome_contratado) . " - Status: " . htmlspecialchars($status) . "</p>";
 
                                 // Exibe botões de ação dependendo do status do contrato
