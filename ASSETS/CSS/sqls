@@ -54,14 +54,15 @@ FOREIGN KEY (id_conversa) REFERENCES Conversas(id_conversa) ON DELETE CASCADE;
 
 
 
+-- Tabela de Conversas
 CREATE TABLE Conversas (
     id_conversa INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario1 INT NOT NULL,
-    id_usuario2 INT NOT NULL,
-    data_inicio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_usuario1) REFERENCES Alunos(id) ON DELETE CASCADE,
-    FOREIGN KEY (id_usuario2) REFERENCES Tutores(id) ON DELETE CASCADE
+    id_aluno INT NOT NULL,
+    id_tutor INT NOT NULL,
+    FOREIGN KEY (id_aluno) REFERENCES Alunos(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_tutor) REFERENCES Tutores(id) ON DELETE CASCADE
 );
+
 
 
 

@@ -2,90 +2,115 @@
 session_start();
 require_once 'conexao.php';
 
-// Verifica se o usuário está logado e se o ID do destinatário foi fornecido
-if (!isset($_SESSION['id_usuario']) || !isset($_GET['id_destinatario'])) {
+if (!isset($_SESSION['id_usuario']) || !isset($_GET['id_conversa'])) {
     header("Location: login.php");
     exit();
 }
 
+$id_conversa = intval($_GET['id_conversa']);
 $id_usuario_logado = $_SESSION['id_usuario'];
-$id_destinatario = $_GET['id_destinatario'];
 
-// Prepara a consulta SQL para buscar as mensagens da conversa
+// Recupera as mensagens da conversa
 $sql_mensagens = "SELECT m.*, 
-                         u1.nome AS remetente_nome, 
-                         u2.nome AS destinatario_nome
+                  CASE WHEN m.id_remetente = :id_usuario THEN 'Você' ELSE 'Outro' END AS remetente
                   FROM Mensagens m
-                  JOIN Alunos u1 ON m.id_remetente = u1.id
-                  JOIN Tutores u2 ON m.id_destinatario = u2.id
-                  WHERE (m.id_remetente = :id_usuario_logado AND m.id_destinatario = :id_destinatario) 
-                     OR (m.id_remetente = :id_destinatario AND m.id_destinatario = :id_usuario_logado)
+                  WHERE m.id_conversa = :id_conversa
                   ORDER BY m.data_envio ASC";
 $stmt_mensagens = $conn->prepare($sql_mensagens);
-$stmt_mensagens->bindParam(':id_usuario_logado', $id_usuario_logado, PDO::PARAM_INT);
-$stmt_mensagens->bindParam(':id_destinatario', $id_destinatario, PDO::PARAM_INT);
+$stmt_mensagens->bindParam(':id_conversa', $id_conversa, PDO::PARAM_INT);
+$stmt_mensagens->bindParam(':id_usuario', $id_usuario_logado, PDO::PARAM_INT);
 $stmt_mensagens->execute();
 $mensagens = $stmt_mensagens->fetchAll(PDO::FETCH_ASSOC);
 
-// Processa o envio de uma nova mensagem
+// Envio de nova mensagem
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['mensagem'])) {
     $mensagem = trim($_POST['mensagem']);
+
+    // Define o destinatário com base na conversa
+    $sql_destinatario = "
+        SELECT CASE 
+                   WHEN :id_usuario = id_aluno THEN id_tutor 
+                   ELSE id_aluno 
+               END AS id_destinatario
+        FROM Conversas 
+        WHERE id_conversa = :id_conversa";
+    $stmt_destinatario = $conn->prepare($sql_destinatario);
+    $stmt_destinatario->bindParam(':id_usuario', $id_usuario_logado, PDO::PARAM_INT);
+    $stmt_destinatario->bindParam(':id_conversa', $id_conversa, PDO::PARAM_INT);
+    $stmt_destinatario->execute();
+    $destinatario = $stmt_destinatario->fetch(PDO::FETCH_ASSOC);
     
-    // Insere a nova mensagem na tabela Mensagens
-    $sql_envio = "INSERT INTO Mensagens (id_remetente, id_destinatario, mensagem, data_envio)
-                  VALUES (:id_remetente, :id_destinatario, :mensagem, NOW())";
+    $id_destinatario = $destinatario['id_destinatario'];
+
+    // Insere a nova mensagem
+    $sql_envio = "INSERT INTO Mensagens (id_remetente, id_destinatario, id_conversa, mensagem, data_envio)
+                  VALUES (:id_remetente, :id_destinatario, :id_conversa, :mensagem, NOW())";
     $stmt_envio = $conn->prepare($sql_envio);
     $stmt_envio->bindParam(':id_remetente', $id_usuario_logado, PDO::PARAM_INT);
     $stmt_envio->bindParam(':id_destinatario', $id_destinatario, PDO::PARAM_INT);
+    $stmt_envio->bindParam(':id_conversa', $id_conversa, PDO::PARAM_INT);
     $stmt_envio->bindParam(':mensagem', $mensagem, PDO::PARAM_STR);
     $stmt_envio->execute();
 
-    // Atualiza a página para mostrar a nova mensagem
-    header("Location: conversa.php?id_destinatario=$id_destinatario");
+    header("Location: conversa.php?id_conversa=$id_conversa");
     exit();
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Conversa</title>
-    <link rel="stylesheet" href="ASSETS/CSS/style.css">
+    <style>
+        #mensagens {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        .mensagem {
+            margin-bottom: 10px;
+        }
+        .remetente {
+            font-weight: bold;
+        }
+        .data-envio {
+            font-size: 0.8em;
+            color: #888;
+        }
+    </style>
 </head>
 <body>
+    <h1>Conversa</h1>
 
-<header class="header">
-    <img src="ASSETS/IMG/capa.png" alt="Capa do site">
-</header>
-
-<main class="main-content">
-    <h2>Conversa com <?php echo htmlspecialchars($_SESSION['tipo_usuario'] === 'aluno' ? 'Tutor' : 'Aluno'); ?></h2>
-
-    <!-- Exibição das mensagens -->
-    <div class="chat-box">
-        <?php if (empty($mensagens)): ?>
-            <p class="sem-mensagens">Nenhuma mensagem ainda. Seja o primeiro a enviar uma!</p>
-        <?php else: ?>
-            <?php foreach ($mensagens as $mensagem): ?>
-                <div class="mensagem <?php echo $mensagem['id_remetente'] === $id_usuario_logado ? 'minha-mensagem' : 'mensagem-destinatario'; ?>">
-                    <strong><?php echo htmlspecialchars($mensagem['remetente_nome']); ?>:</strong>
-                    <p><?php echo nl2br(htmlspecialchars($mensagem['mensagem'])); ?></p>
-                    <span class="data-envio"><?php echo date('d/m/Y H:i', strtotime($mensagem['data_envio'])); ?></span>
-                </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
+    <!-- Exibindo as mensagens -->
+    <div id="mensagens">
+        <?php foreach ($mensagens as $mensagem): ?>
+            <div class="mensagem">
+                <span class="remetente"><?php echo htmlspecialchars($mensagem['remetente']); ?>:</span>
+                <span><?php echo htmlspecialchars($mensagem['mensagem']); ?></span>
+                <br>
+                <span class="data-envio"><?php echo htmlspecialchars($mensagem['data_envio']); ?></span>
+            </div>
+        <?php endforeach; ?>
     </div>
 
-    <!-- Formulário para enviar mensagem -->
-    <form action="" method="post" class="enviar-mensagem-form">
-        <textarea name="mensagem" rows="3" placeholder="Digite sua mensagem" required></textarea>
+    <!-- Formulário para enviar uma nova mensagem -->
+    <form method="post" action="">
+        <textarea name="mensagem" rows="3" cols="50" placeholder="Digite sua mensagem"></textarea>
         <button type="submit">Enviar</button>
     </form>
 
-    <button onclick="window.location.href='dashboard.php'">Voltar para a Dashboard</button>
-</main>
-
+    <script>
+        // Função para atualizar as mensagens automaticamente
+        setInterval(() => {
+            fetch(`conversa.php?id_conversa=<?php echo $id_conversa; ?>&update=1`)
+                .then(response => response.text())
+                .then(data => {
+                    document.querySelector('#mensagens').innerHTML = data;
+                });
+        }, 3000); // Atualiza a cada 3 segundos
+    </script>
 </body>
 </html>

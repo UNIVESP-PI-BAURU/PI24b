@@ -80,8 +80,9 @@ if (!$perfil_usuario) {
                     <button onclick="window.location.href='contratar.php?id=<?php echo $perfil_usuario['id']; ?>'">Contratar</button>
                 <!-- Botão de iniciar chat -->
                 <form action="iniciar_chat.php" method="post">
-                    <input type="hidden" name="id_destinatario" value="<?php echo $perfil_usuario['id']; ?>"> <!-- ID do tutor -->
+                    <input type="hidden" name="id_destinatario" value="<?php echo $perfil_usuario['id']; ?>">
                     <button type="submit">Iniciar Chat</button>
+                </form>
                 </form>
                 <?php endif; ?>
             </div>

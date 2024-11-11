@@ -2,35 +2,41 @@
 session_start();
 require_once 'conexao.php';
 
-// Verifica se o usuário está logado
-if (!isset($_SESSION['id_usuario'])) {
+if (!isset($_SESSION['id_usuario']) || $_SESSION['tipo_usuario'] !== 'aluno') {
     header("Location: login.php");
     exit();
 }
 
-$id_remetente = $_SESSION['id_usuario']; // Usuário logado
-$id_destinatario = $_POST['id_destinatario']; // ID do tutor (destinatário)
+$id_aluno = $_SESSION['id_usuario'];
+$id_tutor = isset($_POST['id_destinatario']) ? intval($_POST['id_destinatario']) : null;
 
-if ($id_destinatario) {
-    // Gera um ID para a nova conversa (caso você queira gerenciar conversas)
-    $id_conversa = uniqid();
-
-    // Insere a mensagem inicial na tabela "Mensagens"
-    $sql_iniciar_mensagem = "INSERT INTO Mensagens (id_remetente, id_destinatario, mensagem, data_envio, id_conversa) 
-                             VALUES (:id_remetente, :id_destinatario, 'Conversa iniciada', NOW(), :id_conversa)";
-    $stmt_iniciar_mensagem = $conn->prepare($sql_iniciar_mensagem);
-    $stmt_iniciar_mensagem->bindParam(':id_remetente', $id_remetente, PDO::PARAM_INT);
-    $stmt_iniciar_mensagem->bindParam(':id_destinatario', $id_destinatario, PDO::PARAM_INT);
-    $stmt_iniciar_mensagem->bindParam(':id_conversa', $id_conversa, PDO::PARAM_STR); // Usando o id gerado para a conversa
-    
-    if ($stmt_iniciar_mensagem->execute()) {
-        // Redireciona para a página do chat real
-        header("Location: conversa.php?id_destinatario=$id_destinatario&id_conversa=$id_conversa");
-        exit();
-    } else {
-        echo "Erro ao iniciar o chat.";
-    }
-} else {
-    echo "Erro: Destinatário não encontrado.";
+if (!$id_tutor) {
+    header("Location: dashboard.php");
+    exit();
 }
+
+// Verifica se a conversa já existe
+$sql_verifica = "SELECT id_conversa FROM Conversas WHERE id_aluno = :id_aluno AND id_tutor = :id_tutor";
+$stmt_verifica = $conn->prepare($sql_verifica);
+$stmt_verifica->bindParam(':id_aluno', $id_aluno, PDO::PARAM_INT);
+$stmt_verifica->bindParam(':id_tutor', $id_tutor, PDO::PARAM_INT);
+$stmt_verifica->execute();
+$conversa = $stmt_verifica->fetch(PDO::FETCH_ASSOC);
+
+if (!$conversa) {
+    // Se não existir conversa, cria uma nova
+    $sql_inicia_conversa = "INSERT INTO Conversas (id_aluno, id_tutor) VALUES (:id_aluno, :id_tutor)";
+    $stmt_inicia_conversa = $conn->prepare($sql_inicia_conversa);
+    $stmt_inicia_conversa->bindParam(':id_aluno', $id_aluno, PDO::PARAM_INT);
+    $stmt_inicia_conversa->bindParam(':id_tutor', $id_tutor, PDO::PARAM_INT);
+    $stmt_inicia_conversa->execute();
+
+    $id_conversa = $conn->lastInsertId();
+} else {
+    $id_conversa = $conversa['id_conversa'];
+}
+
+// Redireciona para conversa.php com o id_conversa
+header("Location: conversa.php?id_conversa=$id_conversa");
+exit();
 ?>
