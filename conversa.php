@@ -66,6 +66,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['mensagem'])) {
     header("Location: conversa.php?id_conversa=$id_conversa");
     exit();
 }
+
+// Se o parâmetro "update" estiver presente, retorna apenas as mensagens
+if (isset($_GET['update'])) {
+    foreach ($mensagens as $mensagem) {
+        echo "<div class='mensagem'>";
+        echo "<span class='remetente'>" . htmlspecialchars($mensagem['remetente']) . ":</span>";
+        echo "<span>" . htmlspecialchars($mensagem['conteudo']) . "</span><br>";
+        echo "<span class='data-envio'>" . htmlspecialchars($mensagem['data_envio']) . "</span>";
+        if ($mensagem['status_leitura'] == 'não_lida') {
+            echo "<span class='status-leitura'>(Não lida)</span>";
+        } else {
+            echo "<span class='status-leitura'>(Lida)</span>";
+        }
+        echo "</div>";
+    }
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -73,30 +90,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['mensagem'])) {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Pesquisa</title>
+        <title>Conversa</title>
         <link rel="stylesheet" href="ASSETS/CSS/style.css">
-            <style>
-                #mensagens {
-                    max-height: 400px;
-                    overflow-y: auto;
-                    border: 1px solid #ddd;
-                    padding: 10px;
-                }
-                .mensagem {
-                    margin-bottom: 10px;
-                }
-                .remetente {
-                    font-weight: bold;
-                }
-                .data-envio {
-                    font-size: 0.8em;
-                    color: #888;
-                }
-                .status-leitura {
-                    font-size: 0.9em;
-                    color: green;
-                }
-            </style>
+        <style>
+            #mensagens {
+                max-height: 400px;
+                overflow-y: auto;
+                border: 1px solid #ddd;
+                padding: 10px;
+            }
+            .mensagem {
+                margin-bottom: 10px;
+            }
+            .remetente {
+                font-weight: bold;
+            }
+            .data-envio {
+                font-size: 0.8em;
+                color: #888;
+            }
+            .status-leitura {
+                font-size: 0.9em;
+                color: green;
+            }
+        </style>
     </head>
     <body>
 
@@ -111,49 +128,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['mensagem'])) {
         </nav>
 
         <!-- Conteúdo Principal -->
-        <main class="main-content">
-            <section class="signup-section">
+        <?php include 'conversa_main.php'; ?>
 
-            <h3>Conversa</h3>
+        <script>
+            // Função para atualizar as mensagens automaticamente
+            setInterval(() => {
+                fetch(`conversa.php?id_conversa=<?php echo $id_conversa; ?>&update=1`)
+                    .then(response => response.text())
+                    .then(data => {
+                        document.querySelector('#mensagens').innerHTML = data;
+                    });
+            }, 3000); // Atualiza a cada 3 segundos
+        </script>
 
-            <!-- Exibindo as mensagens -->
-            <div id="mensagens">
-                <?php foreach ($mensagens as $mensagem): ?>
-                    <div class="mensagem">
-                        <span class="remetente"><?php echo htmlspecialchars($mensagem['remetente']); ?>:</span>
-                        <span><?php echo htmlspecialchars($mensagem['mensagem']); ?></span>
-                        <br>
-                        <span class="data-envio"><?php echo htmlspecialchars($mensagem['data_envio']); ?></span>
-                        <?php if ($mensagem['status_leitura'] == 'não_lida'): ?>
-                            <span class="status-leitura">(Não lida)</span>
-                        <?php else: ?>
-                            <span class="status-leitura">(Lida)</span>
-                        <?php endif; ?>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-
-            <!-- Formulário para enviar uma nova mensagem -->
-            <form method="post" action="">
-                <textarea name="mensagem" rows="3" cols="50" placeholder="Digite sua mensagem"></textarea>
-                <button type="submit">Enviar</button>
-            </form>
-
-            </section>
-        </main>
-
-            <script>
-                // Função para atualizar as mensagens automaticamente
-                setInterval(() => {
-                    fetch(`conversa.php?id_conversa=<?php echo $id_conversa; ?>&update=1`)
-                        .then(response => response.text())
-                        .then(data => {
-                            document.querySelector('#mensagens').innerHTML = data;
-                        });
-                }, 3000); // Atualiza a cada 3 segundos
-            </script>
-
-        <!-- Rodapé -->
         <footer class="footer">
             <p>UNIVESP PI 2024</p>
             <p><a href="https://github.com/UNIVESP-PI-BAURU/PI24b.git" target="_blank">https://github.com/UNIVESP-PI-BAURU/PI24b.git</a></p>
