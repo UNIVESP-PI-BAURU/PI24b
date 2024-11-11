@@ -11,8 +11,10 @@ if (!isset($_SESSION['id_usuario']) || !isset($_GET['id_destinatario'])) {
 $id_usuario_logado = $_SESSION['id_usuario'];
 $id_destinatario = $_GET['id_destinatario'];
 
-// Carrega as mensagens da conversa entre o usuário logado e o destinatário
-$sql_mensagens = "SELECT m.*, u1.nome AS remetente_nome, u2.nome AS destinatario_nome
+// Prepara a consulta SQL para buscar as mensagens da conversa
+$sql_mensagens = "SELECT m.*, 
+                         u1.nome AS remetente_nome, 
+                         u2.nome AS destinatario_nome
                   FROM Mensagens m
                   JOIN Alunos u1 ON m.id_remetente = u1.id
                   JOIN Tutores u2 ON m.id_destinatario = u2.id
@@ -63,18 +65,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['mensagem'])) {
 
     <!-- Exibição das mensagens -->
     <div class="chat-box">
-        <?php foreach ($mensagens as $mensagem): ?>
-            <div class="mensagem">
-                <strong><?php echo htmlspecialchars($mensagem['remetente_nome']); ?>:</strong>
-                <p><?php echo htmlspecialchars($mensagem['mensagem']); ?></p>
-                <span class="data-envio"><?php echo date('d/m/Y H:i', strtotime($mensagem['data_envio'])); ?></span>
-            </div>
-        <?php endforeach; ?>
+        <?php if (empty($mensagens)): ?>
+            <p class="sem-mensagens">Nenhuma mensagem ainda. Seja o primeiro a enviar uma!</p>
+        <?php else: ?>
+            <?php foreach ($mensagens as $mensagem): ?>
+                <div class="mensagem <?php echo $mensagem['id_remetente'] === $id_usuario_logado ? 'minha-mensagem' : 'mensagem-destinatario'; ?>">
+                    <strong><?php echo htmlspecialchars($mensagem['remetente_nome']); ?>:</strong>
+                    <p><?php echo nl2br(htmlspecialchars($mensagem['mensagem'])); ?></p>
+                    <span class="data-envio"><?php echo date('d/m/Y H:i', strtotime($mensagem['data_envio'])); ?></span>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
     </div>
 
     <!-- Formulário para enviar mensagem -->
     <form action="" method="post" class="enviar-mensagem-form">
-        <textarea name="mensagem" rows="3" placeholder="Digite sua mensagem"></textarea>
+        <textarea name="mensagem" rows="3" placeholder="Digite sua mensagem" required></textarea>
         <button type="submit">Enviar</button>
     </form>
 
