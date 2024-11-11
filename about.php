@@ -78,6 +78,8 @@ if (!$perfil_usuario) {
                 <!-- Botão para contratar, apenas para alunos -->
                 <?php if ($tipo_usuario_logado === 'aluno'): ?>
                     <button onclick="window.location.href='contratar.php?id=<?php echo $perfil_usuario['id']; ?>'">Contratar</button>
+                    <!-- Botão para iniciar um chat com o tutor -->
+                    <button onclick="window.location.href='chat.php?id=<?php echo $perfil_usuario['id']; ?>'">Iniciar Chat</button>
                 <?php endif; ?>
             </div>
 

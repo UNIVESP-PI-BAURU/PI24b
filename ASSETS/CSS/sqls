@@ -48,6 +48,16 @@ CREATE TABLE Mensagens (
 );
 
 
+CREATE TABLE Conversas (
+    id_conversa INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario1 INT NOT NULL,
+    id_usuario2 INT NOT NULL,
+    data_inicio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario1) REFERENCES Alunos(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_usuario2) REFERENCES Tutores(id) ON DELETE CASCADE
+);
+
+
 
 -- Tabela de Curtidas (Relaciona Alunos e Tutores)
 CREATE TABLE Curtidas (
