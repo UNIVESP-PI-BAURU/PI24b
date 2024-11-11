@@ -152,13 +152,12 @@ $id_usuario = $_SESSION['id_usuario']; // Garantindo que id_usuario esteja corre
                 <?php
                     // Consulta para pegar as últimas 5 mensagens trocadas
                     $sql_mensagens = "SELECT m.id, m.mensagem AS conteudo, m.data_envio, m.status_leitura, 
-                        COALESCE(a.nome, t.nome) AS usuario_nome
+                        COALESCE(a.nome, t.nome) AS usuario_nome, m.id_conversa
                         FROM Mensagens m
                         LEFT JOIN Alunos a ON a.id = m.id_remetente OR a.id = m.id_destinatario
                         LEFT JOIN Tutores t ON t.id = m.id_remetente OR t.id = m.id_destinatario
                         WHERE (m.id_remetente = :id_usuario OR m.id_destinatario = :id_usuario)
                         ORDER BY m.data_envio DESC LIMIT 5"; // Limitar para as últimas 5 mensagens
-
 
                     try {
                         $stmt_mensagens = $conn->prepare($sql_mensagens);
@@ -170,9 +169,10 @@ $id_usuario = $_SESSION['id_usuario']; // Garantindo que id_usuario esteja corre
                         if (count($result_mensagens) > 0) {
                             foreach ($result_mensagens as $mensagem) {
                                 $nome_usuario_mensagem = $mensagem['usuario_nome'];
-                                $conteudo_mensagem = htmlspecialchars($mensagem['mensagem']);
+                                $conteudo_mensagem = htmlspecialchars($mensagem['conteudo']);
                                 $data_envio = $mensagem['data_envio'];
                                 $status_leitura = $mensagem['status_leitura'];
+                                $id_conversa = $mensagem['id_conversa']; // ID da conversa
 
                                 // Exibe o conteúdo da mensagem
                                 echo "<p><strong>$nome_usuario_mensagem</strong>: $conteudo_mensagem";
@@ -190,10 +190,13 @@ $id_usuario = $_SESSION['id_usuario']; // Garantindo que id_usuario esteja corre
                         echo "Erro: " . $e->getMessage();
                     }
                 ?>
-                <button onclick="window.location.href='conversa.php';">Ver todas as mensagens</button>
+                <!-- Botão para abrir a conversa específica -->
+                <button onclick="window.location.href='conversa.php?id_conversa=<?php echo $id_conversa; ?>';">Ver todas as mensagens</button>
+
             </section>
         </section>
         <!-- Fim Últimas Mensagens -->
+
 
     </main>
     <!-- Fim Conteúdo Principal -->
