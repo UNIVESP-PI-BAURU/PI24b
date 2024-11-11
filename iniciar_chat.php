@@ -12,18 +12,19 @@ $id_remetente = $_SESSION['id_usuario']; // Usuário logado
 $id_destinatario = $_POST['id_destinatario']; // ID do tutor (destinatário)
 
 if ($id_destinatario) {
-    // Cria uma nova conversa na tabela "Conversas"
-    $sql_iniciar_conversa = "INSERT INTO Conversas (id_remetente, id_destinatario) VALUES (:id_remetente, :id_destinatario)";
-    $stmt_iniciar_conversa = $conn->prepare($sql_iniciar_conversa);
-    $stmt_iniciar_conversa->bindParam(':id_remetente', $id_remetente, PDO::PARAM_INT);
-    $stmt_iniciar_conversa->bindParam(':id_destinatario', $id_destinatario, PDO::PARAM_INT);
+    // Insere a mensagem inicial na tabela "Mensagens"
+    $sql_iniciar_mensagem = "INSERT INTO Mensagens (id_remetente, id_destinatario, mensagem, data_envio) 
+                             VALUES (:id_remetente, :id_destinatario, 'Conversa iniciada', NOW())";
+    $stmt_iniciar_mensagem = $conn->prepare($sql_iniciar_mensagem);
+    $stmt_iniciar_mensagem->bindParam(':id_remetente', $id_remetente, PDO::PARAM_INT);
+    $stmt_iniciar_mensagem->bindParam(':id_destinatario', $id_destinatario, PDO::PARAM_INT);
     
-    if ($stmt_iniciar_conversa->execute()) {
-        // Após inserir a conversa, recupera o ID da nova conversa
-        $id_conversa = $conn->lastInsertId();
+    if ($stmt_iniciar_mensagem->execute()) {
+        // Recupera o ID da nova mensagem (não precisamos de uma nova "conversa" aqui)
+        $id_mensagem = $conn->lastInsertId();
 
         // Redireciona para a página do chat real
-        header("Location: conversa.php?id_conversa=$id_conversa");
+        header("Location: conversa.php?id_destinatario=$id_destinatario");
         exit();
     } else {
         echo "Erro ao iniciar o chat.";

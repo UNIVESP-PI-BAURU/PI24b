@@ -3,51 +3,25 @@ session_start();
 require_once 'conexao.php';
 
 // Verifica se o usuário está logado e se o ID do destinatário foi fornecido
-if (!isset($_SESSION['id_usuario']) || !isset($_GET['id'])) {
+if (!isset($_SESSION['id_usuario']) || !isset($_GET['id_destinatario'])) {
     header("Location: login.php");
     exit();
 }
 
 $id_usuario_logado = $_SESSION['id_usuario'];
-$id_destinatario = $_GET['id'];
+$id_destinatario = $_GET['id_destinatario'];
 
-// Verifica se o destinatário é aluno ou tutor
-$tabela_destinatario = $_SESSION['tipo_usuario'] === 'aluno' ? 'Tutores' : 'Alunos';
-
-// Verifica se já existe uma conversa entre o usuário logado e o destinatário
-$sql_conversa = "SELECT id_conversa FROM Mensagens WHERE (id_remetente = :id_usuario_logado AND id_destinatario = :id_destinatario)
-                 OR (id_remetente = :id_destinatario AND id_destinatario = :id_usuario_logado)
-                 LIMIT 1";
-$stmt_conversa = $conn->prepare($sql_conversa);
-$stmt_conversa->bindParam(':id_usuario_logado', $id_usuario_logado, PDO::PARAM_INT);
-$stmt_conversa->bindParam(':id_destinatario', $id_destinatario, PDO::PARAM_INT);
-$stmt_conversa->execute();
-$conversa = $stmt_conversa->fetch(PDO::FETCH_ASSOC);
-
-// Se não existe conversa, cria uma nova
-if (!$conversa) {
-    $sql_criar_conversa = "INSERT INTO Mensagens (id_remetente, id_destinatario, mensagem, data_envio)
-                           VALUES (:id_usuario_logado, :id_destinatario, 'Conversa iniciada', NOW())";
-    $stmt_criar_conversa = $conn->prepare($sql_criar_conversa);
-    $stmt_criar_conversa->bindParam(':id_usuario_logado', $id_usuario_logado, PDO::PARAM_INT);
-    $stmt_criar_conversa->bindParam(':id_destinatario', $id_destinatario, PDO::PARAM_INT);
-    $stmt_criar_conversa->execute();
-
-    // Recupera o id da nova conversa
-    $id_conversa = $conn->lastInsertId();
-} else {
-    $id_conversa = $conversa['id_conversa'];
-}
-
-// Carrega as mensagens da conversa
+// Carrega as mensagens da conversa entre o usuário logado e o destinatário
 $sql_mensagens = "SELECT m.*, u1.nome AS remetente_nome, u2.nome AS destinatario_nome
                   FROM Mensagens m
                   JOIN Alunos u1 ON m.id_remetente = u1.id
                   JOIN Tutores u2 ON m.id_destinatario = u2.id
-                  WHERE m.id_conversa = :id_conversa
+                  WHERE (m.id_remetente = :id_usuario_logado AND m.id_destinatario = :id_destinatario) 
+                     OR (m.id_remetente = :id_destinatario AND m.id_destinatario = :id_usuario_logado)
                   ORDER BY m.data_envio ASC";
 $stmt_mensagens = $conn->prepare($sql_mensagens);
-$stmt_mensagens->bindParam(':id_conversa', $id_conversa, PDO::PARAM_INT);
+$stmt_mensagens->bindParam(':id_usuario_logado', $id_usuario_logado, PDO::PARAM_INT);
+$stmt_mensagens->bindParam(':id_destinatario', $id_destinatario, PDO::PARAM_INT);
 $stmt_mensagens->execute();
 $mensagens = $stmt_mensagens->fetchAll(PDO::FETCH_ASSOC);
 
@@ -56,17 +30,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['mensagem'])) {
     $mensagem = trim($_POST['mensagem']);
     
     // Insere a nova mensagem na tabela Mensagens
-    $sql_envio = "INSERT INTO Mensagens (id_remetente, id_destinatario, mensagem, data_envio, id_conversa)
-                  VALUES (:id_remetente, :id_destinatario, :mensagem, NOW(), :id_conversa)";
+    $sql_envio = "INSERT INTO Mensagens (id_remetente, id_destinatario, mensagem, data_envio)
+                  VALUES (:id_remetente, :id_destinatario, :mensagem, NOW())";
     $stmt_envio = $conn->prepare($sql_envio);
     $stmt_envio->bindParam(':id_remetente', $id_usuario_logado, PDO::PARAM_INT);
     $stmt_envio->bindParam(':id_destinatario', $id_destinatario, PDO::PARAM_INT);
     $stmt_envio->bindParam(':mensagem', $mensagem, PDO::PARAM_STR);
-    $stmt_envio->bindParam(':id_conversa', $id_conversa, PDO::PARAM_INT);
     $stmt_envio->execute();
 
     // Atualiza a página para mostrar a nova mensagem
-    header("Location: conversa.php?id=$id_destinatario");
+    header("Location: conversa.php?id_destinatario=$id_destinatario");
     exit();
 }
 ?>
