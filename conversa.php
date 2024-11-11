@@ -22,7 +22,7 @@ $stmt_atualiza_status->bindParam(':id_usuario', $id_usuario_logado, PDO::PARAM_I
 $stmt_atualiza_status->execute();
 
 // Recupera as mensagens da conversa
-$sql_mensagens = "SELECT m.*, 
+$sql_mensagens = "SELECT m.id, m.mensagem AS conteudo, m.data_envio, m.status_leitura, 
                   CASE WHEN m.id_remetente = :id_usuario THEN 'Você' ELSE 'Outro' END AS remetente
                   FROM Mensagens m
                   WHERE m.id_conversa = :id_conversa
@@ -158,6 +158,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['mensagem'])) {
             <p>UNIVESP PI 2024</p>
             <p><a href="https://github.com/UNIVESP-PI-BAURU/PI24b.git" target="_blank">https://github.com/UNIVESP-PI-BAURU/PI24b.git</a></p>
         </footer>
-        
+
     </body>
 </html>
