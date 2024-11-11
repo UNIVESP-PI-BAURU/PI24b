@@ -145,6 +145,53 @@ $id_usuario = $_SESSION['id_usuario']; // Garantindo que id_usuario esteja corre
         </section>
         <!-- Fim Contratos -->
 
+        <!-- complemento: Últimas Mensagens -->
+        <section class="signup-section">
+            <section class="mensagens">
+                <h4>Últimas Mensagens</h4>
+                <?php
+                    // Consulta para pegar as últimas 5 mensagens trocadas
+                    $sql_mensagens = "SELECT m.id, m.conteudo, m.data_envio, m.status_leitura, u.nome AS usuario_nome
+                                        FROM Mensagens m
+                                        JOIN Usuarios u ON (u.id = m.id_remetente OR u.id = m.id_destinatario)
+                                        WHERE (m.id_remetente = :id_usuario OR m.id_destinatario = :id_usuario)
+                                        ORDER BY m.data_envio DESC LIMIT 5"; // Limitar para as últimas 5 mensagens
+
+                    try {
+                        $stmt_mensagens = $conn->prepare($sql_mensagens);
+                        $stmt_mensagens->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
+                        $stmt_mensagens->execute();
+                        $result_mensagens = $stmt_mensagens->fetchAll(PDO::FETCH_ASSOC);
+
+                        if (count($result_mensagens) > 0) {
+                            foreach ($result_mensagens as $mensagem) {
+                                $nome_usuario_mensagem = $mensagem['usuario_nome'];
+                                $conteudo_mensagem = htmlspecialchars($mensagem['conteudo']);
+                                $data_envio = $mensagem['data_envio'];
+                                $status_leitura = $mensagem['status_leitura'];
+
+                                // Exibe o conteúdo da mensagem
+                                echo "<p><strong>$nome_usuario_mensagem</strong>: $conteudo_mensagem";
+                                echo "<br><small>Enviada em: " . date('d/m/Y H:i', strtotime($data_envio)) . "</small></p>";
+
+                                // Indicador de mensagem não lida
+                                if ($status_leitura == 'não_lida') {
+                                    echo "<p><em>Mensagem não lida</em></p>";
+                                }
+                            }
+                        } else {
+                            echo "<p>Não há mensagens recentes.</p>";
+                        }
+                    } catch (PDOException $e) {
+                        echo "Erro: " . $e->getMessage();
+                    }
+                ?>
+                <button onclick="window.location.href='conversa.php';">Ver todas as mensagens</button>
+            </section>
+        </section>
+        <!-- Fim Últimas Mensagens -->
+
+
     </main>
     <!-- Fim Conteúdo Principal -->
 
