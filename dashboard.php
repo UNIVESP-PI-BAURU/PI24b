@@ -106,7 +106,8 @@ $id_usuario = $_SESSION['id_usuario']; // Garantindo que id_usuario esteja corre
                     }
 
                     // Preparar e executar a consulta
-                    if ($stmt = $conn->prepare($sql)) {
+                    try {
+                        $stmt = $conn->prepare($sql);
                         $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT); // Usando id_usuario da sessão
                         $stmt->execute();
                         $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // Usar fetchAll para obter todas as linhas de uma vez
@@ -137,6 +138,8 @@ $id_usuario = $_SESSION['id_usuario']; // Garantindo que id_usuario esteja corre
                             echo "<p>Não há contratos registrados.</p>";
                         }
                         $stmt->close();
+                    } catch (PDOException $e) {
+                        echo "Erro: " . $e->getMessage();
                     }
                 ?>
             </section>
