@@ -106,7 +106,7 @@ $nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou
 
                     // Preparar e executar a consulta
                     if ($stmt = $conn->prepare($sql)) {
-                        $stmt->bind_param("i", $_SESSION['id_usuario']); // Usando id_usuario da sessão
+                        $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT); // Usando id_usuario da sessão
                         $stmt->execute();
                         $result = $stmt->get_result();
 
