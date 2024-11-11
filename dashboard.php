@@ -51,10 +51,6 @@ $nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou
         <!-- complemento: Saudação -->
         <section class="signup-section">
             <h4>Bem-vindo(a), <?php echo htmlspecialchars($nome_usuario); ?>! Você é um(a) <?php echo ($tipo_usuario === 'aluno' ? 'Aluno(a)' : 'Tutor(a)'); ?>.</h4>
-            <?php
-                // Debug: Exibe o tipo de usuário no HTML
-                // echo "<br>Debug Saudação: Nome: $nome_usuario - Tipo: $tipo_usuario";
-            ?>
         </section>
         <!-- Fim Saudação -->
 
@@ -64,8 +60,6 @@ $nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou
                 <h4>Resumo do Perfil</h4>
                 <?php
                     // Exibe informações adicionais do perfil (exemplo: foto, cidade, idioma)
-                    // Aqui você pode adaptar para exibir as informações que você tiver, como cidade, idioma, etc.
-
                     if (isset($_SESSION['foto_usuario']) && !empty($_SESSION['foto_usuario'])) {
                         $foto_usuario = $_SESSION['foto_usuario'];
                         echo "<img src='ASSETS/IMG/$foto_usuario' alt='Foto do usuário' class='avatar-dashboard'><br>";
@@ -78,14 +72,14 @@ $nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou
         </section>
         <!-- Fim Resumo Perfil -->
 
-        <!-- complemento: pesquisa -->
+        <!-- complemento: Pesquisa -->
         <section class="signup-section">
             <section class="pesquisa">
                 <h4>Pesquisar</h4>
                 <button onclick="window.location.href='pesquisa.php';">Ir para Pesquisa</button>
             </section>
         </section>
-        <!-- Fim pesquisa -->        
+        <!-- Fim Pesquisa -->
 
         <!-- complemento: Contratos -->
         <section class="signup-section">
@@ -94,13 +88,13 @@ $nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou
                 <?php
                     // Exibe os contratos dependendo do tipo de usuário
                     if ($tipo_usuario === 'aluno') {
-                        // Código para exibir os contratos do aluno (Contratos pendentes, confirmados, etc)
+                        // Exibe contratos do aluno
                         $sql = "SELECT c.id, t.nome AS tutor_nome, c.status
                                 FROM Contratos c
                                 JOIN Tutores t ON c.id_tutor = t.id
                                 WHERE c.id_aluno = ?"; // Ajuste com a consulta que você quer
                     } else {
-                        // Código para exibir os contratos do tutor
+                        // Exibe contratos do tutor
                         $sql = "SELECT c.id, a.nome AS aluno_nome, c.status
                                 FROM Contratos c
                                 JOIN Alunos a ON c.id_aluno = a.id
@@ -115,7 +109,25 @@ $nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou
 
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
-                                echo "<p>Contrato ID: " . $row['id'] . " - " . ($tipo_usuario === 'aluno' ? 'Tutor(a): ' : 'Aluno(a): ') . $row[($tipo_usuario === 'aluno' ? 'tutor_nome' : 'aluno_nome')] . " - Status: " . $row['status'] . "</p>";
+                                $nome_contratado = ($tipo_usuario === 'aluno') ? $row['tutor_nome'] : $row['aluno_nome'];
+                                $status = $row['status'];
+                                $contrato_id = $row['id'];
+
+                                echo "<p>Contrato ID: $contrato_id - " . ($tipo_usuario === 'aluno' ? 'Tutor(a): ' : 'Aluno(a): ') . htmlspecialchars($nome_contratado) . " - Status: " . htmlspecialchars($status) . "</p>";
+
+                                // Exibe botões de ação dependendo do status do contrato
+                                if ($tipo_usuario === 'aluno' && $status === 'pendente') {
+                                    // Se for aluno e o status for "pendente"
+                                    echo "<button onclick='window.location.href=\"cancelar_contrato.php?id=$contrato_id\"'>Cancelar Contrato</button>";
+                                } elseif ($tipo_usuario === 'tutor') {
+                                    // Se for tutor
+                                    if ($status === 'pendente') {
+                                        echo "<button onclick='window.location.href=\"aceitar_contrato.php?id=$contrato_id\"'>Aceitar</button>";
+                                        echo "<button onclick='window.location.href=\"negar_contrato.php?id=$contrato_id\"'>Negar</button>";
+                                    } elseif ($status === 'confirmado') {
+                                        echo "<button onclick='window.location.href=\"cancelar_contrato.php?id=$contrato_id\"'>Cancelar Contrato</button>";
+                                    }
+                                }
                             }
                         } else {
                             echo "<p>Não há contratos registrados.</p>";
