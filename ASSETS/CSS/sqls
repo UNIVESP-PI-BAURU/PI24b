@@ -80,16 +80,6 @@ CREATE TABLE Curtidas (
     FOREIGN KEY (id_tutor) REFERENCES Tutores(id) ON DELETE CASCADE
 );
 
--- Tabela de Logs (Relacionado a ações de Alunos e Tutores)
-CREATE TABLE Logs (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario INT NOT NULL,
-    tipo_usuario ENUM('aluno', 'tutor') NOT NULL,
-    acao VARCHAR(255) NOT NULL,
-    data_acao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_usuario) REFERENCES Alunos(id) ON DELETE CASCADE
-        ON UPDATE CASCADE
-);
 
 
 -- Tabela de contratos
