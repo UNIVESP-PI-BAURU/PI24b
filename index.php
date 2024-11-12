@@ -23,11 +23,6 @@
         <?php
         session_start(); // Inicia a sessão para verificar o login
 
-        // Debug: Verificando os dados de sessão
-        echo "<!-- Debugging Sessão -->";
-        echo "<!-- id_usuario: " . (isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : 'não definido') . " -->";
-        echo "<!-- tipo_usuario: " . (isset($_SESSION['tipo_usuario']) ? $_SESSION['tipo_usuario'] : 'não definido') . " -->";
-
         // Verifica se o usuário está logado
         if (isset($_SESSION['id_usuario']) && isset($_SESSION['tipo_usuario'])): ?>
             <!-- Usuário logado -->
@@ -68,7 +63,6 @@
         <p>UNIVESP PI 2024</p>
         <p><a href="https://github.com/UNIVESP-PI-BAURU/PI24b.git" target="_blank">https://github.com/UNIVESP-PI-BAURU/PI24b.git</a></p>
     </footer>
-
 
     <!-- Scripts -->
     <script>

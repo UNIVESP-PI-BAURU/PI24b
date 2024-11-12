@@ -7,7 +7,6 @@ session_start();
 
 // Verifica se o usuário está logado e redireciona para login se não estiver
 if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
-    echo "Usuário não logado! Redirecionando para login..."; // Debug
     header("Location: login.php"); // Redireciona para login
     exit(); // Evita que o código continue
 }
@@ -16,10 +15,6 @@ if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['tipo_usuario'])) {
 $tipo_usuario = $_SESSION['tipo_usuario']; // 'aluno' ou 'tutor'
 $nome_usuario = $_SESSION['nome_usuario'] ?? 'Visitante'; // Nome do usuário ou "Visitante" se não estiver definido
 $id_usuario = $_SESSION['id_usuario']; // Garantindo que id_usuario esteja corretamente setado
-
-// Debug: Exibe o tipo e nome do usuário
-// echo "Tipo de usuário: $tipo_usuario<br>";
-// echo "Nome de usuário: $nome_usuario<br>";
 ?>
 
 <!DOCTYPE html>
@@ -49,13 +44,12 @@ $id_usuario = $_SESSION['id_usuario']; // Garantindo que id_usuario esteja corre
     <!-- Conteúdo Principal -->
     <main class="main-content">
 
-        <!-- complemento: Saudação -->
+        <!-- Saudação -->
         <section class="signup-section">
             <h4>Bem-vindo(a), <?php echo htmlspecialchars($nome_usuario); ?>! Você é um(a) <?php echo ($tipo_usuario === 'aluno' ? 'Aluno(a)' : 'Tutor(a)'); ?>.</h4>
         </section>
-        <!-- Fim Saudação -->
 
-        <!-- complemento: Resumo Perfil -->
+        <!-- Resumo do Perfil -->
         <section class="signup-section">    
             <section class="perfil-resumo">
                 <h4>Resumo do Perfil</h4>
@@ -74,18 +68,16 @@ $id_usuario = $_SESSION['id_usuario']; // Garantindo que id_usuario esteja corre
                 <button onclick="window.location.href='perfil.php';">Ver Perfil Completo</button>
             </section>
         </section>
-        <!-- Fim Resumo Perfil -->
 
-        <!-- complemento: Pesquisa -->
+        <!-- Pesquisa -->
         <section class="signup-section">
             <section class="pesquisa">
                 <h4>Pesquisar</h4>
                 <button onclick="window.location.href='pesquisa.php';">Ir para Pesquisa</button>
             </section>
         </section>
-        <!-- Fim Pesquisa -->
 
-        <!-- complemento: Contratos -->
+        <!-- Contratos -->
         <section class="signup-section">
             <section class="contratos">
                 <h4>Contratos</h4>
@@ -143,9 +135,8 @@ $id_usuario = $_SESSION['id_usuario']; // Garantindo que id_usuario esteja corre
                 ?>
             </section>
         </section>
-        <!-- Fim Contratos -->
 
-        <!-- complemento: Últimas Mensagens -->
+        <!-- Últimas Mensagens -->
         <section class="signup-section">
             <section class="mensagens">
                 <h4>Últimas Mensagens</h4>
@@ -162,7 +153,6 @@ $id_usuario = $_SESSION['id_usuario']; // Garantindo que id_usuario esteja corre
                     try {
                         $stmt_mensagens = $conn->prepare($sql_mensagens);
                         $stmt_mensagens->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
-                        $stmt_mensagens->bindParam(':tipo_usuario', $tipo_usuario, PDO::PARAM_STR);
                         $stmt_mensagens->execute();
                         $result_mensagens = $stmt_mensagens->fetchAll(PDO::FETCH_ASSOC);
 
@@ -195,8 +185,6 @@ $id_usuario = $_SESSION['id_usuario']; // Garantindo que id_usuario esteja corre
 
             </section>
         </section>
-        <!-- Fim Últimas Mensagens -->
-
 
     </main>
     <!-- Fim Conteúdo Principal -->
@@ -204,7 +192,7 @@ $id_usuario = $_SESSION['id_usuario']; // Garantindo que id_usuario esteja corre
     <!-- Rodapé -->
     <footer class="footer">
         <p>UNIVESP PI 2024</p>
-        <p><a href="https://github.com/UNIVESP-PI-BAURU/PI24b.git" target="_blank">https://github.com/UNIVESP-PI-BAURU/PI24b.git</a></p>
+        <p><a href="https://github.com/UNIVESP-PI-BA-2024/PI-2024B" target="_blank">Acesse o repositório</a></p>
     </footer>
 
 </body>

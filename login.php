@@ -17,10 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $senha = $_POST['senha'];
     $tipo = $_POST['tipo']; // Tipo: aluno ou tutor
 
-    // Exibindo dados para depuração
-    echo "<!-- Debugging - Dados do Formulário -->";
-    var_dump($_POST);  // Verificando os dados enviados pelo formulário
-
     // Verificando se o tipo de usuário é 'aluno' ou 'tutor' e selecionando a tabela correspondente
     if ($tipo === 'aluno') {
         $sql = "SELECT * FROM Alunos WHERE email = :email";
@@ -36,10 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Verificando se o usuário foi encontrado
     if ($stmt->rowCount() > 0) {
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // Exibindo dados do usuário para depuração
-        echo "<!-- Debugging - Dados do Usuário Encontrado -->";
-        var_dump($usuario);  // Verificando os dados do usuário retornados
 
         // Verificando se a senha está correta
         if (password_verify($senha, $usuario['senha'])) {

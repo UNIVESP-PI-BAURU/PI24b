@@ -1,8 +1,4 @@
 <?php
-// Ativar exibição de erros para debug
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 // Conexão com o banco de dados
 require_once 'conexao.php'; // Certifique-se de que o arquivo de conexão com o banco de dados esteja correto
 
@@ -23,10 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $senha = isset($_POST['senha']) ? $_POST['senha'] : '';
     $idioma = isset($_POST['idioma']) ? $_POST['idioma'] : '';
     $tipo = isset($_POST['tipo']) ? $_POST['tipo'] : '';
-
-    // Exibir dados de entrada para debug
-    echo "<!-- Debugging - Dados do Formulário -->";
-    var_dump($_POST); // Exibe todos os dados do formulário para análise
 
     // Verificando se os campos estão preenchidos
     if (empty($nome) || empty($email) || empty($senha) || empty($idioma) || empty($tipo)) {
