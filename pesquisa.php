@@ -27,7 +27,7 @@ $tipo_usuario = $_SESSION['tipo_usuario']; // Aluno ou Tutor
 
     <nav class="navbar">
         <button onclick="window.location.href='index.php'">Home</button>
-        <button onclick="window.location.href='dashboard.php'">Dashboard</button>
+        <button onclick="window.location.href='dashboard.php'">Meu painel</button>
         <button onclick="window.location.href='logout.php'">Logout</button>
     </nav>
 
@@ -50,7 +50,7 @@ $tipo_usuario = $_SESSION['tipo_usuario']; // Aluno ou Tutor
             </form>
 
             <!-- Botão para retornar à Dashboard -->
-            <button onclick="window.location.href='dashboard.php'">Retornar à Dashboard</button>
+            <button onclick="window.location.href='dashboard.php'">Retornar ao Meu painel</button>
 
         </section>
     </main>

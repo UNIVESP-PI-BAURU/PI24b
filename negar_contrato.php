@@ -57,7 +57,7 @@ try {
 
     <nav class="navbar">
         <button onclick="window.location.href='index.php'">Home</button>
-        <button onclick="window.location.href='dashboard.php'">Dashboard</button>
+        <button onclick="window.location.href='dashboard.php'">Meu painel</button>
         <button onclick="window.location.href='logout.php'">Logout</button>
     </nav>
 
@@ -65,7 +65,7 @@ try {
     <main class="main-content">
         <section class="signup-section">
             <h3><?php echo $msg; ?></h3>
-            <button onclick="window.location.href='dashboard.php'">Voltar para a Dashboard</button>
+            <button onclick="window.location.href='dashboard.php'">Voltar ao Meu painel</button>
         </section>
     </main>
 

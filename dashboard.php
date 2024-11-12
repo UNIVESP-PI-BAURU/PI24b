@@ -27,7 +27,7 @@ $id_usuario = $_SESSION['id_usuario']; // Garantindo que id_usuario esteja corre
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Meu painel</title>
     <link rel="stylesheet" href="ASSETS/CSS/style.css">
 </head>
 <body>
@@ -41,7 +41,7 @@ $id_usuario = $_SESSION['id_usuario']; // Garantindo que id_usuario esteja corre
     <nav class="navbar">
         <button onclick="window.location.href='index.php';">Home</button>
         <button onclick="window.location.href='sobre_nos.php';">Sobre nós</button>
-        <button onclick="window.location.href='dashboard.php';">Dashboard</button>
+        <button onclick="window.location.href='dashboard.php';">Meu painel</button>
         <button onclick="window.location.href='logout.php';">Logout</button>
     </nav>
     <!-- Fim Navegação -->

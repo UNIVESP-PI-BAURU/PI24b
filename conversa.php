@@ -123,7 +123,7 @@ if (isset($_GET['update'])) {
 
         <nav class="navbar">
             <button onclick="window.location.href='index.php'">Home</button>
-            <button onclick="window.location.href='dashboard.php'">Dashboard</button>
+            <button onclick="window.location.href='dashboard.php'">Meu painel</button>
             <button onclick="window.location.href='logout.php'">Logout</button>
         </nav>
 
