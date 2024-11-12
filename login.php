@@ -113,7 +113,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </form>
 
             <p>Ainda não tem uma conta?</p>
-            <button onclick="window.location.href='cadastro.php';">Cadastre-se aqui</button>
+            <button onclick="window.location.href='cadastro.php';">Cadastre-se aqui!</button>
+
+            <p>Esqueceu a senha?</p>
+            <button onclick="window.location.href='recuperar_senha.php';">Recupere aqui!</button>
         </section>
     </main>
 
